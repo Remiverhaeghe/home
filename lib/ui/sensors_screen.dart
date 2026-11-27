@@ -167,7 +167,10 @@ class SensorsScreen extends StatelessWidget {
               icon: const Icon(Icons.home_work_outlined),
               onPressed: () => Navigator.push<void>(
                 pContext,
-                MaterialPageRoute(builder: (_) => HouseScreen(controller: houseController!, weather: weatherController)),
+                MaterialPageRoute(
+                  builder: (_) =>
+                      HouseScreen(controller: houseController!, weather: weatherController),
+                ),
               ),
             ),
           if (pelletController != null)

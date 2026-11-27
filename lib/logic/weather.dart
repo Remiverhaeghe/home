@@ -85,11 +85,7 @@ String weatherJson({required bool pEnabled, required List<Reading> pReadings}) =
   'enabled': pEnabled,
   'readings': [
     for (final vReading in pReadings)
-      {
-        'at': vReading.at.toIso8601String(),
-        'temp': vReading.temp,
-        'humidity': vReading.humidity,
-      },
+      {'at': vReading.at.toIso8601String(), 'temp': vReading.temp, 'humidity': vReading.humidity},
   ],
 });
 

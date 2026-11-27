@@ -88,10 +88,10 @@ void main() {
     expect(vStore.saved.placeOf('Haut').room, 'Salon');
   });
 
-  testWidgets('la météo est désactivée au départ, puis récupérée une fois autorisée', (pTester) async {
-    final vLink = FakeWeatherLink([
-      Reading(at: DateTime(2026, 11, 27, 10), temp: 5, humidity: 80),
-    ]);
+  testWidgets('la météo est désactivée au départ, puis récupérée une fois autorisée', (
+    pTester,
+  ) async {
+    final vLink = FakeWeatherLink([Reading(at: DateTime(2026, 11, 27, 10), temp: 5, humidity: 80)]);
     final vWeather = WeatherController(MemoryWeatherStore(), vLink);
     final vHouse = HouseController(
       MemoryHouseStore(
@@ -99,9 +99,7 @@ void main() {
       ),
     );
     await vHouse.load();
-    await pTester.pumpWidget(
-      localized(HouseScreen(controller: vHouse, weather: vWeather)),
-    );
+    await pTester.pumpWidget(localized(HouseScreen(controller: vHouse, weather: vWeather)));
     await pTester.scrollUntilVisible(find.byType(Switch), 200, scrollable: find.byType(Scrollable));
 
     expect(vLink.calls, 0);
@@ -109,7 +107,11 @@ void main() {
 
     await pTester.tap(find.byType(Switch));
     await pTester.pumpAndSettle();
-    await pTester.scrollUntilVisible(find.text('Actualiser'), 200, scrollable: find.byType(Scrollable));
+    await pTester.scrollUntilVisible(
+      find.text('Actualiser'),
+      200,
+      scrollable: find.byType(Scrollable),
+    );
     await pTester.tap(find.text('Actualiser'));
     await pTester.pumpAndSettle();
 
@@ -117,4 +119,3 @@ void main() {
     expect(find.textContaining('1 relevés gardés'), findsOneWidget);
   });
 }
-

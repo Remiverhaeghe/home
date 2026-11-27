@@ -35,7 +35,13 @@ void main() {
     expect(parseWeather('pas du json', pNow: now), isEmpty);
     expect(parseWeather('[]', pNow: now), isEmpty);
     expect(parseWeather('{"hourly":{"time":[]}}', pNow: now), isEmpty);
-    expect(parseWeather('{"hourly":{"time":[1],"temperature_2m":[1],"relative_humidity_2m":[1]}}', pNow: now), isEmpty);
+    expect(
+      parseWeather(
+        '{"hourly":{"time":[1],"temperature_2m":[1],"relative_humidity_2m":[1]}}',
+        pNow: now,
+      ),
+      isEmpty,
+    );
   });
 
   test('la fusion remplace une même heure et ne double rien', () {
@@ -53,11 +59,10 @@ void main() {
 
   test('l\'archive oublie ce qui a plus de 400 jours', () {
     final vLast = DateTime(2026, 11, 27);
-    final vMerged = mergeWeather([
-      Reading(at: vLast.subtract(const Duration(days: 401)), temp: 1, humidity: 1),
-    ], [
-      Reading(at: vLast, temp: 2, humidity: 2),
-    ]);
+    final vMerged = mergeWeather(
+      [Reading(at: vLast.subtract(const Duration(days: 401)), temp: 1, humidity: 1)],
+      [Reading(at: vLast, temp: 2, humidity: 2)],
+    );
 
     expect(vMerged, hasLength(1));
     expect(mergeWeather(const [], const []), isEmpty);

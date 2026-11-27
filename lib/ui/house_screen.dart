@@ -110,7 +110,8 @@ class _HouseScreenState extends State<HouseScreen> {
               TextButton(onPressed: _clear, child: Text(vTexts.houseClear)),
             ],
           ),
-          if (widget.weather != null) _WeatherSection(house: widget.controller, weather: widget.weather!),
+          if (widget.weather != null)
+            _WeatherSection(house: widget.controller, weather: widget.weather!),
         ],
       ),
     );
