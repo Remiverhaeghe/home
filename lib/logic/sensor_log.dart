@@ -10,7 +10,10 @@ List<Sensor> withLiveReading(List<Sensor> pSensors, String pName, Reading pReadi
   final vKey = pName.trim().toLowerCase();
   final vIndex = pSensors.indexWhere((pS) => pS.name.trim().toLowerCase() == vKey);
   if (vIndex < 0) {
-    return [...pSensors, Sensor(name: pName.trim(), readings: [pReading])];
+    return [
+      ...pSensors,
+      Sensor(name: pName.trim(), readings: [pReading]),
+    ];
   }
   final vOld = pSensors[vIndex];
   final vLast = vOld.last;

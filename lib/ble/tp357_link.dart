@@ -69,10 +69,7 @@ class BleTp357Link implements Tp357Link {
   }
 
   /// Trames reçues d'un capteur connecté ; [pOnReady] part une fois abonné.
-  Stream<List<int>> _frames(
-    String pDeviceId,
-    Future<void> Function(String pDeviceId) pOnReady,
-  ) {
+  Stream<List<int>> _frames(String pDeviceId, Future<void> Function(String pDeviceId) pOnReady) {
     late final StreamController<List<int>> rController;
     StreamSubscription<ConnectionStateUpdate>? vConnection;
     StreamSubscription<List<int>>? vFrames;

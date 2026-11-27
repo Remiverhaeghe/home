@@ -83,7 +83,10 @@ class _DiagnosticScreenState extends State<DiagnosticScreen> {
           FilledButton(onPressed: _ask, child: Text(vTexts.diagnosticAsk)),
           if (_failed) ...[
             const SizedBox(height: 12),
-            Text(vTexts.bluetoothError, style: TextStyle(color: Theme.of(pContext).colorScheme.error)),
+            Text(
+              vTexts.bluetoothError,
+              style: TextStyle(color: Theme.of(pContext).colorScheme.error),
+            ),
           ],
           const SizedBox(height: 12),
           Text(vTexts.diagnosticCount(_count)),

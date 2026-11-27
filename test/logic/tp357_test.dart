@@ -77,7 +77,16 @@ void main() {
     });
 
     test('un relevé coupé en fin de trame est laissé de côté', () {
-      final vRecords = parseHistoryFrame([0xA7, 0, 0, 0, 0xEB, 0x00, 0x3D, 0xEB], HistoryPeriod.day);
+      final vRecords = parseHistoryFrame([
+        0xA7,
+        0,
+        0,
+        0,
+        0xEB,
+        0x00,
+        0x3D,
+        0xEB,
+      ], HistoryPeriod.day);
 
       expect(vRecords, hasLength(1));
     });

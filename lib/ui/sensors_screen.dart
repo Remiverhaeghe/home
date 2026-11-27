@@ -18,9 +18,7 @@ typedef TextFilePicker = Future<String?> Function();
 
 Future<String?> pickTextFile() async {
   final vFile = await FilePicker.pickFile();
-  final rText = vFile == null
-      ? null
-      : utf8.decode(await vFile.readAsBytes(), allowMalformed: true);
+  final rText = vFile == null ? null : utf8.decode(await vFile.readAsBytes(), allowMalformed: true);
 
   return rText;
 }

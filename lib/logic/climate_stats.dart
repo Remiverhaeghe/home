@@ -54,8 +54,7 @@ List<DayAverage> dailyAverages(List<Reading> pReadings) {
         day: vEntry.key,
         temp: vEntry.value.map((pR) => pR.temp).reduce((pA, pB) => pA + pB) / vEntry.value.length,
         humidity:
-            vEntry.value.map((pR) => pR.humidity).reduce((pA, pB) => pA + pB) /
-            vEntry.value.length,
+            vEntry.value.map((pR) => pR.humidity).reduce((pA, pB) => pA + pB) / vEntry.value.length,
       ),
   ]..sort((pA, pB) => pA.day.compareTo(pB.day));
 

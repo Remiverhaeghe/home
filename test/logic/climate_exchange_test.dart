@@ -17,11 +17,7 @@ void main() {
     expect(
       () => parseExchange('pas du json'),
       throwsA(
-        isA<ExchangeException>().having(
-          (pE) => pE.problem,
-          'motif',
-          ExchangeProblem.notJson,
-        ),
+        isA<ExchangeException>().having((pE) => pE.problem, 'motif', ExchangeProblem.notJson),
       ),
     );
     expect(() => parseExchange('[1, 2]'), throwsA(isA<ExchangeException>()));
@@ -31,11 +27,7 @@ void main() {
     expect(
       () => parseExchange('{"version": 2, "sensors": []}'),
       throwsA(
-        isA<ExchangeException>().having(
-          (pE) => pE.problem,
-          'motif',
-          ExchangeProblem.wrongVersion,
-        ),
+        isA<ExchangeException>().having((pE) => pE.problem, 'motif', ExchangeProblem.wrongVersion),
       ),
     );
   });
@@ -44,11 +36,7 @@ void main() {
     expect(
       () => parseExchange('{"version": 1}'),
       throwsA(
-        isA<ExchangeException>().having(
-          (pE) => pE.problem,
-          'motif',
-          ExchangeProblem.noSensors,
-        ),
+        isA<ExchangeException>().having((pE) => pE.problem, 'motif', ExchangeProblem.noSensors),
       ),
     );
   });

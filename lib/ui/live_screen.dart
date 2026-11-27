@@ -80,7 +80,10 @@ class _LiveScreenState extends State<LiveScreen> {
         padding: const EdgeInsets.all(16),
         children: [
           if (_failed) ...[
-            Text(vTexts.bluetoothError, style: TextStyle(color: Theme.of(pContext).colorScheme.error)),
+            Text(
+              vTexts.bluetoothError,
+              style: TextStyle(color: Theme.of(pContext).colorScheme.error),
+            ),
             const SizedBox(height: 16),
           ],
           if (vFollowed != null) ...[
