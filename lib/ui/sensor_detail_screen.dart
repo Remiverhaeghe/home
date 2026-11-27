@@ -29,31 +29,10 @@ class _SensorDetailScreenState extends State<SensorDetailScreen> {
   Sensor get sensor => widget.sensor;
 
   Future<void> _rename() async {
-    final vTexts = AppLocalizations.of(context);
-    final vField = TextEditingController(text: _title == sensor.name ? '' : _title);
     final vLabel = await showDialog<String>(
       context: context,
-      builder: (pDialog) => AlertDialog(
-        title: Text(vTexts.detailRename),
-        content: TextField(
-          controller: vField,
-          autofocus: true,
-          decoration: InputDecoration(
-            hintText: vTexts.detailRenameHint,
-            helperText: vTexts.detailRenameDevice(sensor.name),
-            helperMaxLines: 2,
-          ),
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(pDialog), child: Text(vTexts.cancel)),
-          FilledButton(
-            onPressed: () => Navigator.pop(pDialog, vField.text),
-            child: Text(vTexts.save),
-          ),
-        ],
-      ),
+      builder: (_) => _RenameDialog(current: _title == sensor.name ? '' : _title, device: sensor.name),
     );
-    vField.dispose();
     if (vLabel == null) {
       return;
     }
@@ -132,6 +111,52 @@ class _SensorDetailScreenState extends State<SensorDetailScreen> {
           ],
         ],
       ),
+    );
+  }
+}
+
+/// Saisie du nom. Le champ vit dans cette boîte : il n'est détruit qu'avec elle.
+class _RenameDialog extends StatefulWidget {
+  const _RenameDialog({required this.current, required this.device});
+
+  final String current;
+  final String device;
+
+  @override
+  State<_RenameDialog> createState() => _RenameDialogState();
+}
+
+class _RenameDialogState extends State<_RenameDialog> {
+  late final _field = TextEditingController(text: widget.current);
+
+  @override
+  void dispose() {
+    _field.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext pContext) {
+    final vTexts = AppLocalizations.of(pContext);
+
+    return AlertDialog(
+      title: Text(vTexts.detailRename),
+      content: TextField(
+        controller: _field,
+        autofocus: true,
+        decoration: InputDecoration(
+          hintText: vTexts.detailRenameHint,
+          helperText: vTexts.detailRenameDevice(widget.device),
+          helperMaxLines: 2,
+        ),
+      ),
+      actions: [
+        TextButton(onPressed: () => Navigator.pop(pContext), child: Text(vTexts.cancel)),
+        FilledButton(
+          onPressed: () => Navigator.pop(pContext, _field.text),
+          child: Text(vTexts.save),
+        ),
+      ],
     );
   }
 }
