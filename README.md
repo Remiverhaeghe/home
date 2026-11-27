@@ -1,6 +1,6 @@
 # Home
 
-Application Android qui suit la température et l'humidité de la maison à partir de thermo-hygromètres. Tout reste sur le téléphone : pas de compte, pas de réseau.
+Application Android qui suit la température et l'humidité de la maison à partir de thermo-hygromètres. Tout reste sur le téléphone : pas de compte, pas de réseau, pas de serveur.
 
 Home sert de tableau de bord. Atelier, de son côté, s'en sert pour savoir quand une pièce est assez sèche pour poser un parquet ou une peinture : les deux applis échangent le même fichier JSON.
 

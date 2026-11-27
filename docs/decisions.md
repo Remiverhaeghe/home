@@ -16,3 +16,9 @@ Décision : une palette ardoise unique, sans bascule clair/sombre.
 
 Contexte : les relevés de la maison sont des données privées.
 Décision : l'appli ne déclare pas la permission réseau ; l'import passe par un fichier choisi par l'utilisateur.
+
+## 2026-11-27 : tout tourne sur le téléphone
+
+Contexte : pas de NAS pour le moment, et les relevés de la maison sont privés.
+Décision : aucune partie serveur. Les capteurs se liront en Bluetooth depuis le téléphone, l'historique reste dans `capteurs.json`, et l'échange avec Atelier passe par un fichier partagé depuis le téléphone.
+Écarté : un service sur le NAS qui collecterait les relevés en continu. À reconsidérer si un NAS arrive, avec le même fichier d'échange comme format.
