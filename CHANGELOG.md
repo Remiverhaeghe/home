@@ -8,6 +8,7 @@
 
 ### Ajouté
 
+- Poêle à pellets Ecoforest (bouton flamme de la liste des capteurs) : température de la pièce, étape du poêle, marche et arrêt, consigne de température par pas de 0,5 °C. Connexion HTTPS locale avec le numéro de série et le mot de passe de l'étiquette, rangés dans `poele.json`. Montage décrit dans `docs/poele-pellets.md`
 - Garage et Velux : boutons à relais Wi-Fi Shelly (Plus, Pro, 1, 2.5), un par commande, enregistrés dans `relais.json`. La porte de garage demande confirmation, un double appui en moins de 5 secondes est ignoré, les adresses hors du réseau de la maison sont refusées. Montage décrit dans `docs/relais.md`
 - Affichage mural (bouton « Affichage mural » de la liste des capteurs) : paysage, plein écran, écran allumé, heure et date, une grosse tuile par pièce avec température, humidité, relevé ancien signalé, et boutons d'allumage et de consigne par pas de 0,5 °C ; les climatisations sont relues toutes les 30 secondes
 - Notifications d'alerte avec son et bannière (gel, humidité haute, capteur muet), une par alerte, appli ouverte ou fermée ; l'accord est demandé au démarrage

@@ -14,6 +14,7 @@ Home sert de tableau de bord. Atelier, de son côté, s'en sert pour savoir quan
 - Pilotage : une température souhaitée par pièce et par profil (confort, nuit, éco, absent), un planning de la semaine par pièce, la détection d'une fenêtre ouverte (la clim se met au repos), des règles de seuil sur l'humidité et la température, et la température extérieure lue sur la clim pour ne pas chauffer l'été ni refroidir l'hiver. Le plan s'applique toutes les 5 minutes, appli ouverte ou fermée (le service d'arrière-plan prend le relais).
 - Mode vacances : la maison est tenue hors gel pendant l'absence, puis remonte en température la veille du retour.
 - Affichage mural : une tablette accrochée montre chaque pièce en grand (température, humidité, consigne) en paysage et plein écran, l'écran restant allumé ; gros boutons pour allumer, éteindre et régler la consigne par 0,5 °C.
+- Poêle à pellets Ecoforest : température de la pièce, marche et arrêt, consigne par pas de 0,5 °C, sur le réseau de la maison (voir `docs/poele-pellets.md`).
 - Garage et Velux : un gros bouton par commande, envoyé à un relais Wi-Fi Shelly branché en parallèle du bouton ou de la télécommande ; la porte demande confirmation (voir `docs/relais.md`).
 - Alertes (notification avec son et bannière, et écran Pilotage) pour le gel (sous 5 °C), l'humidité (au-dessus de 70 %) et un capteur muet depuis plus de 30 minutes.
 - Import d'un fichier d'échange JSON contenant plusieurs capteurs.
@@ -74,6 +75,7 @@ La CI refuse une couverture de `lib/logic` sous 95 %.
 | [docs/echange-climat.md](docs/echange-climat.md) | Format du fichier d'échange avec Atelier |
 | [docs/tp357.md](docs/tp357.md) | Ce que l'on sait du Bluetooth du TP357 et ce qui reste à vérifier |
 | [docs/daikin.md](docs/daikin.md) | API locale des climatisations Daikin, limites et points à vérifier |
+| [docs/poele-pellets.md](docs/poele-pellets.md) | Poêle à pellets Ecoforest : réseau, identifiants, requêtes |
 | [docs/relais.md](docs/relais.md) | Garage et Velux par relais Wi-Fi : matériel, branchement, sécurité |
 | [docs/decisions.md](docs/decisions.md) | Choix qui ne se devinent pas à la lecture du code |
 | [CHANGELOG.md](CHANGELOG.md) | Historique des versions |
