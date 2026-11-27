@@ -225,7 +225,7 @@ void main() {
           threshold: 17.5,
           action: AutoActionKind.heat,
           setpoint: 20,
-          minGap: const Duration(minutes: 10),
+          minGap: Duration(minutes: 10),
         ),
       ];
 

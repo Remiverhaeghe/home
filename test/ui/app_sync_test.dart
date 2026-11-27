@@ -50,6 +50,8 @@ void main() {
     expect(find.text('TP357 (1A2B)'), findsOneWidget);
   });
 
+  // « Inactif » plutôt que « en pause » : en pause, Flutter coupe les rendus et la lecture du
+  // fichier n'avance plus dans le test.
   testWidgets('au retour dans l\'appli, les nouveaux relevés sont rangés', (pTester) async {
     await real(pTester, () => pTester.pumpWidget(HomeApp(controller: vController, files: vFiles)));
     expect(vController.sensors, isEmpty);
@@ -57,7 +59,7 @@ void main() {
     await addPending(pTester, 5);
     await real(
       pTester,
-      () async => pTester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused),
+      () async => pTester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive),
     );
     expect(vController.sensors, isEmpty);
     await real(
