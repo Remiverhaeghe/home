@@ -49,7 +49,8 @@ void main() {
   });
 
   test('une température absente ou fausse reprend la valeur par défaut', () {
-    const vJson = '{"version": 1, "rooms": [{"acHost": "h", "targets": {"comfort": "chaud", "eco": 19}}]}';
+    const vJson =
+        '{"version": 1, "rooms": [{"acHost": "h", "targets": {"comfort": "chaud", "eco": 19}}]}';
 
     final vTargets = parseRooms(vJson).single.targets;
 
