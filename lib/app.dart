@@ -9,6 +9,8 @@ import 'l10n/gen/app_localizations.dart';
 import 'state/ac_controller.dart';
 import 'state/plan_controller.dart';
 import 'state/house_controller.dart';
+import 'logic/appearance.dart';
+import 'state/appearance_controller.dart';
 import 'state/pellet_controller.dart';
 import 'storage/backup_files.dart';
 import 'state/weather_controller.dart';
@@ -29,6 +31,7 @@ class HomeApp extends StatefulWidget {
     this.houseController,
     this.weatherController,
     this.backupFiles,
+    this.appearance,
     this.onRestored,
     this.notifier,
     this.background,
@@ -45,6 +48,9 @@ class HomeApp extends StatefulWidget {
   final HouseController? houseController;
   final WeatherController? weatherController;
   final BackupFiles? backupFiles;
+
+  /// Thème et taille du texte ; sans lui, thème sombre et texte normal.
+  final AppearanceController? appearance;
   final Future<void> Function()? onRestored;
 
   /// Notifications d'alerte ; sans elles, les alertes restent visibles dans l'écran Pilotage.
@@ -62,6 +68,9 @@ class HomeApp extends StatefulWidget {
 const planInterval = Duration(minutes: 5);
 
 class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
+  /// Écouté à la place du contrôleur d'apparence quand il n'y en a pas.
+  final _noAppearance = ValueNotifier<int>(0);
+
   Timer? _planTimer;
 
   @override
@@ -108,9 +117,26 @@ class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
   }
 
   @override
-  Widget build(BuildContext pContext) => MaterialApp(
+  Widget build(BuildContext pContext) => ListenableBuilder(
+    listenable: widget.appearance ?? _noAppearance,
+    builder: (pContext, _) => _app(widget.appearance?.settings ?? const AppearanceSettings()),
+  );
+
+  Widget _app(AppearanceSettings pLook) => MaterialApp(
     onGenerateTitle: (pContext) => AppLocalizations.of(pContext).appTitle,
-    theme: buildTheme(),
+    theme: buildTheme(pBrightness: Brightness.light),
+    darkTheme: buildTheme(),
+    themeMode: switch (pLook.theme) {
+      ThemeChoice.system => ThemeMode.system,
+      ThemeChoice.light => ThemeMode.light,
+      ThemeChoice.dark => ThemeMode.dark,
+    },
+    builder: (pContext, pChild) => MediaQuery(
+      data: MediaQuery.of(pContext).copyWith(
+        textScaler: TextScaler.linear(MediaQuery.textScalerOf(pContext).scale(1) * pLook.textScale),
+      ),
+      child: pChild!,
+    ),
     locale: const Locale('fr'),
     localizationsDelegates: const [
       AppLocalizations.delegate,
@@ -128,6 +154,7 @@ class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
       houseController: widget.houseController,
       weatherController: widget.weatherController,
       backupFiles: widget.backupFiles,
+      appearance: widget.appearance,
       onRestored: widget.onRestored,
       background: widget.background,
       files: widget.files,

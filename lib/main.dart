@@ -15,11 +15,13 @@ import 'net/relay_link.dart';
 import 'state/ac_controller.dart';
 import 'state/plan_controller.dart';
 import 'state/house_controller.dart';
+import 'state/appearance_controller.dart';
 import 'state/pellet_controller.dart';
 import 'state/weather_controller.dart';
 import 'state/relay_controller.dart';
 import 'state/sensors_controller.dart';
 import 'storage/ac_store.dart';
+import 'storage/appearance_store.dart';
 import 'storage/backup_files.dart';
 import 'storage/background_files.dart';
 import 'storage/file_sensor_store.dart';
@@ -63,6 +65,8 @@ Future<void> main() async {
     HttpWeatherLink(),
   );
   await vWeather.load();
+  final vLook = AppearanceController(FileAppearanceStore(File('${vFolder.path}/apparence.json')));
+  await vLook.load();
   // Sans autorisation ou sans lieu, rien ne part ; au plus une récupération par heure
   unawaited(vWeather.refresh(vHouse.house.location));
   final vNotifier = LocalAlertNotifier();
@@ -77,6 +81,7 @@ Future<void> main() async {
       houseController: vHouse,
       weatherController: vWeather,
       backupFiles: BackupFiles(vFolder),
+      appearance: vLook,
       onRestored: () async {
         await vController.load();
         await vAc.load();
@@ -85,6 +90,7 @@ Future<void> main() async {
         await vPellet.load();
         await vHouse.load();
         await vWeather.load();
+        await vLook.load();
       },
       notifier: vNotifier,
       background: ForegroundBackgroundControl(),

@@ -14,6 +14,7 @@ import '../logic/reading.dart';
 import '../state/ac_controller.dart';
 import '../state/plan_controller.dart';
 import '../logic/house.dart';
+import '../state/appearance_controller.dart';
 import '../state/house_controller.dart';
 import '../storage/backup_files.dart';
 import '../state/pellet_controller.dart';
@@ -24,6 +25,7 @@ import '../storage/background_files.dart';
 import 'ac_screen.dart';
 import 'live_screen.dart';
 import 'plan_screen.dart';
+import 'appearance_screen.dart';
 import 'backup_screen.dart';
 import 'house_screen.dart';
 import 'pellet_screen.dart';
@@ -70,6 +72,7 @@ class SensorsScreen extends StatelessWidget {
     this.houseController,
     this.weatherController,
     this.backupFiles,
+    this.appearance,
     this.onRestored,
   });
 
@@ -101,6 +104,7 @@ class SensorsScreen extends StatelessWidget {
 
   /// Sauvegarde et restauration ; le bouton n'apparaît que si les fichiers et la relecture sont fournis.
   final BackupFiles? backupFiles;
+  final AppearanceController? appearance;
   final Future<void> Function()? onRestored;
 
   Future<void> _import(BuildContext pContext) async {
@@ -167,6 +171,15 @@ class SensorsScreen extends StatelessWidget {
               onPressed: () => Navigator.push<void>(
                 pContext,
                 MaterialPageRoute(builder: (_) => RelayScreen(controller: relayController!)),
+              ),
+            ),
+          if (appearance != null)
+            IconButton(
+              tooltip: vTexts.appearanceOpen,
+              icon: const Icon(Icons.palette_outlined),
+              onPressed: () => Navigator.push<void>(
+                pContext,
+                MaterialPageRoute(builder: (_) => AppearanceScreen(controller: appearance!)),
               ),
             ),
           if (backupFiles != null && onRestored != null)
