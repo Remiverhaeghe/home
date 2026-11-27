@@ -4,11 +4,13 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../ble/tp357_link.dart';
 import '../l10n/gen/app_localizations.dart';
 import '../logic/climate_exchange.dart';
 import '../logic/climate_stats.dart';
 import '../logic/reading.dart';
 import '../state/sensors_controller.dart';
+import 'live_screen.dart';
 import 'theme.dart';
 
 /// Choix d'un fichier d'échange ; renvoie son texte, ou null si l'utilisateur renonce.
@@ -25,10 +27,18 @@ Future<String?> pickTextFile() async {
 
 /// Écran unique du premier lot : un capteur par carte, avec le dernier relevé.
 class SensorsScreen extends StatelessWidget {
-  const SensorsScreen({super.key, required this.controller, this.pickFile = pickTextFile});
+  const SensorsScreen({
+    super.key,
+    required this.controller,
+    this.pickFile = pickTextFile,
+    this.link,
+  });
 
   final SensorsController controller;
   final TextFilePicker pickFile;
+
+  /// Liaison Bluetooth ; créée à l'ouverture de l'écran des capteurs à portée si absente.
+  final Tp357Link? link;
 
   Future<void> _import(BuildContext pContext) async {
     final vText = await pickFile();
@@ -55,7 +65,21 @@ class SensorsScreen extends StatelessWidget {
     final vTexts = AppLocalizations.of(pContext);
 
     return Scaffold(
-      appBar: AppBar(title: Text(vTexts.sensorsTitle)),
+      appBar: AppBar(
+        title: Text(vTexts.sensorsTitle),
+        actions: [
+          IconButton(
+            tooltip: vTexts.liveOpen,
+            icon: const Icon(Icons.bluetooth_searching),
+            onPressed: () => Navigator.push<void>(
+              pContext,
+              MaterialPageRoute(
+                builder: (_) => LiveScreen(link: link ?? BleTp357Link(), controller: controller),
+              ),
+            ),
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _import(pContext),
         icon: const Icon(Icons.file_open_outlined),
