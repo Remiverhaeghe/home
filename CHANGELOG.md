@@ -6,7 +6,7 @@
 
 - Pilotage de la maison : température souhaitée par pièce et par profil (confort, nuit, éco, absent), planning de la semaine éditable par pièce, plan appliqué toutes les 5 minutes appli ouverte
 - Détection d'une fenêtre ouverte (chute de 1,5 °C en 10 minutes) : la clim se met au repos 30 minutes
-- Règles de seuil sur l'humidité et la température du capteur, avec un délai minimal entre deux commandes
+- Règles de seuil sur l'humidité et la température du capteur, avec un délai minimal entre deux commandes ; écran pour les ajouter et les supprimer (seuil contrôlé, nom proposé, consigne facultative)
 - Température extérieure lue sur la clim : pas de chauffage l'été, pas de froid l'hiver
 - Mode vacances : maison tenue hors gel pendant l'absence, remontée en température la veille du retour
 - Alertes de gel, d'humidité et de capteur muet
