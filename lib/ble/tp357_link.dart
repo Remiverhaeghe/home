@@ -55,9 +55,9 @@ class BleTp357Link implements Tp357Link {
     await _aBle.discoverAllServices(pDeviceId);
     for (final vService in await _aBle.getDiscoveredServices(pDeviceId)) {
       for (final vCharacteristic in vService.characteristics) {
-        if (vCharacteristic.characteristicId == vTarget) {
+        if (vCharacteristic.id == vTarget) {
           return QualifiedCharacteristic(
-            serviceId: vService.serviceId,
+            serviceId: vService.id,
             characteristicId: vTarget,
             deviceId: pDeviceId,
           );
