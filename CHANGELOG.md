@@ -4,6 +4,7 @@
 
 ### Ajouté
 
+- Affichage mural (bouton « Affichage mural » de la liste des capteurs) : paysage, plein écran, écran allumé, heure et date, une grosse tuile par pièce avec température, humidité, relevé ancien signalé, et boutons d'allumage et de consigne par pas de 0,5 °C ; les climatisations sont relues toutes les 30 secondes
 - Notifications d'alerte avec son et bannière (gel, humidité haute, capteur muet), une par alerte, appli ouverte ou fermée ; l'accord est demandé au démarrage
 - APK de publication signée à chaque construction, et préversion `build-N` publiée à chaque fusion sur main pour l'installer et la mettre à jour avec Obtainium (si les secrets de signature existent)
 - Export des capteurs en fichier d'échange (`home-climat.json`), à enregistrer depuis le téléphone puis à ouvrir dans Atelier, écran « Capteurs de la maison »

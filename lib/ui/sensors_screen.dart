@@ -20,6 +20,8 @@ import 'live_screen.dart';
 import 'plan_screen.dart';
 import 'sensor_detail_screen.dart';
 import 'theme.dart';
+import 'wall_display.dart';
+import 'wall_screen.dart';
 
 /// Choix d'un fichier d'échange ; renvoie son texte, ou null si l'utilisateur renonce.
 typedef TextFilePicker = Future<String?> Function();
@@ -52,6 +54,7 @@ class SensorsScreen extends StatelessWidget {
     this.planController,
     this.background,
     this.files,
+    this.wallDisplay,
   });
 
   final SensorsController controller;
@@ -70,6 +73,9 @@ class SensorsScreen extends StatelessWidget {
   /// Relevé en arrière-plan, transmis à l'écran des capteurs à portée.
   final BackgroundControl? background;
   final BackgroundFiles? files;
+
+  /// Plein écran, paysage et écran allumé de l'affichage mural ; ceux de l'appareil si absent.
+  final WallDisplay? wallDisplay;
 
   Future<void> _import(BuildContext pContext) async {
     final vText = await pickFile();
@@ -125,6 +131,21 @@ class SensorsScreen extends StatelessWidget {
                 pContext,
                 MaterialPageRoute(
                   builder: (_) => AcScreen(controller: acController!, sensors: controller),
+                ),
+              ),
+            ),
+          if (acController != null)
+            IconButton(
+              tooltip: vTexts.wallOpen,
+              icon: const Icon(Icons.tablet_android),
+              onPressed: () => Navigator.push<void>(
+                pContext,
+                MaterialPageRoute(
+                  builder: (_) => WallScreen(
+                    sensors: controller,
+                    ac: acController!,
+                    display: wallDisplay ?? PlatformWallDisplay(),
+                  ),
                 ),
               ),
             ),
