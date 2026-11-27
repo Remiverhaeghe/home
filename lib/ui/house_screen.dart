@@ -112,7 +112,10 @@ class _HouseScreenState extends State<HouseScreen> {
 
 /// Emplacement d'un capteur : pièce, niveau ou dehors.
 Future<SensorPlace?> editPlace(BuildContext pContext, SensorPlace pCurrent) =>
-    showDialog<SensorPlace>(context: pContext, builder: (_) => _PlaceDialog(current: pCurrent));
+    showDialog<SensorPlace>(
+      context: pContext,
+      builder: (_) => _PlaceDialog(current: pCurrent),
+    );
 
 class _PlaceDialog extends StatefulWidget {
   const _PlaceDialog({required this.current});

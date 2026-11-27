@@ -226,10 +226,7 @@ class SensorsScreen extends StatelessWidget {
         label: Text(vTexts.importFile),
       ),
       body: ListenableBuilder(
-        listenable: Listenable.merge([
-          controller,
-          if (houseController != null) houseController!,
-        ]),
+        listenable: Listenable.merge([controller, if (houseController != null) houseController!]),
         builder: (pContext, _) {
           final vSensors = controller.sensors;
           if (vSensors.isEmpty) {

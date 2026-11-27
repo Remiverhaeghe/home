@@ -133,8 +133,15 @@ House parseHouse(String pText) {
     final vLabel = vRawLocation['label'];
     final vLat = vRawLocation['latitude'];
     final vLon = vRawLocation['longitude'];
-    if (vLabel is String && vLat is num && vLon is num && isValidCoordinates(vLat.toDouble(), vLon.toDouble())) {
-      vLocation = HouseLocation(label: vLabel, latitude: vLat.toDouble(), longitude: vLon.toDouble());
+    if (vLabel is String &&
+        vLat is num &&
+        vLon is num &&
+        isValidCoordinates(vLat.toDouble(), vLon.toDouble())) {
+      vLocation = HouseLocation(
+        label: vLabel,
+        latitude: vLat.toDouble(),
+        longitude: vLon.toDouble(),
+      );
     }
   }
   final vPlaces = <String, SensorPlace>{};
