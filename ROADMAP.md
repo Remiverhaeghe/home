@@ -8,7 +8,8 @@ Tout doit marcher avec le téléphone seul : pas de NAS, pas de serveur, pas de 
 - [x] Lot 3 bis : climatisations Daikin BRP069, état, commandes, lien avec le capteur de la pièce
 - [x] Lot 4 : relevé des capteurs en arrière-plan, courbes par jour
 - [ ] Lot 4 ter : historique du capteur (dates décodées d'après les trames du diagnostic)
-- [ ] Lot 5 : automatismes (couper ou régler la clim selon l'humidité et la température du capteur), seuils par pièce et notification
+- [ ] Lot 5 : automatismes (couper ou régler la clim selon l'humidité et la température du capteur), seuils par pièce et notification, mode vacances (règles de confort suspendues, maison tenue hors gel)
+- [ ] Lot iOS : clés `Info.plist` (Bluetooth, réseau local, HTTP vers les clims), CI macOS sans signature, relevé limité à l'appli ouverte, installation sans compte payant
 - [ ] Lot 4 bis : modules BRP072C à clé (HTTPS), si c'est ton module
 
 ## Appareils à ajouter
