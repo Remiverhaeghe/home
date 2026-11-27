@@ -153,5 +153,7 @@
         "type": "String"
       }
     }
-  }
+  },
+  "cancel": "Annuler",
+  "save": "Enregistrer"
 }
