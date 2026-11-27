@@ -154,23 +154,26 @@ void main() {
   });
 
   group('alertes', () {
-    test('une alerte n\'est signalée qu\'une fois tant qu\'elle dure, puis de nouveau après', () async {
-      await start(salon(3));
+    test(
+      'une alerte n\'est signalée qu\'une fois tant qu\'elle dure, puis de nouveau après',
+      () async {
+        await start(salon(3));
 
-      final vFirst = await vPlan.tick(vNow);
-      final vSecond = await vPlan.tick(vNow);
+        final vFirst = await vPlan.tick(vNow);
+        final vSecond = await vPlan.tick(vNow);
 
-      expect(vFirst.single.kind, AlertKind.frost);
-      expect(vSecond, isEmpty);
+        expect(vFirst.single.kind, AlertKind.frost);
+        expect(vSecond, isEmpty);
 
-      final vWarm = vNow.add(const Duration(hours: 1));
-      await vSensors.addLiveReading('Salon', Reading(at: vWarm, temp: 19, humidity: 50));
-      await vPlan.tick(vWarm);
-      final vCold = vNow.add(const Duration(hours: 2));
-      await vSensors.addLiveReading('Salon', Reading(at: vCold, temp: 2, humidity: 50));
-      final vAgain = await vPlan.tick(vCold);
+        final vWarm = vNow.add(const Duration(hours: 1));
+        await vSensors.addLiveReading('Salon', Reading(at: vWarm, temp: 19, humidity: 50));
+        await vPlan.tick(vWarm);
+        final vCold = vNow.add(const Duration(hours: 2));
+        await vSensors.addLiveReading('Salon', Reading(at: vCold, temp: 2, humidity: 50));
+        final vAgain = await vPlan.tick(vCold);
 
-      expect(vAgain.single.kind, AlertKind.frost);
-    });
+        expect(vAgain.single.kind, AlertKind.frost);
+      },
+    );
   });
 }

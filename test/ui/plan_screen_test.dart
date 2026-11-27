@@ -34,7 +34,10 @@ void main() {
     );
     vSensors = SensorsController(
       MemorySensorStore([
-        Sensor(name: 'Salon', readings: [Reading(at: vNow, temp: pTemp, humidity: 50)]),
+        Sensor(
+          name: 'Salon',
+          readings: [Reading(at: vNow, temp: pTemp, humidity: 50)],
+        ),
       ]),
     );
     vStore = MemoryPlanStore();
