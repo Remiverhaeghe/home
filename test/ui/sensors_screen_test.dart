@@ -122,7 +122,10 @@ void main() {
 
       await pTester.pumpWidget(localized(SensorsScreen(controller: vController)));
 
-      expect(pTester.widget<IconButton>(find.widgetWithIcon(IconButton, Icons.ios_share)).onPressed, isNull);
+      expect(
+        pTester.widget<IconButton>(find.widgetWithIcon(IconButton, Icons.ios_share)).onPressed,
+        isNull,
+      );
     });
 
     testWidgets('le fichier d\'échange de tous les capteurs est proposé à l\'enregistrement', (
