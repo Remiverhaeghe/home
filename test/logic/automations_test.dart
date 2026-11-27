@@ -217,7 +217,7 @@ void main() {
     test('écriture puis lecture redonnent les mêmes règles', () {
       final vRules = [
         _rule(),
-        AutoRule(
+        const AutoRule(
           name: 'Chaud',
           acHost: '192.168.1.21',
           metric: AutoMetric.temperature,
