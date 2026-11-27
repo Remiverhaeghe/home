@@ -10,6 +10,7 @@ import '../logic/vacation.dart';
 import '../state/ac_controller.dart';
 import '../state/plan_controller.dart';
 import '../state/sensors_controller.dart';
+import 'rules_screen.dart';
 import 'schedule_screen.dart';
 
 /// Choix des jours d'absence : premier et dernier jour, null si l'utilisateur renonce.
@@ -135,6 +136,18 @@ class PlanScreen extends StatelessWidget {
                   ),
                 Text(vTexts.planScheduleNote, style: Theme.of(pContext).textTheme.bodySmall),
               ],
+              const SizedBox(height: 8),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: OutlinedButton.icon(
+                  onPressed: () => Navigator.push<void>(
+                    pContext,
+                    MaterialPageRoute(builder: (_) => RulesScreen(plan: plan, ac: ac)),
+                  ),
+                  icon: const Icon(Icons.rule),
+                  label: Text(vTexts.rulesOpen),
+                ),
+              ),
               const SizedBox(height: 24),
               Text(vTexts.planVacationTitle, style: Theme.of(pContext).textTheme.titleMedium),
               const SizedBox(height: 8),

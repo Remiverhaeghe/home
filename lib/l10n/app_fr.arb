@@ -307,5 +307,44 @@
         "type": "String"
       }
     }
+  },
+  "rulesOpen": "Règles de seuil",
+  "rulesTitle": "Règles de seuil",
+  "rulesEmpty": "Aucune règle. Exemple : au-dessus de 70 % d'humidité, couper la clim de la salle de bain.",
+  "rulesAdd": "Ajouter une règle",
+  "ruleHumidity": "Humidité",
+  "ruleTemperature": "Température",
+  "ruleAbove": "au-dessus de",
+  "ruleBelow": "sous",
+  "ruleActionOff": "Couper",
+  "ruleActionCool": "Froid",
+  "ruleActionHeat": "Chaud",
+  "ruleActionAuto": "Auto",
+  "ruleSummary": "{unit} : {metric} {side} {threshold} → {action}",
+  "ruleRemove": "Supprimer la règle",
+  "ruleNameLabel": "Nom (facultatif)",
+  "ruleThresholdLabel": "Seuil",
+  "ruleSetpointLabel": "Consigne en °C (facultatif)",
+  "ruleProblemThreshold": "Le seuil doit être un nombre.",
+  "ruleProblemRange": "Ce seuil est hors de ce que le capteur mesure (0 à 100 % d'humidité, -30 à 60 °C).",
+  "ruleProblemSetpoint": "La consigne doit être entre 10 et 32 °C.",
+  "@ruleSummary": {
+    "placeholders": {
+      "unit": {
+        "type": "String"
+      },
+      "metric": {
+        "type": "String"
+      },
+      "side": {
+        "type": "String"
+      },
+      "threshold": {
+        "type": "String"
+      },
+      "action": {
+        "type": "String"
+      }
+    }
   }
 }
