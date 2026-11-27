@@ -142,7 +142,9 @@ class PlanScreen extends StatelessWidget {
                 child: OutlinedButton.icon(
                   onPressed: () => Navigator.push<void>(
                     pContext,
-                    MaterialPageRoute(builder: (_) => RulesScreen(plan: plan, ac: ac)),
+                    MaterialPageRoute(
+                      builder: (_) => RulesScreen(plan: plan, ac: ac),
+                    ),
                   ),
                   icon: const Icon(Icons.rule),
                   label: Text(vTexts.rulesOpen),

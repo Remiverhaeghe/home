@@ -68,18 +68,12 @@ void main() {
     });
 
     test('hors de la plage de la clim ou illisible : refusée', () {
-      expect(
-        _build(pAction: AutoActionKind.cool, pSetpoint: '5').problem,
-        RuleProblem.badSetpoint,
-      );
+      expect(_build(pAction: AutoActionKind.cool, pSetpoint: '5').problem, RuleProblem.badSetpoint);
       expect(
         _build(pAction: AutoActionKind.cool, pSetpoint: '40').problem,
         RuleProblem.badSetpoint,
       );
-      expect(
-        _build(pAction: AutoActionKind.cool, pSetpoint: 'x').problem,
-        RuleProblem.badSetpoint,
-      );
+      expect(_build(pAction: AutoActionKind.cool, pSetpoint: 'x').problem, RuleProblem.badSetpoint);
     });
   });
 

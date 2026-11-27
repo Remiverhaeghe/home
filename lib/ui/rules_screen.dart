@@ -222,7 +222,10 @@ class _RuleDialogState extends State<_RuleDialog> {
             if (_problemText(vTexts) case final String vMessage)
               Padding(
                 padding: const EdgeInsets.only(top: 8),
-                child: Text(vMessage, style: TextStyle(color: Theme.of(pContext).colorScheme.error)),
+                child: Text(
+                  vMessage,
+                  style: TextStyle(color: Theme.of(pContext).colorScheme.error),
+                ),
               ),
           ],
         ),
