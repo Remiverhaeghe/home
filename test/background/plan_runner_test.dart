@@ -37,13 +37,18 @@ void main() {
       ),
     ]);
     await FilePlanStore(vFolder).save(
-      const PlanSettings(rooms: [Room(acHost: vHost, targets: RoomTargets(eco: 19))]),
+      const PlanSettings(
+        rooms: [Room(acHost: vHost, targets: RoomTargets(eco: 19))],
+      ),
     );
   });
   tearDown(() => vFolder.deleteSync(recursive: true));
 
   Future<void> coldReading() => vFiles.appendPending(
-    pendingLine('Salon', Reading(at: vNow.subtract(const Duration(minutes: 2)), temp: 15, humidity: 50)),
+    pendingLine(
+      'Salon',
+      Reading(at: vNow.subtract(const Duration(minutes: 2)), temp: 15, humidity: 50),
+    ),
   );
 
   test('appli fermée, le plan se sert des relevés en attente et commande la clim', () async {

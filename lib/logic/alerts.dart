@@ -57,8 +57,7 @@ String alertSummary(List<SensorAlert> pAlerts) => pAlerts
     .map(
       (pAlert) => switch (pAlert.kind) {
         AlertKind.frost => 'Gel : ${pAlert.sensorName} (${_decimal(pAlert.value ?? 0)} °C)',
-        AlertKind.humidity =>
-          'Humidité : ${pAlert.sensorName} (${(pAlert.value ?? 0).round()} %)',
+        AlertKind.humidity => 'Humidité : ${pAlert.sensorName} (${(pAlert.value ?? 0).round()} %)',
         AlertKind.silent => 'Capteur muet : ${pAlert.sensorName}',
       },
     )
