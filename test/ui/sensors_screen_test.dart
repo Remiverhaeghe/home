@@ -1,4 +1,9 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:home/logic/climate_exchange.dart';
 import 'package:home/logic/reading.dart';
 import 'package:home/state/sensors_controller.dart';
 import 'package:home/storage/sensor_store.dart';
@@ -109,5 +114,60 @@ void main() {
     await pTester.pumpAndSettle();
 
     expect(find.text('Recherche des capteurs TP357…'), findsOneWidget);
+  });
+
+  group('export pour Atelier', () {
+    testWidgets('le bouton est inactif sans capteur', (pTester) async {
+      final vController = SensorsController(MemorySensorStore());
+
+      await pTester.pumpWidget(localized(SensorsScreen(controller: vController)));
+
+      expect(
+        pTester.widget<IconButton>(find.widgetWithIcon(IconButton, Icons.ios_share)).onPressed,
+        isNull,
+      );
+    });
+
+    testWidgets('le fichier d\'échange de tous les capteurs est proposé à l\'enregistrement', (
+      pTester,
+    ) async {
+      final vController = SensorsController(MemorySensorStore([bathroomSensor()]));
+      await vController.load();
+      String? vName;
+      Uint8List? vBytes;
+
+      await pTester.pumpWidget(
+        localized(
+          SensorsScreen(
+            controller: vController,
+            saveFile: (pName, pBytes) async {
+              vName = pName;
+              vBytes = pBytes;
+
+              return true;
+            },
+          ),
+        ),
+      );
+      await pTester.tap(find.byTooltip('Exporter pour Atelier'));
+      await pTester.pump();
+
+      expect(vName, 'home-climat.json');
+      expect(parseExchange(utf8.decode(vBytes!)).single.name, 'Salle de bain');
+      expect(find.textContaining('Ouvre-le dans Atelier'), findsOneWidget);
+    });
+
+    testWidgets('renoncer à l\'enregistrement n\'affiche rien', (pTester) async {
+      final vController = SensorsController(MemorySensorStore([bathroomSensor()]));
+      await vController.load();
+
+      await pTester.pumpWidget(
+        localized(SensorsScreen(controller: vController, saveFile: (_, _) async => false)),
+      );
+      await pTester.tap(find.byTooltip('Exporter pour Atelier'));
+      await pTester.pump();
+
+      expect(find.byType(SnackBar), findsNothing);
+    });
   });
 }
