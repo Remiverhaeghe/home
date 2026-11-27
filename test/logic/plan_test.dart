@@ -32,7 +32,11 @@ Sensor _sensor(double pTemp, {double pHumidity = 50, Duration pAge = Duration.ze
 Sensor _falling(double pFrom, double pTo, {int pMinutes = 8}) => Sensor(
   name: 'TP357 (1A2B)',
   readings: [
-    Reading(at: _now.subtract(Duration(minutes: pMinutes)), temp: pFrom, humidity: 50),
+    Reading(
+      at: _now.subtract(Duration(minutes: pMinutes)),
+      temp: pFrom,
+      humidity: 50,
+    ),
     Reading(at: _now, temp: pTo, humidity: 50),
   ],
 );
@@ -123,9 +127,10 @@ void main() {
 
   group('température souhaitée', () {
     test('une pièce trop froide fait chauffer sa clim', () {
-      final vResult = _plan(pSensor: _sensor(15), pRooms: const [
-        Room(acHost: _host, targets: RoomTargets(eco: 20)),
-      ]);
+      final vResult = _plan(
+        pSensor: _sensor(15),
+        pRooms: const [Room(acHost: _host, targets: RoomTargets(eco: 20))],
+      );
 
       final vCommand = vResult.commands.single;
       expect(vCommand.reason, PlanReason.comfort);
@@ -259,8 +264,10 @@ void main() {
     test('hors période, les règles et la température souhaitée reprennent', () {
       final vOver = VacationMode(from: DateTime(2026, 11, 1), until: DateTime(2026, 11, 20));
 
-      expect(_plan(pSensor: _sensor(15), pVacation: vOver).commands.single.reason,
-          PlanReason.comfort);
+      expect(
+        _plan(pSensor: _sensor(15), pVacation: vOver).commands.single.reason,
+        PlanReason.comfort,
+      );
     });
   });
 

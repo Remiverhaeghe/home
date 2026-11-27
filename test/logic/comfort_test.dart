@@ -60,7 +60,10 @@ void main() {
       ];
 
       expect(profileAt(const [], DateTime(2026, 12, 7)), ProfileKind.eco);
-      expect(profileAt(const [], DateTime(2026, 12, 7), pFallback: ProfileKind.away), ProfileKind.away);
+      expect(
+        profileAt(const [], DateTime(2026, 12, 7), pFallback: ProfileKind.away),
+        ProfileKind.away,
+      );
       expect(profileAt(vOnlyMonday, DateTime(2026, 12, 9)), ProfileKind.comfort);
       expect(
         profileAt(const [
@@ -100,9 +103,15 @@ void main() {
 
     test('dehors chaud, pas de chauffage ; dehors froid, pas de froid', () {
       expect(comfortControl(pTarget: 21, pTemp: 19, pControl: _control(), pOutdoor: 20), isNull);
-      expect(comfortControl(pTarget: 21, pTemp: 19, pControl: _control(), pOutdoor: 19.9), isNotNull);
+      expect(
+        comfortControl(pTarget: 21, pTemp: 19, pControl: _control(), pOutdoor: 19.9),
+        isNotNull,
+      );
       expect(comfortControl(pTarget: 21, pTemp: 23, pControl: _control(), pOutdoor: 18), isNull);
-      expect(comfortControl(pTarget: 21, pTemp: 23, pControl: _control(), pOutdoor: 18.1), isNotNull);
+      expect(
+        comfortControl(pTarget: 21, pTemp: 23, pControl: _control(), pOutdoor: 18.1),
+        isNotNull,
+      );
     });
 
     test('la clim en chauffe s\'arrête une fois la température atteinte', () {

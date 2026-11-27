@@ -35,9 +35,7 @@ List<SensorAlert> evaluateAlerts(List<Sensor> pSensors, DateTime pNow) {
       continue;
     }
     if (vLast.temp < frostAlertTemp) {
-      rAlerts.add(
-        SensorAlert(sensorName: vSensor.name, kind: AlertKind.frost, value: vLast.temp),
-      );
+      rAlerts.add(SensorAlert(sensorName: vSensor.name, kind: AlertKind.frost, value: vLast.temp));
     }
     if (vLast.humidity > humidityAlertLevel) {
       rAlerts.add(

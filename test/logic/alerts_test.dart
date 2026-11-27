@@ -40,10 +40,10 @@ void main() {
     });
 
     test('un capteur muet alerte, sans mesure, et masque les autres alertes', () {
-      final vAlerts = evaluateAlerts(
-        [_sensor('A', 3, 90, pAge: const Duration(minutes: 31)), _sensor('B', 20, 50, pAge: silentAfter)],
-        _now,
-      );
+      final vAlerts = evaluateAlerts([
+        _sensor('A', 3, 90, pAge: const Duration(minutes: 31)),
+        _sensor('B', 20, 50, pAge: silentAfter),
+      ], _now);
 
       expect(vAlerts, hasLength(1));
       expect(vAlerts.single.kind, AlertKind.silent);

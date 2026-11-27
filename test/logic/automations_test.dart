@@ -18,11 +18,10 @@ DaikinControl _control({bool pPower = true, String pMode = '3', String pSetpoint
       fanDirection: '0',
     );
 
-Sensor _sensor({double pTemp = 21, double pHumidity = 50, Duration pAge = Duration.zero}) =>
-    Sensor(
-      name: 'TP357 (1A2B)',
-      readings: [Reading(at: _now.subtract(pAge), temp: pTemp, humidity: pHumidity)],
-    );
+Sensor _sensor({double pTemp = 21, double pHumidity = 50, Duration pAge = Duration.zero}) => Sensor(
+  name: 'TP357 (1A2B)',
+  readings: [Reading(at: _now.subtract(pAge), temp: pTemp, humidity: pHumidity)],
+);
 
 AutoRule _rule({
   AutoMetric pMetric = AutoMetric.humidity,

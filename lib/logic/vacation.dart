@@ -37,8 +37,7 @@ class VacationMode {
   bool isActiveAt(DateTime pNow) => !pNow.isBefore(from) && pNow.isBefore(until);
 
   /// Vrai pendant l'absence, une fois entré dans le délai de remontée avant le retour.
-  bool isPreheatingAt(DateTime pNow) =>
-      isActiveAt(pNow) && !pNow.isBefore(until.subtract(preheat));
+  bool isPreheatingAt(DateTime pNow) => isActiveAt(pNow) && !pNow.isBefore(until.subtract(preheat));
 }
 
 /// Version du fichier `vacances.json`.
