@@ -39,6 +39,8 @@ class RelayScreen extends StatelessWidget {
       }
     }
     final vResult = await controller.press(pButton);
+    // Le dernier message remplace le précédent au lieu de faire la queue derrière lui
+    vMessenger.hideCurrentSnackBar();
     vMessenger.showSnackBar(
       SnackBar(
         content: Text(switch (vResult) {
