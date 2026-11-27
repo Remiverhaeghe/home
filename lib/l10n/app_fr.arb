@@ -281,5 +281,31 @@
         "type": "String"
       }
     }
+  },
+  "scheduleOpen": "Planning",
+  "scheduleTitle": "Planning · {room}",
+  "scheduleEmpty": "Aucune plage : la pièce reste au profil Éco. Ajoute une plage pour fixer une heure de début, des jours et un profil.",
+  "scheduleAdd": "Ajouter une plage",
+  "scheduleEveryDay": "Tous les jours",
+  "scheduleSlot": "À {time} : {profile}",
+  "scheduleRemove": "Supprimer la plage",
+  "scheduleCancel": "Annuler",
+  "scheduleSave": "Enregistrer",
+  "@scheduleTitle": {
+    "placeholders": {
+      "room": {
+        "type": "String"
+      }
+    }
+  },
+  "@scheduleSlot": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "profile": {
+        "type": "String"
+      }
+    }
   }
 }

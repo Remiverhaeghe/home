@@ -10,6 +10,7 @@ import '../logic/vacation.dart';
 import '../state/ac_controller.dart';
 import '../state/plan_controller.dart';
 import '../state/sensors_controller.dart';
+import 'schedule_screen.dart';
 
 /// Choix des jours d'absence : premier et dernier jour, null si l'utilisateur renonce.
 typedef DateRangePicker = Future<DateTimeRange?> Function(BuildContext pContext);
@@ -71,7 +72,7 @@ class PlanScreen extends StatelessWidget {
       Room(
         acHost: pUnit.host,
         targets: _withTarget(vTargets, pProfile, vTargets.of(pProfile) + pDelta),
-        schedule: vRoom?.schedule.isNotEmpty ?? false ? vRoom!.schedule : defaultSchedule,
+        schedule: vRoom?.schedule ?? defaultSchedule,
       ),
     );
   }
@@ -125,6 +126,12 @@ class PlanScreen extends StatelessWidget {
                     number: vNumber,
                     profileName: (pProfile) => _profileName(vTexts, pProfile),
                     onChange: (pProfile, pDelta) => _change(vUnit, pProfile, pDelta),
+                    onSchedule: () => Navigator.push<void>(
+                      pContext,
+                      MaterialPageRoute(
+                        builder: (_) => ScheduleScreen(plan: plan, unit: vUnit),
+                      ),
+                    ),
                   ),
                 Text(vTexts.planScheduleNote, style: Theme.of(pContext).textTheme.bodySmall),
               ],
@@ -188,6 +195,7 @@ class _RoomCard extends StatelessWidget {
     required this.number,
     required this.profileName,
     required this.onChange,
+    required this.onSchedule,
   });
 
   final AcUnit unit;
@@ -196,6 +204,7 @@ class _RoomCard extends StatelessWidget {
   final NumberFormat number;
   final String Function(ProfileKind) profileName;
   final void Function(ProfileKind, double) onChange;
+  final VoidCallback onSchedule;
 
   @override
   Widget build(BuildContext pContext) => Card(
@@ -226,6 +235,14 @@ class _RoomCard extends StatelessWidget {
                 ),
               ],
             ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton.icon(
+              onPressed: onSchedule,
+              icon: const Icon(Icons.calendar_month),
+              label: Text(texts.scheduleOpen),
+            ),
+          ),
         ],
       ),
     ),
