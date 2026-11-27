@@ -163,13 +163,12 @@ void main() {
       expect(vFirst.single.kind, AlertKind.frost);
       expect(vSecond, isEmpty);
 
-      await vSensors.addLiveReading('Salon', Reading(at: vNow, temp: 19, humidity: 50));
-      await vPlan.tick(vNow);
-      await vSensors.addLiveReading(
-        'Salon',
-        Reading(at: vNow.add(const Duration(minutes: 20)), temp: 2, humidity: 50),
-      );
-      final vAgain = await vPlan.tick(vNow.add(const Duration(minutes: 21)));
+      final vWarm = vNow.add(const Duration(hours: 1));
+      await vSensors.addLiveReading('Salon', Reading(at: vWarm, temp: 19, humidity: 50));
+      await vPlan.tick(vWarm);
+      final vCold = vNow.add(const Duration(hours: 2));
+      await vSensors.addLiveReading('Salon', Reading(at: vCold, temp: 2, humidity: 50));
+      final vAgain = await vPlan.tick(vCold);
 
       expect(vAgain.single.kind, AlertKind.frost);
     });
