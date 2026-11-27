@@ -50,5 +50,154 @@
   },
   "humidityDry": "Air sec",
   "humidityGood": "Air confortable",
-  "humidityHumid": "Air humide"
+  "humidityHumid": "Air humide",
+  "liveOpen": "Capteurs à portée",
+  "liveTitle": "Capteurs à portée",
+  "liveSearching": "Recherche des capteurs TP357…",
+  "liveNone": "Aucun TP357 trouvé pour l'instant. Approche le téléphone du capteur.",
+  "liveFollow": "Suivre",
+  "liveFollowing": "Mesure en direct de {name}",
+  "liveWaiting": "En attente de la première mesure…",
+  "liveKeptNote": "Les mesures sont gardées sur le téléphone tant que cet écran reste ouvert.",
+  "bluetoothError": "Le Bluetooth ne répond pas. Vérifie qu'il est activé et que l'accord est donné.",
+  "diagnosticOpen": "Diagnostic de l'historique",
+  "diagnosticTitle": "Diagnostic de l'historique",
+  "diagnosticHelp": "Demande au capteur son historique et affiche les trames reçues, pour vérifier le décodage.",
+  "diagnosticDay": "24 heures",
+  "diagnosticWeek": "7 jours",
+  "diagnosticYear": "1 an",
+  "diagnosticAsk": "Demander l'historique",
+  "diagnosticCopy": "Copier les trames",
+  "diagnosticCopied": "Trames copiées",
+  "diagnosticCount": "{count, plural, =0{Aucune trame reçue} =1{1 trame reçue} other{{count} trames reçues}}",
+  "@liveFollowing": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@diagnosticCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "acOpen": "Climatisations",
+  "acTitle": "Climatisations",
+  "acEmpty": "Aucune climatisation pour l'instant.\nAjoute un module Daikin par son adresse, ou lance la recherche sur le réseau de la maison.",
+  "acAdd": "Ajouter par adresse",
+  "acSearch": "Chercher sur le réseau",
+  "acSearching": "Recherche des climatisations…",
+  "acFoundNone": "Aucune climatisation trouvée. Vérifie que le téléphone est sur le Wi-Fi de la maison.",
+  "acAddressLabel": "Adresse du module (192.168.x.x)",
+  "acNameLabel": "Nom (facultatif)",
+  "acAddProblemNotPrivate": "Cette adresse n'est pas sur un réseau de maison (10.x, 172.16 à 172.31, 192.168.x).",
+  "acAddProblemKnown": "Cette climatisation est déjà dans la liste.",
+  "acAddProblemUnreachable": "Le module ne répond pas. Vérifie l'adresse et que le téléphone est sur le Wi-Fi de la maison.",
+  "acUnreachable": "Injoignable",
+  "acRefresh": "Actualiser",
+  "acRemove": "Retirer",
+  "acRemoveConfirm": "Retirer « {name} » de la liste ?",
+  "acPower": "Marche",
+  "acModeAuto": "Auto",
+  "acModeCool": "Froid",
+  "acModeHeat": "Chaud",
+  "acModeDry": "Sec",
+  "acModeFan": "Ventilation",
+  "acSetpoint": "Consigne {value} °C",
+  "acNoSetpoint": "Pas de consigne dans ce mode",
+  "acIndoor": "Température mesurée {value} °C",
+  "acOutdoor": "Extérieur {value} °C",
+  "acCommandFailed": "La climatisation n'a pas pris la commande.",
+  "acSensor": "Capteur de la pièce",
+  "acSensorNone": "Aucun",
+  "acSensorReading": "{temp} °C et {humidity} % au capteur",
+  "acLower": "Baisser la consigne",
+  "acRaise": "Monter la consigne",
+  "@acRemoveConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@acSetpoint": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "@acIndoor": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "@acOutdoor": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "@acSensorReading": {
+    "placeholders": {
+      "temp": {
+        "type": "String"
+      },
+      "humidity": {
+        "type": "String"
+      }
+    }
+  },
+  "cancel": "Annuler",
+  "save": "Enregistrer",
+  "backgroundSwitch": "Relever en arrière-plan",
+  "backgroundHelp": "Toutes les 5 minutes, même appli fermée. Une notification reste affichée.",
+  "backgroundDenied": "Le service n'a pas pu démarrer : l'accord pour les notifications est nécessaire.",
+  "backgroundNotificationTitle": "Home relève les capteurs",
+  "backgroundNotificationText": "Une mesure toutes les 5 minutes",
+  "detailTitle": "{name}",
+  "@detailTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "detailChartTitle": "Moyennes par jour",
+  "detailNotEnough": "Pas encore de relevés sur plusieurs jours.",
+  "detailTemperature": "Température",
+  "detailHumidity": "Humidité",
+  "detailRange": "{min} à {max}",
+  "@detailRange": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "detailChartLabel": "Courbes de température et d'humidité sur {days} jours",
+  "@detailChartLabel": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "detailReadings": "{count, plural, =0{Aucun relevé} =1{1 relevé} other{{count} relevés}}",
+  "@detailReadings": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

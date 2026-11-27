@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
 
 import '../logic/climate_exchange.dart';
+import '../logic/pending_readings.dart';
 import '../logic/reading.dart';
+import '../logic/sensor_log.dart';
 import '../logic/sensor_merge.dart';
 import '../storage/sensor_store.dart';
 
@@ -42,5 +44,31 @@ class SensorsController extends ChangeNotifier {
     notifyListeners();
 
     return rCount;
+  }
+
+  /// Garde une mesure lue en direct sur un capteur, sauf si elle suit de trop près la précédente.
+  Future<void> addLiveReading(String pName, Reading pReading) async {
+    final vBefore = _sensors;
+    _sensors = withLiveReading(_sensors, pName, pReading);
+    if (identical(_sensors, vBefore)) {
+      return;
+    }
+    await _store.save(_sensors);
+    notifyListeners();
+  }
+
+  /// Range les relevés pris en arrière-plan. [pTake] les rend et les retire de leur fichier.
+  Future<void> syncPending(Future<List<PendingReading>> Function() pTake) async {
+    final vPending = await pTake();
+    if (vPending.isEmpty) {
+      return;
+    }
+    final vBefore = _sensors;
+    _sensors = applyPending(_sensors, vPending);
+    if (identical(_sensors, vBefore)) {
+      return;
+    }
+    await _store.save(_sensors);
+    notifyListeners();
   }
 }

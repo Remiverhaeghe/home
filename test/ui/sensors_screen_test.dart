@@ -4,6 +4,7 @@ import 'package:home/state/sensors_controller.dart';
 import 'package:home/storage/sensor_store.dart';
 import 'package:home/ui/sensors_screen.dart';
 
+import '../support/fake_link.dart';
 import '../support/localized.dart';
 import '../support/sensors.dart';
 
@@ -96,5 +97,17 @@ void main() {
 
     expect(vController.sensors, isEmpty);
     expect(find.textContaining('importé'), findsNothing);
+  });
+
+  testWidgets('le bouton Bluetooth ouvre les capteurs à portée', (pTester) async {
+    final vController = SensorsController(MemorySensorStore());
+    await pTester.pumpWidget(
+      localized(SensorsScreen(controller: vController, link: FakeTp357Link())),
+    );
+
+    await pTester.tap(find.byTooltip('Capteurs à portée'));
+    await pTester.pumpAndSettle();
+
+    expect(find.text('Recherche des capteurs TP357…'), findsOneWidget);
   });
 }
