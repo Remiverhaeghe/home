@@ -22,6 +22,8 @@ dependencies:
   permission_handler: ^13.0.2
   # Relevé des capteurs toutes les 5 minutes, appli fermée : service de premier plan Android
   flutter_foreground_task: ^11.0.3
+  # Alertes de gel, d'humidité et de capteur muet : notification avec son et bannière
+  flutter_local_notifications: ^20.1.0
 
 dev_dependencies:
   flutter_test:
