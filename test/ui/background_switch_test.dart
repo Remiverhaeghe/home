@@ -102,7 +102,9 @@ void main() {
   });
 
   testWidgets('un autre capteur suivi garde le service en marche', (pTester) async {
-    await pTester.runAsync(() => vFiles.saveFollowed([const FollowedDevice(id: 'BB', name: 'TP357 (3C4D)')]));
+    await pTester.runAsync(
+      () => vFiles.saveFollowed([const FollowedDevice(id: 'BB', name: 'TP357 (3C4D)')]),
+    );
     await follow(pTester);
     await pTester.tap(find.byType(Switch));
     await settle(pTester);
@@ -116,7 +118,9 @@ void main() {
   });
 
   testWidgets('un capteur déjà suivi s\'affiche activé', (pTester) async {
-    await pTester.runAsync(() => vFiles.saveFollowed([const FollowedDevice(id: 'AA', name: 'TP357 (1A2B)')]));
+    await pTester.runAsync(
+      () => vFiles.saveFollowed([const FollowedDevice(id: 'AA', name: 'TP357 (1A2B)')]),
+    );
 
     await follow(pTester);
 
