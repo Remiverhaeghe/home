@@ -5,7 +5,9 @@ import '../l10n/gen/app_localizations.dart';
 import '../logic/climate_stats.dart';
 import '../logic/reading.dart';
 import 'analysis_section.dart';
+import '../state/notes_controller.dart';
 import 'day_chart.dart';
+import 'notes_section.dart';
 import 'theme.dart';
 
 /// Détail d'un capteur : courbes des quatorze derniers jours, minimum et maximum.
@@ -16,6 +18,7 @@ class SensorDetailScreen extends StatefulWidget {
     this.onRename,
     this.onEditPlace,
     this.outdoor = const [],
+    this.notes,
   });
 
   final Sensor sensor;
@@ -28,6 +31,9 @@ class SensorDetailScreen extends StatefulWidget {
 
   /// Relevés extérieurs pour comparer ; vides sans météo.
   final List<Reading> outdoor;
+
+  /// Notes datées ; sans lui, la section n'apparaît pas.
+  final NotesController? notes;
 
   /// Nombre de jours montrés sur les courbes.
   static const shownDays = 14;
@@ -92,6 +98,7 @@ class _SensorDetailScreenState extends State<SensorDetailScreen> {
         children: [
           Text(vTexts.detailReadings(sensor.readings.length), style: vTheme.bodySmall),
           AnalysisSection(readings: sensor.readings, outdoor: widget.outdoor),
+          if (widget.notes != null) NotesSection(controller: widget.notes!, sensor: sensor),
           const SizedBox(height: 16),
           Text(vTexts.detailChartTitle, style: vTheme.titleMedium),
           const SizedBox(height: 12),

@@ -37,3 +37,5 @@ Home sur un écran dans la pièce principale, avec une vue 3D de la maison et la
 - [x] Sauvegarde et restauration de toute la configuration en un fichier
 - [x] Thème clair et taille du texte au choix
 - [ ] Unités (°F, 12 h) : les textes écrivent « °C » en dur dans une centaine d'endroits ; à faire d'un bloc avec un formateur unique
+- [x] Deux capteurs sur les mêmes courbes, notes datées avec effet avant et après
+- [ ] Bilan mensuel en PDF : demande une bibliothèque PDF à ajouter et à vérifier en CI

@@ -16,6 +16,7 @@ import 'state/ac_controller.dart';
 import 'state/plan_controller.dart';
 import 'state/house_controller.dart';
 import 'state/appearance_controller.dart';
+import 'state/notes_controller.dart';
 import 'state/pellet_controller.dart';
 import 'state/weather_controller.dart';
 import 'state/relay_controller.dart';
@@ -28,6 +29,7 @@ import 'storage/file_sensor_store.dart';
 import 'storage/house_store.dart';
 import 'storage/label_store.dart';
 import 'storage/plan_store.dart';
+import 'storage/notes_store.dart';
 import 'storage/pellet_store.dart';
 import 'storage/weather_store.dart';
 import 'storage/relay_store.dart';
@@ -67,6 +69,8 @@ Future<void> main() async {
   await vWeather.load();
   final vLook = AppearanceController(FileAppearanceStore(File('${vFolder.path}/apparence.json')));
   await vLook.load();
+  final vNotes = NotesController(FileNotesStore(File('${vFolder.path}/notes.json')));
+  await vNotes.load();
   // Sans autorisation ou sans lieu, rien ne part ; au plus une récupération par heure
   unawaited(vWeather.refresh(vHouse.house.location));
   final vNotifier = LocalAlertNotifier();
@@ -82,6 +86,7 @@ Future<void> main() async {
       weatherController: vWeather,
       backupFiles: BackupFiles(vFolder),
       appearance: vLook,
+      notes: vNotes,
       onRestored: () async {
         await vController.load();
         await vAc.load();
@@ -91,6 +96,7 @@ Future<void> main() async {
         await vHouse.load();
         await vWeather.load();
         await vLook.load();
+        await vNotes.load();
       },
       notifier: vNotifier,
       background: ForegroundBackgroundControl(),

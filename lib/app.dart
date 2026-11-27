@@ -11,6 +11,7 @@ import 'state/plan_controller.dart';
 import 'state/house_controller.dart';
 import 'logic/appearance.dart';
 import 'state/appearance_controller.dart';
+import 'state/notes_controller.dart';
 import 'state/pellet_controller.dart';
 import 'storage/backup_files.dart';
 import 'state/weather_controller.dart';
@@ -32,6 +33,7 @@ class HomeApp extends StatefulWidget {
     this.weatherController,
     this.backupFiles,
     this.appearance,
+    this.notes,
     this.onRestored,
     this.notifier,
     this.background,
@@ -51,6 +53,7 @@ class HomeApp extends StatefulWidget {
 
   /// Thème et taille du texte ; sans lui, thème sombre et texte normal.
   final AppearanceController? appearance;
+  final NotesController? notes;
   final Future<void> Function()? onRestored;
 
   /// Notifications d'alerte ; sans elles, les alertes restent visibles dans l'écran Pilotage.
@@ -155,6 +158,7 @@ class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
       weatherController: widget.weatherController,
       backupFiles: widget.backupFiles,
       appearance: widget.appearance,
+      notes: widget.notes,
       onRestored: widget.onRestored,
       background: widget.background,
       files: widget.files,
