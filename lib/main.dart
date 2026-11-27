@@ -8,10 +8,12 @@ import 'app.dart';
 import 'background/background_control.dart';
 import 'net/daikin_link.dart';
 import 'state/ac_controller.dart';
+import 'state/plan_controller.dart';
 import 'state/sensors_controller.dart';
 import 'storage/ac_store.dart';
 import 'storage/background_files.dart';
 import 'storage/file_sensor_store.dart';
+import 'storage/plan_store.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,10 +26,13 @@ Future<void> main() async {
     HttpDaikinLink(),
   );
   await vAc.load();
+  final vPlan = PlanController(FilePlanStore(vFolder), vAc, vController);
+  await vPlan.load();
   runApp(
     HomeApp(
       controller: vController,
       acController: vAc,
+      planController: vPlan,
       background: ForegroundBackgroundControl(),
       files: BackgroundFiles(vFolder),
     ),

@@ -140,4 +140,13 @@ void main() {
       expect(comfortControl(pTarget: 21, pTemp: 19, pControl: vHeating), isNull);
     });
   });
+
+  group('planning par défaut', () {
+    test('confort en journée, nuit le soir et la nuit', () {
+      expect(profileAt(defaultSchedule, DateTime(2026, 12, 2, 12)), ProfileKind.comfort);
+      expect(profileAt(defaultSchedule, DateTime(2026, 12, 2, 22, 30)), ProfileKind.night);
+      expect(profileAt(defaultSchedule, DateTime(2026, 12, 3, 6, 59)), ProfileKind.night);
+      expect(profileAt(defaultSchedule, DateTime(2026, 12, 3, 7)), ProfileKind.comfort);
+    });
+  });
 }

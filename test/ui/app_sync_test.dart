@@ -35,7 +35,7 @@ void main() {
   Future<void> real(WidgetTester pTester, Future<void> Function() pAction) async {
     await pAction();
     // Chaque étape réelle d'un fichier ne reprend qu'au rendu suivant : plusieurs tours.
-    for (var vRound = 0; vRound < 8; vRound++) {
+    for (var vRound = 0; vRound < 30; vRound++) {
       await pTester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 20)));
       await pTester.pump();
     }

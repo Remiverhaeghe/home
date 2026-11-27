@@ -29,7 +29,7 @@ void main() {
   /// Laisse les lectures et écritures de fichiers aller jusqu'au bout : chacune enchaîne
   /// plusieurs étapes réelles, et chaque étape ne reprend qu'au rendu suivant.
   Future<void> settle(WidgetTester pTester) async {
-    for (var vRound = 0; vRound < 8; vRound++) {
+    for (var vRound = 0; vRound < 30; vRound++) {
       await pTester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 20)));
       await pTester.pump();
     }

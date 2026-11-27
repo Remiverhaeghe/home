@@ -118,6 +118,10 @@ class AcController extends ChangeNotifier {
     return true;
   }
 
+  /// Envoie des réglages déjà calculés, par exemple ceux du plan. Renvoie false si l'appareil ne
+  /// répond pas ou refuse.
+  Future<bool> apply(String pHost, DaikinControl pControl) => _send(pHost, pControl);
+
   DaikinControl? _controlOf(String pHost) => _status[pHost]?.state?.control;
 
   Future<bool> setPower(String pHost, {required bool pOn}) =>
