@@ -411,5 +411,9 @@
   "pelletFailed": "L'ordre n'a pas abouti.",
   "pelletProblemName": "Donne un nom au poêle.",
   "pelletProblemHost": "Adresse refusée : Home n'envoie rien hors de la maison.",
-  "pelletProblemLogin": "Renseigne le numéro de série et le mot de passe."
+  "pelletProblemLogin": "Renseigne le numéro de série et le mot de passe.",
+  "detailRename": "Nommer le capteur",
+  "detailRenameHint": "Où se trouve-t-il ? (chambre, salon, cave…)",
+  "detailRenameDevice": "Appareil : {name}. Laisse vide pour reprendre son nom d'origine.",
+  "@detailRenameDevice": {"placeholders": {"name": {"type": "String"}}}
 }

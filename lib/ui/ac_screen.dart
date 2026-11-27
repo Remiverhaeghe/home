@@ -250,7 +250,7 @@ class AcCard extends StatelessWidget {
     final vStatus = controller.statusOf(unit.host);
     final vState = vStatus?.state;
     final vControl = vState?.control;
-    final vSensorNames = sensors.sensors.map((pSensor) => pSensor.name).toList();
+    final vSensorList = sensors.sensors;
     final vLinked = sensors.sensors.where((pSensor) => pSensor.name == unit.sensorName).firstOrNull;
     final vReading = vLinked?.last;
 
@@ -342,8 +342,8 @@ class AcCard extends StatelessWidget {
                   value: vLinked?.name,
                   items: [
                     DropdownMenuItem<String?>(value: null, child: Text(vTexts.acSensorNone)),
-                    for (final vName in vSensorNames)
-                      DropdownMenuItem<String?>(value: vName, child: Text(vName)),
+                    for (final vSensor in vSensorList)
+                      DropdownMenuItem<String?>(value: vSensor.name, child: Text(vSensor.title)),
                   ],
                   onChanged: (pName) => unawaited(controller.linkSensor(unit.host, pName)),
                 ),

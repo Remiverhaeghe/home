@@ -232,7 +232,12 @@ class SensorsScreen extends StatelessWidget {
               sensor: vSensors[pIndex],
               onTap: () => Navigator.push<void>(
                 pContext,
-                MaterialPageRoute(builder: (_) => SensorDetailScreen(sensor: vSensors[pIndex])),
+                MaterialPageRoute(
+                  builder: (_) => SensorDetailScreen(
+                    sensor: vSensors[pIndex],
+                    onRename: (pLabel) => controller.rename(vSensors[pIndex].name, pLabel),
+                  ),
+                ),
               ),
             ),
           );
@@ -270,7 +275,7 @@ class SensorCard extends StatelessWidget {
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(sensor.name, style: vTheme.titleMedium),
+                    Text(sensor.title, style: vTheme.titleMedium),
                     const SizedBox(height: 4),
                     Text(vTexts.noReading),
                   ],
@@ -278,7 +283,7 @@ class SensorCard extends StatelessWidget {
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(sensor.name, style: vTheme.titleMedium),
+                    Text(sensor.title, style: vTheme.titleMedium),
                     const SizedBox(height: 8),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.baseline,

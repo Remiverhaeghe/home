@@ -125,4 +125,31 @@ void main() {
     expect(find.byType(SensorDetailScreen), findsOneWidget);
     expect(find.text('Moyennes par jour'), findsOneWidget);
   });
+
+  testWidgets('le crayon donne un nom au capteur et le titre suit', (pTester) async {
+    String? vSaved;
+    await pTester.pumpWidget(
+      localized(
+        SensorDetailScreen(
+          sensor: const Sensor(name: 'Cave'),
+          onRename: (pLabel) async => vSaved = pLabel,
+        ),
+      ),
+    );
+
+    await pTester.tap(find.byTooltip('Nommer le capteur'));
+    await pTester.pumpAndSettle();
+    await pTester.enterText(find.byType(TextField), 'Cave à vin');
+    await pTester.tap(find.widgetWithText(FilledButton, 'Enregistrer'));
+    await pTester.pumpAndSettle();
+
+    expect(vSaved, 'Cave à vin');
+    expect(find.textContaining('Cave à vin'), findsOneWidget);
+  });
+
+  testWidgets('sans moyen de ranger le nom, pas de crayon', (pTester) async {
+    await pTester.pumpWidget(localized(const SensorDetailScreen(sensor: Sensor(name: 'Cave'))));
+
+    expect(find.byTooltip('Nommer le capteur'), findsNothing);
+  });
 }
