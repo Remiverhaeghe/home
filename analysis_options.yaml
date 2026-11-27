@@ -1,0 +1,17 @@
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+    - lib/l10n/gen/**
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    # Les journaux passent par dart:developer, jamais par print.
+    avoid_print: true
+    prefer_const_constructors: true
+    prefer_final_locals: true
+
+# Largeur des lignes de dart format, contrôlée par la CI
+formatter:
+  page_width: 100
