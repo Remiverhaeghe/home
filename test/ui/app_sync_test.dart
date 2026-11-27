@@ -30,32 +30,44 @@ void main() {
     ),
   );
 
-  Future<void> wait(WidgetTester pTester) async {
-    await pTester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 150)));
+  /// Lance [pAction] en vrai temps, pour que la lecture des fichiers aille jusqu'au bout.
+  Future<void> real(WidgetTester pTester, Future<void> Function() pAction) async {
+    await pTester.runAsync(() async {
+      await pAction();
+      await Future<void>.delayed(const Duration(milliseconds: 150));
+    });
     await pTester.pump();
   }
 
   testWidgets('à l\'ouverture, les relevés pris en arrière-plan sont rangés', (pTester) async {
     await addPending(pTester, 0);
 
-    await pTester.pumpWidget(HomeApp(controller: vController, files: vFiles));
-    await wait(pTester);
+    await real(
+      pTester,
+      () => pTester.pumpWidget(HomeApp(controller: vController, files: vFiles)),
+    );
 
     expect(vController.sensors.single.name, 'TP357 (1A2B)');
     expect(find.text('TP357 (1A2B)'), findsOneWidget);
   });
 
   testWidgets('au retour dans l\'appli, les nouveaux relevés sont rangés', (pTester) async {
-    await pTester.pumpWidget(HomeApp(controller: vController, files: vFiles));
-    await wait(pTester);
+    await real(
+      pTester,
+      () => pTester.pumpWidget(HomeApp(controller: vController, files: vFiles)),
+    );
     expect(vController.sensors, isEmpty);
 
     await addPending(pTester, 5);
-    pTester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
-    await wait(pTester);
+    await real(
+      pTester,
+      () async => pTester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused),
+    );
     expect(vController.sensors, isEmpty);
-    pTester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
-    await wait(pTester);
+    await real(
+      pTester,
+      () async => pTester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed),
+    );
 
     expect(vController.sensors.single.readings, hasLength(1));
   });

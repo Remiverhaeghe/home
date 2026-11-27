@@ -110,8 +110,7 @@ void main() {
   testWidgets('un capteur sans relevé n\'a pas de courbe', (pTester) async {
     await pTester.pumpWidget(localized(const SensorDetailScreen(sensor: Sensor(name: 'Cave'))));
 
-    expect(find.text('1 relevé'), findsNothing);
-    expect(find.text('0 relevés'), findsOneWidget);
+    expect(find.text('Aucun relevé'), findsOneWidget);
     expect(find.byType(DayChart), findsNothing);
   });
 

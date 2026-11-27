@@ -192,7 +192,7 @@
       }
     }
   },
-  "detailReadings": "{count, plural, =1{1 relevé} other{{count} relevés}}",
+  "detailReadings": "{count, plural, =0{Aucun relevé} =1{1 relevé} other{{count} relevés}}",
   "@detailReadings": {
     "placeholders": {
       "count": {

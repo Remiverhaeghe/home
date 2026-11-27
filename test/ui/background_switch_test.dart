@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:home/logic/pending_readings.dart';
 import 'package:home/state/sensors_controller.dart';
 import 'package:home/storage/background_files.dart';
 import 'package:home/storage/sensor_store.dart';
@@ -25,16 +27,21 @@ void main() {
   tearDown(() => vFolder.deleteSync(recursive: true));
 
   Future<void> follow(WidgetTester pTester, {bool pWithBackground = true}) async {
-    await pTester.pumpWidget(
-      localized(
-        LiveScreen(
-          link: vLink,
-          controller: SensorsController(MemorySensorStore()),
-          background: pWithBackground ? vBackground : null,
-          files: pWithBackground ? vFiles : null,
+    // Dans runAsync : la lecture du fichier des capteurs suivis se fait en vrai temps
+    await pTester.runAsync(() async {
+      await pTester.pumpWidget(
+        localized(
+          LiveScreen(
+            link: vLink,
+            controller: SensorsController(MemorySensorStore()),
+            background: pWithBackground ? vBackground : null,
+            files: pWithBackground ? vFiles : null,
+          ),
         ),
-      ),
-    );
+      );
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+    });
+    await pTester.pump();
     vLink.devices.add((id: 'AA', name: 'TP357 (1A2B)'));
     await pTester.pump();
     await pTester.tap(find.text('Suivre'));
@@ -126,8 +133,6 @@ void main() {
     await vFiles.saveFollowed([const FollowedDevice(id: 'AA', name: 'TP357 (1A2B)')]);
 
     await follow(pTester);
-    await pTester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 100)));
-    await pTester.pump();
 
     expect(pTester.widget<Switch>(find.byType(Switch)).value, isTrue);
   });
