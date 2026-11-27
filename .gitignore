@@ -14,8 +14,17 @@ coverage/
 # Textes générés par flutter gen-l10n
 lib/l10n/gen/
 
-# Android : recréé par « flutter create --platforms=android --org fr.remiverhaeghe --project-name home . »
-/android/
+# Android : build.gradle.kts et le manifeste sont versionnés, le reste est recréé par
+# « flutter create --platforms=android --org fr.remiverhaeghe --project-name home . »
+/android/*
+!/android/app/
+/android/app/*
+!/android/app/build.gradle.kts
+!/android/app/src/
+/android/app/src/*
+!/android/app/src/main/
+/android/app/src/main/*
+!/android/app/src/main/AndroidManifest.xml
 /ios/
 /web/
 /linux/

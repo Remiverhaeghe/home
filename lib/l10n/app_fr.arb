@@ -50,5 +50,38 @@
   },
   "humidityDry": "Air sec",
   "humidityGood": "Air confortable",
-  "humidityHumid": "Air humide"
+  "humidityHumid": "Air humide",
+  "liveOpen": "Capteurs à portée",
+  "liveTitle": "Capteurs à portée",
+  "liveSearching": "Recherche des capteurs TP357…",
+  "liveNone": "Aucun TP357 trouvé pour l'instant. Approche le téléphone du capteur.",
+  "liveFollow": "Suivre",
+  "liveFollowing": "Mesure en direct de {name}",
+  "liveWaiting": "En attente de la première mesure…",
+  "liveKeptNote": "Les mesures sont gardées sur le téléphone tant que cet écran reste ouvert.",
+  "bluetoothError": "Le Bluetooth ne répond pas. Vérifie qu'il est activé et que l'accord est donné.",
+  "diagnosticOpen": "Diagnostic de l'historique",
+  "diagnosticTitle": "Diagnostic de l'historique",
+  "diagnosticHelp": "Demande au capteur son historique et affiche les trames reçues, pour vérifier le décodage.",
+  "diagnosticDay": "24 heures",
+  "diagnosticWeek": "7 jours",
+  "diagnosticYear": "1 an",
+  "diagnosticAsk": "Demander l'historique",
+  "diagnosticCopy": "Copier les trames",
+  "diagnosticCopied": "Trames copiées",
+  "diagnosticCount": "{count, plural, =0{Aucune trame reçue} =1{1 trame reçue} other{{count} trames reçues}}",
+  "@liveFollowing": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@diagnosticCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

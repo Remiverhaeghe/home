@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:home/logic/climate_exchange.dart';
+import 'package:home/logic/reading.dart';
 import 'package:home/state/sensors_controller.dart';
 import 'package:home/storage/sensor_store.dart';
 
@@ -59,5 +60,40 @@ void main() {
     await vController.importText(exchangeSample);
 
     expect(vController.problem, isNull);
+  });
+
+  test('une mesure en direct est gardée, enregistrée et signalée', () async {
+    final vStore = MemorySensorStore();
+    final vController = SensorsController(vStore);
+    var vNotified = 0;
+    vController.addListener(() => vNotified++);
+
+    await vController.addLiveReading(
+      'TP357 (1A2B)',
+      Reading(at: DateTime(2026, 12, 1, 8), temp: 21.5, humidity: 48),
+    );
+
+    expect(vController.sensors.single.last!.temp, 21.5);
+    expect(vStore.saved.single.name, 'TP357 (1A2B)');
+    expect(vNotified, 1);
+  });
+
+  test('une mesure trop proche de la précédente n\'écrit rien', () async {
+    final vStore = MemorySensorStore();
+    final vController = SensorsController(vStore);
+    await vController.addLiveReading(
+      'Cave',
+      Reading(at: DateTime(2026, 12, 1, 8), temp: 12, humidity: 70),
+    );
+    var vNotified = 0;
+    vController.addListener(() => vNotified++);
+
+    await vController.addLiveReading(
+      'Cave',
+      Reading(at: DateTime(2026, 12, 1, 8, 0, 30), temp: 13, humidity: 71),
+    );
+
+    expect(vController.sensors.single.readings, hasLength(1));
+    expect(vNotified, 0);
   });
 }

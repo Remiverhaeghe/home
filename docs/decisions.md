@@ -12,6 +12,18 @@ Contexte : l'appli se regarde surtout le soir, sur un téléphone posé ou un é
 Décision : une palette ardoise unique, sans bascule clair/sombre.
 Écarté : suivre le réglage du téléphone, qui double les couleurs à entretenir pour un gain faible.
 
+## 2026-11-27 : le service Bluetooth du TP357 est lu sur le capteur
+
+Contexte : les outils libres qui parlent au TP357 donnent les caractéristiques (`…2b10`, `…2b11`) mais pas le service qui les contient.
+Décision : Home découvre les services du capteur et prend celui qui porte la caractéristique, au lieu d'écrire un identifiant de service deviné.
+Écarté : fixer un identifiant de service tiré d'un autre modèle ThermoPro, faux si le micrologiciel diffère.
+
+## 2026-11-27 : le lot 2 ne décode pas les dates de l'historique
+
+Contexte : les trames d'historique ne portent pas de date lisible dans les outils existants, et je n'ai pas le capteur sous la main pour trancher.
+Décision : le lot 2 lit seulement la mesure en direct et affiche les trames brutes de l'historique ; les dates se décodent au lot 3 avec une capture réelle.
+Écarté : deviner un pas de temps fixe, qui placerait des relevés faux dans les courbes.
+
 ## 2026-11-27 : aucune permission réseau
 
 Contexte : les relevés de la maison sont des données privées.
