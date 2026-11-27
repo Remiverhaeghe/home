@@ -30,12 +30,11 @@ void main() {
     ),
   );
 
-  /// Lance [pAction] en vrai temps, pour que la lecture des fichiers aille jusqu'au bout.
+  /// Lance [pAction], puis laisse la lecture réelle des fichiers aller jusqu'au bout.
+  /// Seule l'attente est en vrai temps : les rendus restent dans le temps du test.
   Future<void> real(WidgetTester pTester, Future<void> Function() pAction) async {
-    await pTester.runAsync(() async {
-      await pAction();
-      await Future<void>.delayed(const Duration(milliseconds: 150));
-    });
+    await pAction();
+    await pTester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 150)));
     await pTester.pump();
   }
 
