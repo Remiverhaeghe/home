@@ -31,6 +31,11 @@ class AcController extends ChangeNotifier {
 
   AcStatus? statusOf(String pHost) => _status[pHost];
 
+  /// Réglages lus de chaque climatisation déjà interrogée ; null quand elle n'a pas répondu.
+  Map<String, DaikinControl?> get controls => {
+    for (final vEntry in _status.entries) vEntry.key: vEntry.value.state?.control,
+  };
+
   /// Adresses des modules qui répondent sur le réseau de la maison.
   Stream<String> discover() => _link.discover();
 

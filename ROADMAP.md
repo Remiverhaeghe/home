@@ -29,6 +29,6 @@ Tout doit marcher avec le téléphone seul : pas de NAS, pas de serveur, pas de 
 
 Home sur un écran dans la pièce principale, avec une vue 3D de la maison et la gestion de tout.
 
-- [ ] Mode écran mural : paysage, plein écran, écran allumé, grosses commandes lisibles à deux mètres
+- [x] Mode écran mural : paysage, plein écran, écran allumé, grosses commandes lisibles à deux mètres
 - [ ] Vue 3D de la maison : plan repris d'Atelier, pièces colorées selon la température et l'humidité, toucher une pièce pour régler clim, fenêtres, poêle et prises
 - [ ] La tablette murale, toujours allumée, sert de centrale : relevés et automatismes tournent dessus, sans NAS

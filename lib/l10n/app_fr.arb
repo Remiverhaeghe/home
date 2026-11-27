@@ -348,5 +348,11 @@
     }
   },
   "exportFile": "Exporter pour Atelier",
+  "wallOpen": "Affichage mural",
+  "wallClose": "Quitter l'affichage mural",
+  "wallEmpty": "Rien à afficher : ajoute une climatisation ou importe un capteur.",
+  "wallStale": "Relevé de plus de 30 minutes",
+  "wallTurnOn": "Allumer",
+  "wallTurnOff": "Éteindre",
   "exportDone": "Fichier enregistré. Ouvre-le dans Atelier, écran « Capteurs de la maison »."
 }

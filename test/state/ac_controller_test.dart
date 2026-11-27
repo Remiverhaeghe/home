@@ -190,4 +190,23 @@ void main() {
       expect(vStore.saved, isEmpty);
     });
   });
+
+  group('réglages lus', () {
+    test('chaque clim lue donne ses réglages, une clim muette donne null', () async {
+      await vController.add(vHost);
+      vLink.unreachable.add(vHost);
+      await vController.refresh();
+
+      expect(vController.controls, {vHost: null});
+
+      vLink.unreachable.clear();
+      await vController.refresh();
+
+      expect(vController.controls[vHost]!.power, isTrue);
+    });
+
+    test('une clim pas encore lue est absente de la table', () {
+      expect(vController.controls, isEmpty);
+    });
+  });
 }
