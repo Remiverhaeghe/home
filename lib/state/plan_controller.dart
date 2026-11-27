@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import '../logic/alerts.dart';
 import '../logic/automations.dart';
+import '../logic/comfort.dart';
 import '../logic/daikin.dart';
 import '../logic/plan.dart';
 import '../logic/vacation.dart';
@@ -55,6 +56,15 @@ class PlanController extends ChangeNotifier {
       vacation: vacation,
     ),
   );
+
+  /// Remplace le planning d'une pièce, en gardant ses températures souhaitées.
+  Future<void> setSchedule(String pHost, List<ScheduleSlot> pSlots) {
+    final vRoom = roomOf(pHost);
+
+    return setRoom(
+      Room(acHost: pHost, targets: vRoom?.targets ?? const RoomTargets(), schedule: pSlots),
+    );
+  }
 
   Future<void> setRules(List<AutoRule> pRules) =>
       _save(PlanSettings(rooms: rooms, rules: pRules, vacation: vacation));

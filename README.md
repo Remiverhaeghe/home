@@ -11,6 +11,9 @@ Home sert de tableau de bord. Atelier, de son côté, s'en sert pour savoir quan
 - Courbes par jour et extrêmes sur les quatorze derniers jours, en touchant la carte d'un capteur.
 - Écran de diagnostic de l'historique du capteur, qui affiche les trames brutes pour vérifier leur décodage (voir [docs/tp357.md](docs/tp357.md)).
 - Climatisations Daikin à module BRP069 : état, marche/arrêt, mode (auto, froid, chaud), consigne, et lien avec le capteur de la même pièce (voir [docs/daikin.md](docs/daikin.md)).
+- Pilotage : une température souhaitée par pièce et par profil (confort, nuit, éco, absent), un planning de la semaine par pièce, la détection d'une fenêtre ouverte (la clim se met au repos), des règles de seuil sur l'humidité et la température, et la température extérieure lue sur la clim pour ne pas chauffer l'été ni refroidir l'hiver. Le plan s'applique toutes les 5 minutes appli ouverte.
+- Mode vacances : la maison est tenue hors gel pendant l'absence, puis remonte en température la veille du retour.
+- Alertes affichées pour le gel (sous 5 °C), l'humidité (au-dessus de 70 %) et un capteur muet depuis plus de 30 minutes.
 - Import d'un fichier d'échange JSON contenant plusieurs capteurs.
 - Une carte par capteur : température, humidité, point de rosée, niveau de l'air (sec sous 40 %, humide au-delà de 60 %) et date du dernier relevé.
 - Ré-importer un fichier ajoute les nouveaux relevés sans doubler les anciens.
@@ -43,12 +46,12 @@ La CI refuse une couverture de `lib/logic` sous 95 %.
 
 | Dossier | Rôle |
 |---|---|
-| `lib/logic/` | Règles en Dart pur : fichier d'échange, fusion des relevés, point de rosée, trames du TP357 |
+| `lib/logic/` | Règles en Dart pur : fichier d'échange, fusion des relevés, point de rosée, trames du TP357, plan de pilotage, règles, vacances, alertes |
 | `lib/background/` | Service Android de relevé des capteurs, et son point d'entrée |
 | `lib/ble/` | Liaison Bluetooth avec les capteurs, remplacée par une fausse dans les tests |
 | `lib/net/` | Liaison HTTP avec les climatisations, remplacée par une fausse dans les tests |
-| `lib/state/` | Capteurs affichés et import |
-| `lib/storage/` | Fichier `capteurs.json` sur le téléphone |
+| `lib/state/` | Capteurs, climatisations et pilotage (plan appliqué, alertes) |
+| `lib/storage/` | Fichiers sur le téléphone : `capteurs.json`, `climatisations.json`, `pieces.json`, `automatismes.json`, `vacances.json` |
 | `lib/ui/` | Thème sombre et écran des capteurs |
 | `lib/l10n/` | Textes de l'appli |
 

@@ -4,6 +4,13 @@
 
 ### Ajouté
 
+- Pilotage de la maison : température souhaitée par pièce et par profil (confort, nuit, éco, absent), planning de la semaine éditable par pièce, plan appliqué toutes les 5 minutes appli ouverte
+- Détection d'une fenêtre ouverte (chute de 1,5 °C en 10 minutes) : la clim se met au repos 30 minutes
+- Règles de seuil sur l'humidité et la température du capteur, avec un délai minimal entre deux commandes
+- Température extérieure lue sur la clim : pas de chauffage l'été, pas de froid l'hiver
+- Mode vacances : maison tenue hors gel pendant l'absence, remontée en température la veille du retour
+- Alertes de gel, d'humidité et de capteur muet
+- Pièces, règles et vacances gardées dans `pieces.json`, `automatismes.json` et `vacances.json`
 - Relevé des capteurs en arrière-plan toutes les 5 minutes (service de premier plan Android, connexion courte à chaque capteur suivi) ; les relevés passent par un fichier partagé et sont rangés dans l'appli à l'ouverture et au retour
 - Interrupteur « Relever en arrière-plan » sur chaque capteur trouvé, avec demande de l'accord pour les notifications
 - Détail d'un capteur : courbes de température et d'humidité par jour sur quatorze jours, minimum et maximum

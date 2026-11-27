@@ -61,6 +61,26 @@ void main() {
       expect(vStore.saved.rooms.single.targets.comfort, 23);
     });
 
+    test('le planning change sans toucher aux températures souhaitées', () async {
+      await vPlan.setRoom(const Room(acHost: vHost, targets: RoomTargets(comfort: 23)));
+
+      await vPlan.setSchedule(vHost, const [
+        ScheduleSlot(weekdays: {6, 7}, minute: 600, profile: ProfileKind.eco),
+      ]);
+
+      expect(vPlan.roomOf(vHost)?.targets.comfort, 23);
+      expect(vStore.saved.rooms.single.schedule.single.minute, 600);
+    });
+
+    test('un planning sur une pièce encore non réglée la crée', () async {
+      await vPlan.setSchedule(vHost, const [
+        ScheduleSlot(weekdays: {1}, minute: 420, profile: ProfileKind.comfort),
+      ]);
+
+      expect(vPlan.roomOf(vHost)?.targets.comfort, const RoomTargets().comfort);
+      expect(vPlan.roomOf(vHost)?.schedule, hasLength(1));
+    });
+
     test('les règles et les vacances s\'enregistrent et se retirent', () async {
       final vVacation = VacationMode(from: DateTime(2026, 12, 18), until: DateTime(2026, 12, 28));
       await vPlan.setRules(const [
