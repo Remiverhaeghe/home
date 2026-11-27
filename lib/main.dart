@@ -16,6 +16,7 @@ import 'state/sensors_controller.dart';
 import 'storage/ac_store.dart';
 import 'storage/background_files.dart';
 import 'storage/file_sensor_store.dart';
+import 'storage/label_store.dart';
 import 'storage/plan_store.dart';
 import 'storage/relay_store.dart';
 
@@ -23,7 +24,10 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   FlutterForegroundTask.initCommunicationPort();
   final vFolder = await getApplicationDocumentsDirectory();
-  final vController = SensorsController(FileSensorStore(File('${vFolder.path}/capteurs.json')));
+  final vController = SensorsController(
+    FileSensorStore(File('${vFolder.path}/capteurs.json')),
+    FileLabelStore(File('${vFolder.path}/noms-capteurs.json')),
+  );
   await vController.load();
   final vAc = AcController(
     FileAcStore(File('${vFolder.path}/climatisations.json')),

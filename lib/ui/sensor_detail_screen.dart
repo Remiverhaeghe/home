@@ -8,13 +8,60 @@ import 'day_chart.dart';
 import 'theme.dart';
 
 /// Détail d'un capteur : courbes des quatorze derniers jours, minimum et maximum.
-class SensorDetailScreen extends StatelessWidget {
-  const SensorDetailScreen({super.key, required this.sensor});
+class SensorDetailScreen extends StatefulWidget {
+  const SensorDetailScreen({super.key, required this.sensor, this.onRename});
 
   final Sensor sensor;
 
+  /// Range le nom donné au capteur ; sans lui, le nom ne se change pas ici.
+  final Future<void> Function(String pLabel)? onRename;
+
   /// Nombre de jours montrés sur les courbes.
   static const shownDays = 14;
+
+  @override
+  State<SensorDetailScreen> createState() => _SensorDetailScreenState();
+}
+
+class _SensorDetailScreenState extends State<SensorDetailScreen> {
+  late var _title = widget.sensor.title;
+
+  Sensor get sensor => widget.sensor;
+
+  Future<void> _rename() async {
+    final vTexts = AppLocalizations.of(context);
+    final vField = TextEditingController(text: _title == sensor.name ? '' : _title);
+    final vLabel = await showDialog<String>(
+      context: context,
+      builder: (pDialog) => AlertDialog(
+        title: Text(vTexts.detailRename),
+        content: TextField(
+          controller: vField,
+          autofocus: true,
+          decoration: InputDecoration(
+            hintText: vTexts.detailRenameHint,
+            helperText: vTexts.detailRenameDevice(sensor.name),
+            helperMaxLines: 2,
+          ),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(pDialog), child: Text(vTexts.cancel)),
+          FilledButton(
+            onPressed: () => Navigator.pop(pDialog, vField.text),
+            child: Text(vTexts.save),
+          ),
+        ],
+      ),
+    );
+    vField.dispose();
+    if (vLabel == null) {
+      return;
+    }
+    await widget.onRename?.call(vLabel);
+    if (mounted) {
+      setState(() => _title = vLabel.trim().isEmpty ? sensor.name : vLabel.trim());
+    }
+  }
 
   @override
   Widget build(BuildContext pContext) {
@@ -23,12 +70,23 @@ class SensorDetailScreen extends StatelessWidget {
     final vColors = HomeColors.of(pContext);
     final vNumber = NumberFormat('0.0', Localizations.localeOf(pContext).toString());
     final vAll = dailyAverages(sensor.readings);
-    final vDays = vAll.length > shownDays ? vAll.sublist(vAll.length - shownDays) : vAll;
+    final vDays = vAll.length > SensorDetailScreen.shownDays
+        ? vAll.sublist(vAll.length - SensorDetailScreen.shownDays) : vAll;
     final vTemps = vDays.map((pDay) => pDay.temp);
     final vHumidities = vDays.map((pDay) => pDay.humidity);
 
     return Scaffold(
-      appBar: AppBar(title: Text(vTexts.detailTitle(sensor.name))),
+      appBar: AppBar(
+        title: Text(vTexts.detailTitle(_title)),
+        actions: [
+          if (widget.onRename != null)
+            IconButton(
+              tooltip: vTexts.detailRename,
+              icon: const Icon(Icons.edit_outlined),
+              onPressed: _rename,
+            ),
+        ],
+      ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [

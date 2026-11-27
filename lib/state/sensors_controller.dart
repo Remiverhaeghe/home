@@ -5,23 +5,44 @@ import '../logic/pending_readings.dart';
 import '../logic/reading.dart';
 import '../logic/sensor_log.dart';
 import '../logic/sensor_merge.dart';
+import '../storage/label_store.dart';
 import '../storage/sensor_store.dart';
 
 /// Capteurs affichés par l'appli, et import d'un fichier d'échange.
 class SensorsController extends ChangeNotifier {
-  SensorsController(this._store);
+  SensorsController(this._store, [LabelStore? pLabels])
+    : _labelStore = pLabels ?? MemoryLabelStore();
 
   final SensorStore _store;
+  final LabelStore _labelStore;
+  Map<String, String> _labels = {};
   List<Sensor> _sensors = [];
   ExchangeProblem? _problem;
 
-  List<Sensor> get sensors => List.unmodifiable(_sensors);
+  /// Les capteurs avec le nom que l'utilisateur leur a donné.
+  List<Sensor> get sensors => List.unmodifiable([
+    for (final vSensor in _sensors) vSensor.withLabel(_labels[vSensor.name]),
+  ]);
+
+  /// Donne un nom à un capteur, par exemple l'endroit où il se trouve. Un nom vide le retire.
+  Future<void> rename(String pSensorName, String pLabel) async {
+    final vLabel = pLabel.trim();
+    _labels = {..._labels};
+    if (vLabel.isEmpty || vLabel == pSensorName) {
+      _labels.remove(pSensorName);
+    } else {
+      _labels[pSensorName] = vLabel;
+    }
+    await _labelStore.save(_labels);
+    notifyListeners();
+  }
 
   /// Dernier problème d'import, null si le dernier import s'est bien passé.
   ExchangeProblem? get problem => _problem;
 
   Future<void> load() async {
     _sensors = await _store.load();
+    _labels = await _labelStore.load();
     notifyListeners();
   }
 

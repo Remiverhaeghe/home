@@ -382,5 +382,9 @@
   "relayFailed": "Le boîtier n'a pas répondu.",
   "relayProblemName": "Donne un nom au bouton.",
   "relayProblemHost": "Adresse refusée : Home n'envoie rien hors de la maison.",
-  "exportDone": "Fichier enregistré. Ouvre-le dans Atelier, écran « Capteurs de la maison »."
+  "exportDone": "Fichier enregistré. Ouvre-le dans Atelier, écran « Capteurs de la maison ».",
+  "detailRename": "Nommer le capteur",
+  "detailRenameHint": "Où se trouve-t-il ? (chambre, salon, cave…)",
+  "detailRenameDevice": "Appareil : {name}. Laisse vide pour reprendre son nom d'origine.",
+  "@detailRenameDevice": {"placeholders": {"name": {"type": "String"}}}
 }
