@@ -50,14 +50,11 @@ void main() {
     });
 
     test('les relevés sont rangés dans l\'ordre du temps, au plus un par minute', () {
-      final vSensors = applyPending(
-        [],
-        [
-          PendingReading(sensor: 'A', reading: _at(DateTime(2026, 12, 1, 8, 10), 22)),
-          PendingReading(sensor: 'A', reading: _at(DateTime(2026, 12, 1, 8, 0), 20)),
-          PendingReading(sensor: 'A', reading: _at(DateTime(2026, 12, 1, 8, 0, 30), 99)),
-        ],
-      );
+      final vSensors = applyPending([], [
+        PendingReading(sensor: 'A', reading: _at(DateTime(2026, 12, 1, 8, 10), 22)),
+        PendingReading(sensor: 'A', reading: _at(DateTime(2026, 12, 1, 8, 0), 20)),
+        PendingReading(sensor: 'A', reading: _at(DateTime(2026, 12, 1, 8, 0, 30), 99)),
+      ]);
 
       expect(vSensors.single.readings.map((pR) => pR.temp), [20, 22]);
     });

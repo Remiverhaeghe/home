@@ -99,8 +99,10 @@ void main() {
   });
 
   group('relevés pris en arrière-plan', () {
-    PendingReading pending(String pSensor, DateTime pAt) =>
-        PendingReading(sensor: pSensor, reading: Reading(at: pAt, temp: 20, humidity: 55));
+    PendingReading pending(String pSensor, DateTime pAt) => PendingReading(
+      sensor: pSensor,
+      reading: Reading(at: pAt, temp: 20, humidity: 55),
+    );
 
     test('ils sont rangés, enregistrés et signalés', () async {
       final vStore = MemorySensorStore();
@@ -142,9 +144,7 @@ void main() {
       var vNotified = 0;
       vController.addListener(() => vNotified++);
 
-      await vController.syncPending(
-        () async => [pending('Cave', DateTime(2026, 12, 1, 8, 0, 20))],
-      );
+      await vController.syncPending(() async => [pending('Cave', DateTime(2026, 12, 1, 8, 0, 20))]);
 
       expect(vController.sensors.single.readings, hasLength(1));
       expect(vNotified, 0);

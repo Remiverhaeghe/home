@@ -15,7 +15,11 @@ Sensor _manyDays(int pDays) => Sensor(
   name: 'Salon',
   readings: [
     for (var vDay = 0; vDay < pDays; vDay++)
-      Reading(at: DateTime(2026, 11, 1 + vDay, 12), temp: 18 + vDay * 0.5, humidity: 40 + vDay.toDouble()),
+      Reading(
+        at: DateTime(2026, 11, 1 + vDay, 12),
+        temp: 18 + vDay * 0.5,
+        humidity: 40 + vDay.toDouble(),
+      ),
   ],
 );
 
@@ -69,13 +73,18 @@ void main() {
     });
   });
 
-  testWidgets('le détail montre les courbes, les extrêmes et le nombre de relevés', (pTester) async {
+  testWidgets('le détail montre les courbes, les extrêmes et le nombre de relevés', (
+    pTester,
+  ) async {
     await pTester.pumpWidget(localized(SensorDetailScreen(sensor: _manyDays(5))));
 
     expect(find.text('Salon'), findsOneWidget);
     expect(find.text('5 relevés'), findsOneWidget);
     expect(find.byType(DayChart), findsOneWidget);
-    expect(find.bySemanticsLabel('Courbes de température et d\'humidité sur 5 jours'), findsOneWidget);
+    expect(
+      find.bySemanticsLabel('Courbes de température et d\'humidité sur 5 jours'),
+      findsOneWidget,
+    );
     expect(find.text('18,0 °C à 20,0 °C'), findsOneWidget);
     expect(find.text('40,0 % à 44,0 %'), findsOneWidget);
   });
@@ -83,7 +92,10 @@ void main() {
   testWidgets('seuls les quatorze derniers jours sont montrés', (pTester) async {
     await pTester.pumpWidget(localized(SensorDetailScreen(sensor: _manyDays(20))));
 
-    expect(find.bySemanticsLabel('Courbes de température et d\'humidité sur 14 jours'), findsOneWidget);
+    expect(
+      find.bySemanticsLabel('Courbes de température et d\'humidité sur 14 jours'),
+      findsOneWidget,
+    );
     // Les extrêmes sont ceux des quatorze derniers jours (jours 6 à 19)
     expect(find.text('21,0 °C à 27,5 °C'), findsOneWidget);
   });

@@ -38,7 +38,11 @@ List<PendingReading> parsePending(String pText) {
     final vTemp = vData['temp'];
     final vHumidity = vData['humidity'];
     final vDate = vAt is String ? DateTime.tryParse(vAt) : null;
-    if (vSensor is String && vSensor.trim().isNotEmpty && vDate != null && vTemp is num && vHumidity is num) {
+    if (vSensor is String &&
+        vSensor.trim().isNotEmpty &&
+        vDate != null &&
+        vTemp is num &&
+        vHumidity is num) {
       rPending.add(
         PendingReading(
           sensor: vSensor,

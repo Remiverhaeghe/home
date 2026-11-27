@@ -183,7 +183,10 @@ class _AddDialogState extends State<_AddDialog> {
             keyboardType: TextInputType.number,
             decoration: InputDecoration(labelText: vTexts.acAddressLabel),
           ),
-          TextField(controller: _name, decoration: InputDecoration(labelText: vTexts.acNameLabel)),
+          TextField(
+            controller: _name,
+            decoration: InputDecoration(labelText: vTexts.acNameLabel),
+          ),
         ],
       ),
       actions: [

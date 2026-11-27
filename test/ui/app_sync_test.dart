@@ -23,7 +23,10 @@ void main() {
 
   Future<void> addPending(WidgetTester pTester, int pMinute) => pTester.runAsync(
     () => vFiles.appendPending(
-      pendingLine('TP357 (1A2B)', Reading(at: DateTime(2026, 12, 1, 8, pMinute), temp: 21, humidity: 50)),
+      pendingLine(
+        'TP357 (1A2B)',
+        Reading(at: DateTime(2026, 12, 1, 8, pMinute), temp: 21, humidity: 50),
+      ),
     ),
   );
 

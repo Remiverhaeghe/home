@@ -15,10 +15,8 @@ void main() {
   });
   tearDown(() => vFolder.deleteSync(recursive: true));
 
-  String line(String pSensor, int pMinute) => pendingLine(
-    pSensor,
-    Reading(at: DateTime(2026, 12, 1, 8, pMinute), temp: 21, humidity: 50),
-  );
+  String line(String pSensor, int pMinute) =>
+      pendingLine(pSensor, Reading(at: DateTime(2026, 12, 1, 8, pMinute), temp: 21, humidity: 50));
 
   test('sans fichier, aucun capteur suivi et aucun relevé en attente', () async {
     expect(await vFiles.loadFollowed(), isEmpty);
@@ -56,10 +54,9 @@ void main() {
 
   test('une dernière ligne coupée est ignorée, les autres sont gardées', () async {
     await vFiles.appendPending(line('A', 0));
-    await File('${vFolder.path}/releves_en_attente.jsonl').writeAsString(
-      '{"sensor": "A", "at": "2026-12-01T08:',
-      mode: FileMode.append,
-    );
+    await File(
+      '${vFolder.path}/releves_en_attente.jsonl',
+    ).writeAsString('{"sensor": "A", "at": "2026-12-01T08:', mode: FileMode.append);
 
     expect(await vFiles.takePending(), hasLength(1));
   });

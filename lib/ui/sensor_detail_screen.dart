@@ -47,8 +47,12 @@ class SensorDetailScreen extends StatelessWidget {
             ),
             Text(
               vTexts.detailRange(
-                vTexts.temperatureValue(vNumber.format(vTemps.reduce((pA, pB) => pA < pB ? pA : pB))),
-                vTexts.temperatureValue(vNumber.format(vTemps.reduce((pA, pB) => pA > pB ? pA : pB))),
+                vTexts.temperatureValue(
+                  vNumber.format(vTemps.reduce((pA, pB) => pA < pB ? pA : pB)),
+                ),
+                vTexts.temperatureValue(
+                  vNumber.format(vTemps.reduce((pA, pB) => pA > pB ? pA : pB)),
+                ),
               ),
             ),
             const SizedBox(height: 8),

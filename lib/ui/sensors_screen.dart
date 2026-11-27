@@ -168,52 +168,54 @@ class SensorCard extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: vLast == null
-            ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(sensor.name, style: vTheme.titleMedium),
-                  const SizedBox(height: 4),
-                  Text(vTexts.noReading),
-                ],
-              )
-            : Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(sensor.name, style: vTheme.titleMedium),
-                  const SizedBox(height: 8),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
-                    children: [
-                      Text(
-                        vTexts.temperatureValue(vNumber.format(vLast.temp)),
-                        style: vTheme.headlineMedium?.copyWith(color: vColors.temperature),
-                      ),
-                      const SizedBox(width: 20),
-                      Text(
-                        vTexts.humidityValue(vNumber.format(vLast.humidity)),
-                        style: vTheme.headlineMedium?.copyWith(color: vColors.humidity),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    _levelLabel(vTexts, humidityLevel(vLast.humidity)),
-                    style: TextStyle(
-                      color: humidityLevel(vLast.humidity) == HumidityLevel.good
-                          ? vColors.good
-                          : vColors.warning,
+          padding: const EdgeInsets.all(16),
+          child: vLast == null
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(sensor.name, style: vTheme.titleMedium),
+                    const SizedBox(height: 4),
+                    Text(vTexts.noReading),
+                  ],
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(sensor.name, style: vTheme.titleMedium),
+                    const SizedBox(height: 8),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      textBaseline: TextBaseline.alphabetic,
+                      children: [
+                        Text(
+                          vTexts.temperatureValue(vNumber.format(vLast.temp)),
+                          style: vTheme.headlineMedium?.copyWith(color: vColors.temperature),
+                        ),
+                        const SizedBox(width: 20),
+                        Text(
+                          vTexts.humidityValue(vNumber.format(vLast.humidity)),
+                          style: vTheme.headlineMedium?.copyWith(color: vColors.humidity),
+                        ),
+                      ],
                     ),
-                  ),
-                  Text(vTexts.dewPointValue(vNumber.format(dewPoint(vLast.temp, vLast.humidity)))),
-                  Text(
-                    vTexts.lastReading(DateFormat.yMMMd(vLocale).add_Hm().format(vLast.at)),
-                    style: vTheme.bodySmall,
-                  ),
-                ],
-              ),
+                    const SizedBox(height: 8),
+                    Text(
+                      _levelLabel(vTexts, humidityLevel(vLast.humidity)),
+                      style: TextStyle(
+                        color: humidityLevel(vLast.humidity) == HumidityLevel.good
+                            ? vColors.good
+                            : vColors.warning,
+                      ),
+                    ),
+                    Text(
+                      vTexts.dewPointValue(vNumber.format(dewPoint(vLast.temp, vLast.humidity))),
+                    ),
+                    Text(
+                      vTexts.lastReading(DateFormat.yMMMd(vLocale).add_Hm().format(vLast.at)),
+                      style: vTheme.bodySmall,
+                    ),
+                  ],
+                ),
         ),
       ),
     );
