@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../l10n/gen/app_localizations.dart';
-import '../logic/daikin.dart';
 import '../logic/wall_tiles.dart';
 import '../state/ac_controller.dart';
 import '../state/sensors_controller.dart';
@@ -166,7 +165,10 @@ class _WallTileCard extends StatelessWidget {
             if (vReading == null)
               Text(vTexts.noReading)
             else
-              Row(
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Row(
                 crossAxisAlignment: CrossAxisAlignment.baseline,
                 textBaseline: TextBaseline.alphabetic,
                 children: [
@@ -181,6 +183,7 @@ class _WallTileCard extends StatelessWidget {
                   ),
                 ],
               ),
+              ),
             if (tile.stale) Text(vTexts.wallStale, style: TextStyle(color: vColors.warning)),
             const Spacer(),
             switch (tile.ac) {
@@ -190,7 +193,11 @@ class _WallTileCard extends StatelessWidget {
                 vTexts.acUnreachable,
                 style: TextStyle(color: vColors.warning),
               ),
-              WallAc.ready => Row(
+              WallAc.ready => FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   FilledButton.tonalIcon(
                     style: FilledButton.styleFrom(minimumSize: const Size(0, 64)),
@@ -198,7 +205,7 @@ class _WallTileCard extends StatelessWidget {
                     label: Text(vControl!.power ? vTexts.wallTurnOff : vTexts.wallTurnOn),
                     onPressed: () => onPower(!vControl.power),
                   ),
-                  const Spacer(),
+                  const SizedBox(width: 16),
                   if (vSetpoint != null) ...[
                     IconButton.filledTonal(
                       tooltip: vTexts.acLower,
@@ -223,6 +230,7 @@ class _WallTileCard extends StatelessWidget {
                     ),
                   ],
                 ],
+              ),
               ),
             },
           ],
