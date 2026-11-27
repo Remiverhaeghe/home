@@ -4,6 +4,8 @@
          adresse qui n'est pas d'un réseau privé. Rien n'est envoyé sur Internet. -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" tools:node="remove" />
+    <!-- Android 17 : parler à un appareil du réseau de la maison demande cette autorisation. -->
+    <uses-permission android:name="android.permission.ACCESS_LOCAL_NETWORK" />
     <!-- Thermo-hygromètres en Bluetooth : recherche sans localisation sur Android 12 et plus,
          localisation demandée seulement par Android 11 et avant pour chercher un appareil. -->
     <uses-permission
