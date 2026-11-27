@@ -19,8 +19,8 @@ Tout doit marcher avec le téléphone seul : pas de NAS, pas de serveur, pas de 
 
 À chaque fois : un écran de commande, un état lu sur le réseau de la maison, et le lien avec la pièce.
 
-- [ ] Velux : par une passerelle KLF 200 (les télécommandes seules ne suffisent pas)
-- [ ] Porte de garage : relais Wi-Fi sur le contact sec du moteur, confirmation obligatoire à chaque commande
+- [x] Velux à radio simple : relais Wi-Fi en parallèle des contacts de la télécommande (une passerelle KLF 200 ne sert qu'aux modèles io-homecontrol)
+- [x] Porte de garage : relais Wi-Fi sur le contact sec du moteur, confirmation obligatoire à chaque commande (docs/relais.md)
 - [ ] Poêle à pellets Ecoforest : état et commande par le réseau de la maison, si le modèle a le module réseau
 - [ ] Prises de courant connectées : marche/arrêt et consommation, marque à choisir
 - [x] Export du fichier d'échange pour Atelier, enregistré depuis le téléphone
