@@ -1,0 +1,28 @@
+# Flutter et Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+coverage/
+*.iml
+.idea/
+.vscode/
+
+# Textes générés par flutter gen-l10n
+lib/l10n/gen/
+
+# Android : recréé par « flutter create --platforms=android --org fr.remiverhaeghe --project-name home . »
+/android/
+/ios/
+/web/
+/linux/
+/macos/
+/windows/
+
+# Clé de signature, jamais dans le dépôt
+*.jks
+*.keystore
+key.properties
