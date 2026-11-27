@@ -415,5 +415,21 @@
   "detailRename": "Nommer le capteur",
   "detailRenameHint": "Où se trouve-t-il ? (chambre, salon, cave…)",
   "detailRenameDevice": "Appareil : {name}. Laisse vide pour reprendre son nom d'origine.",
-  "@detailRenameDevice": {"placeholders": {"name": {"type": "String"}}}
+  "@detailRenameDevice": {"placeholders": {"name": {"type": "String"}}},
+  "analysisTitle": "Analyses des {days} derniers jours",
+  "@analysisTitle": {"placeholders": {"days": {"type": "int"}}},
+  "analysisComfort": "Confort : {comfort} h sur {total} h entre 18 et 24 °C et 40 et 60 % d'humidité ({percent} %)",
+  "@analysisComfort": {"placeholders": {"comfort": {"type": "String"}, "total": {"type": "String"}, "percent": {"type": "int"}}},
+  "analysisAbsolute": "Eau dans l'air au dernier relevé : {value} g/m³",
+  "@analysisAbsolute": {"placeholders": {"value": {"type": "String"}}},
+  "analysisMoldLow": "Moisissure : pas de période humide longue",
+  "analysisMoldWatch": "Moisissure à surveiller : jusqu'à {hours} h d'affilée à 70 % d'humidité ou plus",
+  "@analysisMoldWatch": {"placeholders": {"hours": {"type": "String"}}},
+  "analysisMoldHigh": "Risque de moisissure : jusqu'à {hours} h d'affilée à 70 % d'humidité ou plus, aérer et chauffer",
+  "@analysisMoldHigh": {"placeholders": {"hours": {"type": "String"}}},
+  "analysisNoAnomaly": "Aucune anomalie de mesure",
+  "analysisStuck": "Capteur figé depuis le {date} : mêmes valeurs pendant des heures, pile ou position à vérifier",
+  "@analysisStuck": {"placeholders": {"date": {"type": "String"}}},
+  "analysisJump": "Saut de valeur le {date} : variation trop brusque pour être réelle",
+  "@analysisJump": {"placeholders": {"date": {"type": "String"}}}
 }
