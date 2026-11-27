@@ -2,6 +2,10 @@
 
 ## Non publié
 
+### Corrigé
+
+- Climatisations et relais : sous Android 17, l'accès au réseau local est maintenant déclaré et demandé avant la première connexion ; sans lui, le système bloque les appareils de la maison
+
 ### Ajouté
 
 - Garage et Velux : boutons à relais Wi-Fi Shelly (Plus, Pro, 1, 2.5), un par commande, enregistrés dans `relais.json`. La porte de garage demande confirmation, un double appui en moins de 5 secondes est ignoré, les adresses hors du réseau de la maison sont refusées. Montage décrit dans `docs/relais.md`

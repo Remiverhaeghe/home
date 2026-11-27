@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import '../logic/daikin.dart';
+import 'local_network.dart';
 
 /// Liaison avec les climatisations ; remplacée par une fausse dans les tests.
 abstract interface class DaikinLink {
@@ -26,6 +27,9 @@ class HttpDaikinLink implements DaikinLink {
   Future<String> _get(String pHost, String pPath) async {
     if (!isPrivateAddress(pHost)) {
       throw const DaikinException('adresse hors du réseau de la maison');
+    }
+    if (!await requestLocalNetworkAccess()) {
+      throw const DaikinException('accès au réseau local refusé');
     }
     final vClient = HttpClient()..connectionTimeout = _timeout;
     try {
@@ -64,6 +68,9 @@ class HttpDaikinLink implements DaikinLink {
 
   @override
   Stream<String> discover() async* {
+    if (!await requestLocalNetworkAccess()) {
+      return;
+    }
     final vSocket = await RawDatagramSocket.bind(InternetAddress.anyIPv4, 0);
     vSocket.broadcastEnabled = true;
     vSocket.send(
