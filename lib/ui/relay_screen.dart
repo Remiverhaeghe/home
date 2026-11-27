@@ -132,10 +132,7 @@ class RelayScreen extends StatelessWidget {
                       Icon(iconOf(vButton.kind), size: 32),
                       const SizedBox(width: 16),
                       Expanded(
-                        child: Text(
-                          vButton.name,
-                          style: Theme.of(pContext).textTheme.titleMedium,
-                        ),
+                        child: Text(vButton.name, style: Theme.of(pContext).textTheme.titleMedium),
                       ),
                       IconButton(
                         tooltip: vTexts.relayRemove,

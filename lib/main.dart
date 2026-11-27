@@ -32,7 +32,10 @@ Future<void> main() async {
   await vAc.load();
   final vPlan = PlanController(FilePlanStore(vFolder), vAc, vController);
   await vPlan.load();
-  final vRelays = RelayController(FileRelayStore(File('${vFolder.path}/relais.json')), HttpRelayLink());
+  final vRelays = RelayController(
+    FileRelayStore(File('${vFolder.path}/relais.json')),
+    HttpRelayLink(),
+  );
   await vRelays.load();
   final vNotifier = LocalAlertNotifier();
   await vNotifier.requestPermission();

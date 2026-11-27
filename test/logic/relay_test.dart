@@ -8,10 +8,7 @@ void main() {
         const RelayButton(name: 'Garage', host: '192.168.1.40', channel: 1, pulseSeconds: 2),
       );
 
-      expect(
-        vUri.toString(),
-        'http://192.168.1.40/rpc/Switch.Set?id=1&on=true&toggle_after=2',
-      );
+      expect(vUri.toString(), 'http://192.168.1.40/rpc/Switch.Set?id=1&on=true&toggle_after=2');
     });
 
     test('Shelly 1 ou 2.5 : relais avec minuterie', () {
@@ -47,8 +44,14 @@ void main() {
   });
 
   test('seule la porte de garage demande confirmation', () {
-    expect(const RelayButton(name: 'G', host: 'h', kind: RelayKind.garage).needsConfirmation, isTrue);
-    expect(const RelayButton(name: 'V', host: 'h', kind: RelayKind.velux).needsConfirmation, isFalse);
+    expect(
+      const RelayButton(name: 'G', host: 'h', kind: RelayKind.garage).needsConfirmation,
+      isTrue,
+    );
+    expect(
+      const RelayButton(name: 'V', host: 'h', kind: RelayKind.velux).needsConfirmation,
+      isFalse,
+    );
     expect(const RelayButton(name: 'A', host: 'h').needsConfirmation, isFalse);
   });
 

@@ -52,11 +52,7 @@ Uri relayRequest(RelayButton pButton) {
       scheme: 'http',
       host: pButton.host,
       path: '/rpc/Switch.Set',
-      queryParameters: {
-        'id': '${pButton.channel}',
-        'on': 'true',
-        'toggle_after': '$vSeconds',
-      },
+      queryParameters: {'id': '${pButton.channel}', 'on': 'true', 'toggle_after': '$vSeconds'},
     ),
     RelayModel.shellyGen1 => Uri(
       scheme: 'http',
