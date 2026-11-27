@@ -3,7 +3,8 @@ import 'package:home/logic/compare.dart';
 import 'package:home/logic/reading.dart';
 
 List<Reading> _days(List<int> pDays, double pTemp, double pHumidity) => [
-  for (final vDay in pDays) Reading(at: DateTime(2026, 11, vDay, 12), temp: pTemp, humidity: pHumidity),
+  for (final vDay in pDays)
+    Reading(at: DateTime(2026, 11, vDay, 12), temp: pTemp, humidity: pHumidity),
 ];
 
 void main() {

@@ -33,10 +33,7 @@ void main() {
 
   testWidgets('sans jours communs, la comparaison le dit', (pTester) async {
     final vSensors = SensorsController(
-      MemorySensorStore([
-        Sensor(name: 'Salon', readings: _days(21)),
-        const Sensor(name: 'Cave'),
-      ]),
+      MemorySensorStore([Sensor(name: 'Salon', readings: _days(21)), const Sensor(name: 'Cave')]),
     );
     await vSensors.load();
 

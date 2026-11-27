@@ -134,7 +134,9 @@ class _NoteDialogState extends State<_NoteDialog> {
             OutlinedButton.icon(
               onPressed: _pickDay,
               icon: const Icon(Icons.event),
-              label: Text(DateFormat.yMMMd(Localizations.localeOf(pContext).toString()).format(_day)),
+              label: Text(
+                DateFormat.yMMMd(Localizations.localeOf(pContext).toString()).format(_day),
+              ),
             ),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,

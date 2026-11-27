@@ -29,7 +29,10 @@ void main() {
   test('un fichier abîmé ou une note illisible sont ignorés', () {
     expect(parseNotes('pas du json'), isEmpty);
     expect(parseNotes('{"version":2,"notes":[]}'), isEmpty);
-    expect(parseNotes('{"version":1,"notes":[1,{"at":"x","text":"a"},{"at":"2026-01-01","text":" "}]}'), isEmpty);
+    expect(
+      parseNotes('{"version":1,"notes":[1,{"at":"x","text":"a"},{"at":"2026-01-01","text":" "}]}'),
+      isEmpty,
+    );
   });
 
   test('avant et après se comparent sur deux semaines de chaque côté', () {

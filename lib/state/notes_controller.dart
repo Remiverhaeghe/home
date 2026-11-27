@@ -29,11 +29,7 @@ class NotesController extends ChangeNotifier {
       return false;
     }
     _notes = [
-      HouseNote(
-        at: DateTime(pDay.year, pDay.month, pDay.day),
-        text: pText.trim(),
-        sensor: pSensor,
-      ),
+      HouseNote(at: DateTime(pDay.year, pDay.month, pDay.day), text: pText.trim(), sensor: pSensor),
       ..._notes,
     ]..sort((pA, pB) => pB.at.compareTo(pA.at));
     await _store.save(_notes);
