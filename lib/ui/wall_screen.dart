@@ -169,20 +169,20 @@ class _WallTileCard extends StatelessWidget {
                 fit: BoxFit.scaleDown,
                 alignment: Alignment.centerLeft,
                 child: Row(
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
-                children: [
-                  Text(
-                    vTexts.temperatureValue(vNumber.format(vReading.temp)),
-                    style: vTheme.displayMedium?.copyWith(color: vColors.temperature),
-                  ),
-                  const SizedBox(width: 16),
-                  Text(
-                    vTexts.humidityValue(vNumber.format(vReading.humidity)),
-                    style: vTheme.headlineMedium?.copyWith(color: vColors.humidity),
-                  ),
-                ],
-              ),
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: [
+                    Text(
+                      vTexts.temperatureValue(vNumber.format(vReading.temp)),
+                      style: vTheme.displayMedium?.copyWith(color: vColors.temperature),
+                    ),
+                    const SizedBox(width: 16),
+                    Text(
+                      vTexts.humidityValue(vNumber.format(vReading.humidity)),
+                      style: vTheme.headlineMedium?.copyWith(color: vColors.humidity),
+                    ),
+                  ],
+                ),
               ),
             if (tile.stale) Text(vTexts.wallStale, style: TextStyle(color: vColors.warning)),
             const Spacer(),
@@ -197,40 +197,40 @@ class _WallTileCard extends StatelessWidget {
                 fit: BoxFit.scaleDown,
                 alignment: Alignment.centerLeft,
                 child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  FilledButton.tonalIcon(
-                    style: FilledButton.styleFrom(minimumSize: const Size(0, 64)),
-                    icon: const Icon(Icons.power_settings_new),
-                    label: Text(vControl!.power ? vTexts.wallTurnOff : vTexts.wallTurnOn),
-                    onPressed: () => onPower(!vControl.power),
-                  ),
-                  const SizedBox(width: 16),
-                  if (vSetpoint != null) ...[
-                    IconButton.filledTonal(
-                      tooltip: vTexts.acLower,
-                      iconSize: 32,
-                      constraints: const BoxConstraints.tightFor(width: 64, height: 64),
-                      icon: const Icon(Icons.remove),
-                      onPressed: () => onSetpoint(vSetpoint - 0.5),
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    FilledButton.tonalIcon(
+                      style: FilledButton.styleFrom(minimumSize: const Size(0, 64)),
+                      icon: const Icon(Icons.power_settings_new),
+                      label: Text(vControl!.power ? vTexts.wallTurnOff : vTexts.wallTurnOn),
+                      onPressed: () => onPower(!vControl.power),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Text(
-                        vTexts.temperatureValue(vNumber.format(vSetpoint)),
-                        style: vTheme.headlineSmall?.copyWith(color: vColors.temperature),
+                    const SizedBox(width: 16),
+                    if (vSetpoint != null) ...[
+                      IconButton.filledTonal(
+                        tooltip: vTexts.acLower,
+                        iconSize: 32,
+                        constraints: const BoxConstraints.tightFor(width: 64, height: 64),
+                        icon: const Icon(Icons.remove),
+                        onPressed: () => onSetpoint(vSetpoint - 0.5),
                       ),
-                    ),
-                    IconButton.filledTonal(
-                      tooltip: vTexts.acRaise,
-                      iconSize: 32,
-                      constraints: const BoxConstraints.tightFor(width: 64, height: 64),
-                      icon: const Icon(Icons.add),
-                      onPressed: () => onSetpoint(vSetpoint + 0.5),
-                    ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Text(
+                          vTexts.temperatureValue(vNumber.format(vSetpoint)),
+                          style: vTheme.headlineSmall?.copyWith(color: vColors.temperature),
+                        ),
+                      ),
+                      IconButton.filledTonal(
+                        tooltip: vTexts.acRaise,
+                        iconSize: 32,
+                        constraints: const BoxConstraints.tightFor(width: 64, height: 64),
+                        icon: const Icon(Icons.add),
+                        onPressed: () => onSetpoint(vSetpoint + 0.5),
+                      ),
+                    ],
                   ],
-                ],
-              ),
+                ),
               ),
             },
           ],
