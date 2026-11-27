@@ -16,7 +16,9 @@ List<Reading> _series(int pCount, double pTemp, double pHumidity) => [
 
 void main() {
   testWidgets('un capteur confortable et sec ne signale rien', (pTester) async {
-    await pTester.pumpWidget(localized(Scaffold(body: AnalysisSection(readings: _series(10, 21, 50)))));
+    await pTester.pumpWidget(
+      localized(Scaffold(body: AnalysisSection(readings: _series(10, 21, 50)))),
+    );
 
     expect(find.textContaining('Analyses des 30 derniers jours'), findsOneWidget);
     expect(find.textContaining('Confort : 9 h sur 9 h'), findsOneWidget);
@@ -26,14 +28,20 @@ void main() {
 
   testWidgets('une longue période humide est signalée', (pTester) async {
     await pTester.pumpWidget(
-      localized(Scaffold(body: SingleChildScrollView(child: AnalysisSection(readings: _series(60, 20, 80))))),
+      localized(
+        Scaffold(
+          body: SingleChildScrollView(child: AnalysisSection(readings: _series(60, 20, 80))),
+        ),
+      ),
     );
 
     expect(find.textContaining('Risque de moisissure'), findsOneWidget);
   });
 
   testWidgets('avec un seul relevé, la section est vide', (pTester) async {
-    await pTester.pumpWidget(localized(Scaffold(body: AnalysisSection(readings: _series(1, 20, 50)))));
+    await pTester.pumpWidget(
+      localized(Scaffold(body: AnalysisSection(readings: _series(1, 20, 50)))),
+    );
 
     expect(find.textContaining('Analyses'), findsNothing);
   });

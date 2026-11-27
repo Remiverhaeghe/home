@@ -45,9 +45,7 @@ class AnalysisSection extends StatelessWidget {
             (vComfort.share * 100).round(),
           ),
         ),
-        Text(
-          vTexts.analysisAbsolute(vNumber.format(absoluteHumidity(vLast.temp, vLast.humidity))),
-        ),
+        Text(vTexts.analysisAbsolute(vNumber.format(absoluteHumidity(vLast.temp, vLast.humidity)))),
         Text(switch (vMold.level) {
           MoldLevel.low => vTexts.analysisMoldLow,
           MoldLevel.watch => vTexts.analysisMoldWatch(vNumber.format(vMold.longestHours.round())),
