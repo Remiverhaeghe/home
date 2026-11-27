@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../l10n/gen/app_localizations.dart';
 import '../logic/climate_stats.dart';
 import '../logic/reading.dart';
+import 'analysis_section.dart';
 import 'day_chart.dart';
 import 'theme.dart';
 
@@ -81,6 +82,7 @@ class _SensorDetailScreenState extends State<SensorDetailScreen> {
         padding: const EdgeInsets.all(16),
         children: [
           Text(vTexts.detailReadings(sensor.readings.length), style: vTheme.bodySmall),
+          AnalysisSection(readings: sensor.readings),
           const SizedBox(height: 16),
           Text(vTexts.detailChartTitle, style: vTheme.titleMedium),
           const SizedBox(height: 12),
