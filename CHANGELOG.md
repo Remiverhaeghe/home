@@ -4,6 +4,7 @@
 
 ### Ajouté
 
+- APK de publication signée à chaque construction, et préversion `build-N` publiée à chaque fusion sur main pour l'installer et la mettre à jour avec Obtainium (si les secrets de signature existent)
 - Export des capteurs en fichier d'échange (`home-climat.json`), à enregistrer depuis le téléphone puis à ouvrir dans Atelier, écran « Capteurs de la maison »
 - Plan appliqué en arrière-plan, appli fermée : le service relève les capteurs puis commande les climatisations selon les profils, le planning, les règles et le mode vacances, à partir des relevés en attente
 - Alertes de gel, d'humidité et de capteur muet affichées dans la notification du service

@@ -20,6 +20,16 @@ Home sert de tableau de bord. Atelier, de son côté, s'en sert pour savoir quan
 
 La suite est dans [ROADMAP.md](ROADMAP.md).
 
+## Installer sur le téléphone
+
+Chaque fusion sur `main` publie l'APK dans une préversion `build-N` de [Releases](../../releases) (les trois dernières sont gardées). Le plus simple pour l'installer et la tenir à jour est [Obtainium](https://github.com/ImranR98/Obtainium), une appli Android gratuite qui suit les releases GitHub :
+
+1. Installer Obtainium depuis sa page GitHub ou depuis F-Droid.
+2. Dans Obtainium, « Ajouter une appli », coller `https://github.com/Remiverhaeghe/home`.
+3. Cocher « Inclure les préversions » puis « Ajouter ». Obtainium choisit l'APK du processeur du téléphone (arm64 pour un téléphone récent).
+
+La préversion n'est publiée que si les secrets de signature du dépôt existent (`ANDROID_KEYSTORE_BASE64`, `ANDROID_STORE_PASSWORD`, `ANDROID_KEY_PASSWORD`, `ANDROID_KEY_ALIAS`, les mêmes que ceux d'Atelier) : sans eux, chaque APK aurait une signature différente et ne remplacerait pas la précédente. Dans tous les cas, l'APK de chaque construction se télécharge depuis l'onglet Actions, artefact `home-apk`.
+
 ## Lancer
 
 Flutter et le SDK Android sont installés comme décrit dans le skill `flutter-mobile-remi`.
