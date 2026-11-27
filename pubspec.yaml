@@ -20,6 +20,8 @@ dependencies:
   # 5.6 et plus : compile contre le SDK Android 37 (voir compileSdk de l'appli)
   flutter_reactive_ble: ^5.6.0
   permission_handler: ^13.0.2
+  # Relevé des capteurs toutes les 5 minutes, appli fermée : service de premier plan Android
+  flutter_foreground_task: ^11.0.3
 
 dev_dependencies:
   flutter_test:

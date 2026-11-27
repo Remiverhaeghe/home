@@ -6,6 +6,25 @@ Tout doit marcher avec le téléphone seul : pas de NAS, pas de serveur, pas de 
 - [x] Lot 2 : lecture en direct du TP357 en Bluetooth, diagnostic des trames d'historique
 - [ ] Lot 3 : relevé de l'historique du capteur (dates décodées d'après les trames du diagnostic), puis courbes par jour
 - [x] Lot 3 bis : climatisations Daikin BRP069, état, commandes, lien avec le capteur de la pièce
-- [ ] Lot 4 : automatismes (couper ou régler la clim selon l'humidité et la température du capteur), seuils par pièce et notification
+- [x] Lot 4 : relevé des capteurs en arrière-plan, courbes par jour
+- [ ] Lot 4 ter : historique du capteur (dates décodées d'après les trames du diagnostic)
+- [ ] Lot 5 : automatismes (couper ou régler la clim selon l'humidité et la température du capteur), seuils par pièce et notification
 - [ ] Lot 4 bis : modules BRP072C à clé (HTTPS), si c'est ton module
-- [ ] Lot 5 : export du fichier d'échange pour Atelier, partagé depuis le téléphone
+
+## Appareils à ajouter
+
+À chaque fois : un écran de commande, un état lu sur le réseau de la maison, et le lien avec la pièce.
+
+- [ ] Velux : par une passerelle KLF 200 (les télécommandes seules ne suffisent pas)
+- [ ] Porte de garage : relais Wi-Fi sur le contact sec du moteur, confirmation obligatoire à chaque commande
+- [ ] Poêle à pellets Ecoforest : état et commande par le réseau de la maison, si le modèle a le module réseau
+- [ ] Prises de courant connectées : marche/arrêt et consommation, marque à choisir
+- [ ] Export du fichier d'échange pour Atelier, partagé depuis le téléphone
+
+## Écran mural
+
+Home sur un écran dans la pièce principale, avec une vue 3D de la maison et la gestion de tout.
+
+- [ ] Mode écran mural : paysage, plein écran, écran allumé, grosses commandes lisibles à deux mètres
+- [ ] Vue 3D de la maison : plan repris d'Atelier, pièces colorées selon la température et l'humidité, toucher une pièce pour régler clim, fenêtres, poêle et prises
+- [ ] La tablette murale, toujours allumée, sert de centrale : relevés et automatismes tournent dessus, sans NAS

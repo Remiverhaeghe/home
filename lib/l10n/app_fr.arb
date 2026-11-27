@@ -155,5 +155,49 @@
     }
   },
   "cancel": "Annuler",
-  "save": "Enregistrer"
+  "save": "Enregistrer",
+  "backgroundSwitch": "Relever en arrière-plan",
+  "backgroundHelp": "Toutes les 5 minutes, même appli fermée. Une notification reste affichée.",
+  "backgroundDenied": "Le service n'a pas pu démarrer : l'accord pour les notifications est nécessaire.",
+  "backgroundNotificationTitle": "Home relève les capteurs",
+  "backgroundNotificationText": "Une mesure toutes les 5 minutes",
+  "detailTitle": "{name}",
+  "@detailTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "detailChartTitle": "Moyennes par jour",
+  "detailNotEnough": "Pas encore de relevés sur plusieurs jours.",
+  "detailTemperature": "Température",
+  "detailHumidity": "Humidité",
+  "detailRange": "{min} à {max}",
+  "@detailRange": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "detailChartLabel": "Courbes de température et d'humidité sur {days} jours",
+  "@detailChartLabel": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "detailReadings": "{count, plural, =1{1 relevé} other{{count} relevés}}",
+  "@detailReadings": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

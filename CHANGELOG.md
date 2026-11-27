@@ -4,6 +4,9 @@
 
 ### Ajouté
 
+- Relevé des capteurs en arrière-plan toutes les 5 minutes (service de premier plan Android, connexion courte à chaque capteur suivi) ; les relevés passent par un fichier partagé et sont rangés dans l'appli à l'ouverture et au retour
+- Interrupteur « Relever en arrière-plan » sur chaque capteur trouvé, avec demande de l'accord pour les notifications
+- Détail d'un capteur : courbes de température et d'humidité par jour sur quatorze jours, minimum et maximum
 - Climatisations Daikin (modules BRP069) : ajout par adresse ou par recherche sur le réseau de la maison, état, marche/arrêt, mode auto, froid ou chaud, consigne au demi-degré
 - Lien entre une climatisation et le capteur de la même pièce : la dernière mesure du capteur s'affiche sur la carte
 - Permission réseau limitée au réseau local : le code refuse toute adresse qui n'est pas d'un réseau privé

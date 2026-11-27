@@ -12,6 +12,24 @@ Contexte : dans ces modes l'appareil n'a pas de consigne (`stemp` vaut `M` ou `-
 Décision : Home commande marche/arrêt, auto, froid, chaud et la consigne ; sec et ventilation s'affichent mais se règlent à la télécommande, jusqu'à vérification sur l'appareil.
 Écarté : envoyer `M` ou `--` en retour, au risque d'une réponse `PARAM NG` ou d'un réglage inattendu.
 
+## 2026-11-27 : le relevé en arrière-plan passe par un fichier
+
+Contexte : le service Android tourne dans un autre processus Dart que l'appli, sans mémoire partagée.
+Décision : le service ajoute des lignes à `releves_en_attente.jsonl` ; l'appli les reprend à l'ouverture et à chaque retour, et les range dans ses capteurs. Le fichier est renommé avant lecture pour ne rien perdre.
+Écarté : deux processus qui écrivent `capteurs.json`, avec le risque de s'écraser mutuellement.
+
+## 2026-11-27 : une connexion courte à chaque tour plutôt qu'une connexion permanente
+
+Contexte : le TP357 n'accepte qu'une connexion à la fois, et l'appli du fabricant en a besoin.
+Décision : toutes les 5 minutes, le service se connecte, attend la première mesure et se déconnecte.
+Écarté : rester connecté, qui use la pile et bloque l'appli ThermoPro.
+
+## 2026-11-27 : Home vise un écran mural qui fait office de centrale
+
+Contexte : pas de NAS, et le souhait d'un écran dans la pièce principale avec une vue 3D de la maison.
+Décision : une tablette toujours allumée fera tourner les relevés et les automatismes. Les autres téléphones montrent et commandent les mêmes appareils sur le réseau de la maison.
+À préciser : le matériel (tablette Android), et la façon dont les téléphones partagent l'état de la tablette, sans serveur.
+
 ## 2026-11-27 : un seul thème, sombre
 
 Contexte : l'appli se regarde surtout le soir, sur un téléphone posé ou un écran mural.

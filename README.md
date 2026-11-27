@@ -7,6 +7,8 @@ Home sert de tableau de bord. Atelier, de son côté, s'en sert pour savoir quan
 ## Ce que fait Home
 
 - Lecture en direct des thermo-hygromètres ThermoPro TP357 en Bluetooth : les mesures s'ajoutent aux relevés tant que l'écran « Capteurs à portée » est ouvert.
+- Relevé en arrière-plan : un service Android relève les capteurs suivis toutes les 5 minutes, appli fermée, avec une notification discrète.
+- Courbes par jour et extrêmes sur les quatorze derniers jours, en touchant la carte d'un capteur.
 - Écran de diagnostic de l'historique du capteur, qui affiche les trames brutes pour vérifier leur décodage (voir [docs/tp357.md](docs/tp357.md)).
 - Climatisations Daikin à module BRP069 : état, marche/arrêt, mode (auto, froid, chaud), consigne, et lien avec le capteur de la même pièce (voir [docs/daikin.md](docs/daikin.md)).
 - Import d'un fichier d'échange JSON contenant plusieurs capteurs.
@@ -42,6 +44,7 @@ La CI refuse une couverture de `lib/logic` sous 95 %.
 | Dossier | Rôle |
 |---|---|
 | `lib/logic/` | Règles en Dart pur : fichier d'échange, fusion des relevés, point de rosée, trames du TP357 |
+| `lib/background/` | Service Android de relevé des capteurs, et son point d'entrée |
 | `lib/ble/` | Liaison Bluetooth avec les capteurs, remplacée par une fausse dans les tests |
 | `lib/net/` | Liaison HTTP avec les climatisations, remplacée par une fausse dans les tests |
 | `lib/state/` | Capteurs affichés et import |
