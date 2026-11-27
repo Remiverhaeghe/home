@@ -1,0 +1,54 @@
+{
+  "@@locale": "fr",
+  "appTitle": "Home",
+  "sensorsTitle": "Capteurs de la maison",
+  "sensorsEmpty": "Aucun capteur pour l'instant.\nImporte un fichier d'échange pour voir la température et l'humidité de chaque pièce.",
+  "importFile": "Importer un fichier",
+  "importDone": "{count, plural, =0{Aucun capteur dans ce fichier} =1{1 capteur importé} other{{count} capteurs importés}}",
+  "@importDone": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importNotJson": "Ce fichier n'est pas un fichier d'échange JSON.",
+  "importWrongVersion": "Ce fichier d'échange n'est pas dans une version que Home sait lire.",
+  "importNoSensors": "Ce fichier ne contient pas de liste de capteurs.",
+  "noReading": "Aucun relevé",
+  "lastReading": "Relevé du {date}",
+  "@lastReading": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "temperatureValue": "{value} °C",
+  "@temperatureValue": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "humidityValue": "{value} %",
+  "@humidityValue": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "dewPointValue": "Point de rosée {value} °C",
+  "@dewPointValue": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "humidityDry": "Air sec",
+  "humidityGood": "Air confortable",
+  "humidityHumid": "Air humide"
+}

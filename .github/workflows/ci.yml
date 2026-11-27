@@ -1,0 +1,99 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Actions épinglées par empreinte de commit ; Dependabot propose les nouvelles versions.
+
+# Sur une branche, un nouveau commit (la mise en forme automatique par exemple) rend les
+# contrôles du précédent inutiles : ils sont arrêtés. Sur main, jamais.
+concurrency:
+  group: ci-${{ github.event_name == 'push' && github.sha || github.head_ref || github.ref_name }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' }}
+
+jobs:
+  analyse:
+    name: Analyse
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          channel: stable
+          flutter-version: 3.47.7
+          cache: true
+
+      - name: Installation des dépendances
+        run: flutter pub get
+
+      - name: Textes traduits
+        run: flutter gen-l10n
+
+      # Largeur des lignes fixée dans analysis_options.yaml ; en cas d'écart, le
+      # diff affiché donne la forme attendue.
+      - name: Vérification du formatage
+        run: |
+          dart format lib test
+          git diff --exit-code -- lib test
+
+      - name: Analyse du code
+        run: flutter analyze
+
+  tests:
+    name: Tests et couverture
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          channel: stable
+          flutter-version: 3.47.7
+          cache: true
+
+      - name: Installation des dépendances
+        run: |
+          flutter pub get
+          flutter gen-l10n
+
+      - name: Tests
+        run: flutter test --coverage
+
+      # Les règles (lib/logic) doivent être couvertes à 95 % au moins ; le seuil se relève
+      # avec le temps, il ne baisse jamais pour faire passer un commit.
+      - name: Couverture des règles
+        run: |
+          awk -v vMin=95 '
+            /^SF:/ { vKeep = (substr($0, 4) ~ /^lib\/logic\//) }
+            vKeep && /^DA:/ {
+              split(substr($0, 4), vPart, ",")
+              vFound++
+              if (vPart[2] > 0) vCovered++
+            }
+            END {
+              vPercent = vFound ? 100 * vCovered / vFound : 100
+              printf "Couverture de lib/logic : %.1f %% (%d lignes sur %d), minimum %d %%\n", vPercent, vCovered, vFound, vMin
+              exit (vPercent < vMin)
+            }' coverage/lcov.info
+
+  secrets:
+    name: Recherche de secrets
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
