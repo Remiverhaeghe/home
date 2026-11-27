@@ -29,15 +29,18 @@ void main() {
     expect(vController.stove?.name, 'Poêle');
   });
 
-  test('l\'enregistrement refuse un nom vide, une adresse publique et des identifiants vides', () async {
-    PelletStove make({String name = 'P', String host = '192.168.1.5', String serial = 's'}) =>
-        PelletStove(name: name, host: host, serial: serial, password: 'p');
+  test(
+    'l\'enregistrement refuse un nom vide, une adresse publique et des identifiants vides',
+    () async {
+      PelletStove make({String name = 'P', String host = '192.168.1.5', String serial = 's'}) =>
+          PelletStove(name: name, host: host, serial: serial, password: 'p');
 
-    expect(await vController.setup(make(name: ' ')), PelletSetupProblem.emptyName);
-    expect(await vController.setup(make(host: '8.8.8.8')), PelletSetupProblem.notPrivate);
-    expect(await vController.setup(make(serial: ' ')), PelletSetupProblem.noLogin);
-    expect(vStore.saved, same(_stove));
-  });
+      expect(await vController.setup(make(name: ' ')), PelletSetupProblem.emptyName);
+      expect(await vController.setup(make(host: '8.8.8.8')), PelletSetupProblem.notPrivate);
+      expect(await vController.setup(make(serial: ' ')), PelletSetupProblem.noLogin);
+      expect(vStore.saved, same(_stove));
+    },
+  );
 
   test('un poêle valide est rangé sans espaces superflus', () async {
     final vProblem = await vController.setup(

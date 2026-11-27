@@ -192,10 +192,7 @@ class _PelletScreenState extends State<PelletScreen> {
                   ),
                 ),
                 if (vState.powerLevel != null)
-                  ListTile(
-                    title: Text(vTexts.pelletLevel),
-                    subtitle: Text('${vState.powerLevel}'),
-                  ),
+                  ListTile(title: Text(vTexts.pelletLevel), subtitle: Text('${vState.powerLevel}')),
               ],
             ],
           );

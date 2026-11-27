@@ -71,9 +71,7 @@ void main() {
   test('l\'adresse du poêle est en HTTPS sur le port 8000, réseau privé seulement', () {
     expect(pelletUri(_stove).toString(), 'https://192.168.1.60:8000/recepcion_datos_4.cgi');
     expect(
-      () => pelletUri(
-        const PelletStove(name: 'x', host: '8.8.8.8', serial: 's', password: 'p'),
-      ),
+      () => pelletUri(const PelletStove(name: 'x', host: '8.8.8.8', serial: 's', password: 'p')),
       throwsFormatException,
     );
   });
