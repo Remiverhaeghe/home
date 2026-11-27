@@ -67,7 +67,10 @@ BackupParse parseBackup(String pText) {
   for (final vEntry in (vRoot['files'] as Map).entries) {
     final vName = vEntry.key;
     final vContent = vEntry.value;
-    if (vName is String && backupFileNames.contains(vName) && vContent is String && _isJson(vContent)) {
+    if (vName is String &&
+        backupFileNames.contains(vName) &&
+        vContent is String &&
+        _isJson(vContent)) {
       vFiles[vName] = vContent;
     }
   }

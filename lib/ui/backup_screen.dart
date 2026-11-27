@@ -53,15 +53,12 @@ class BackupScreen extends StatelessWidget {
     final vParsed = parseBackup(vText);
     final vBackup = vParsed.backup;
     if (vBackup == null) {
-      _say(
-        pContext,
-        switch (vParsed.problem!) {
-          BackupProblem.notJson => vTexts.backupNotJson,
-          BackupProblem.notBackup => vTexts.backupNotBackup,
-          BackupProblem.wrongVersion => vTexts.backupWrongVersion,
-          BackupProblem.empty => vTexts.backupEmpty,
-        },
-      );
+      _say(pContext, switch (vParsed.problem!) {
+        BackupProblem.notJson => vTexts.backupNotJson,
+        BackupProblem.notBackup => vTexts.backupNotBackup,
+        BackupProblem.wrongVersion => vTexts.backupWrongVersion,
+        BackupProblem.empty => vTexts.backupEmpty,
+      });
 
       return;
     }

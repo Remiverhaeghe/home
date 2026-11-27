@@ -29,7 +29,10 @@ void main() {
   });
 
   test('une autre version est refusée', () {
-    expect(parseBackup('{"app":"home","version":2,"files":{}}').problem, BackupProblem.wrongVersion);
+    expect(
+      parseBackup('{"app":"home","version":2,"files":{}}').problem,
+      BackupProblem.wrongVersion,
+    );
   });
 
   test('seuls les fichiers connus et lisibles sont gardés', () {
@@ -51,7 +54,11 @@ void main() {
   });
 
   test('une sauvegarde sans fichier utilisable est vide', () {
-    final vText = jsonEncode({'app': 'home', 'version': 1, 'files': {'x.json': '{}'}});
+    final vText = jsonEncode({
+      'app': 'home',
+      'version': 1,
+      'files': {'x.json': '{}'},
+    });
 
     expect(parseBackup(vText).problem, BackupProblem.empty);
   });
