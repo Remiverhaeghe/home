@@ -42,20 +42,14 @@ void main() {
   testWidgets('à l\'ouverture, les relevés pris en arrière-plan sont rangés', (pTester) async {
     await addPending(pTester, 0);
 
-    await real(
-      pTester,
-      () => pTester.pumpWidget(HomeApp(controller: vController, files: vFiles)),
-    );
+    await real(pTester, () => pTester.pumpWidget(HomeApp(controller: vController, files: vFiles)));
 
     expect(vController.sensors.single.name, 'TP357 (1A2B)');
     expect(find.text('TP357 (1A2B)'), findsOneWidget);
   });
 
   testWidgets('au retour dans l\'appli, les nouveaux relevés sont rangés', (pTester) async {
-    await real(
-      pTester,
-      () => pTester.pumpWidget(HomeApp(controller: vController, files: vFiles)),
-    );
+    await real(pTester, () => pTester.pumpWidget(HomeApp(controller: vController, files: vFiles)));
     expect(vController.sensors, isEmpty);
 
     await addPending(pTester, 5);
