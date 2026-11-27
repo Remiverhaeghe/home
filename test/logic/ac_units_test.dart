@@ -18,7 +18,10 @@ void main() {
   });
 
   test('une climatisation sans capteur n\'écrit pas de capteur', () {
-    expect(acUnitsJson([const AcUnit(name: 'Salon', host: '192.168.1.20')]).contains('sensor'), isFalse);
+    expect(
+      acUnitsJson([const AcUnit(name: 'Salon', host: '192.168.1.20')]).contains('sensor'),
+      isFalse,
+    );
   });
 
   test('un texte abîmé, une autre version ou une autre forme donnent une liste vide', () {

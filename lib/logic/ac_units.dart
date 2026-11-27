@@ -9,8 +9,7 @@ class AcUnit {
   final String host;
   final String? sensorName;
 
-  AcUnit withSensor(String? pSensorName) =>
-      AcUnit(name: name, host: host, sensorName: pSensorName);
+  AcUnit withSensor(String? pSensorName) => AcUnit(name: name, host: host, sensorName: pSensorName);
 }
 
 /// Version du fichier `climatisations.json`.
@@ -38,7 +37,9 @@ List<AcUnit> parseAcUnits(String pJson) {
       final vHost = vEntry['host'];
       final vSensor = vEntry['sensor'];
       if (vName is String && vName.trim().isNotEmpty && vHost is String && vHost.isNotEmpty) {
-        rUnits.add(AcUnit(name: vName, host: vHost, sensorName: vSensor is String ? vSensor : null));
+        rUnits.add(
+          AcUnit(name: vName, host: vHost, sensorName: vSensor is String ? vSensor : null),
+        );
       }
     }
   }

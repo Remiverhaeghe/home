@@ -63,7 +63,10 @@ class _AcScreenState extends State<AcScreen> {
               keyboardType: TextInputType.number,
               decoration: InputDecoration(labelText: vTexts.acAddressLabel),
             ),
-            TextField(controller: vName, decoration: InputDecoration(labelText: vTexts.acNameLabel)),
+            TextField(
+              controller: vName,
+              decoration: InputDecoration(labelText: vTexts.acNameLabel),
+            ),
           ],
         ),
         actions: [
@@ -87,7 +90,9 @@ class _AcScreenState extends State<AcScreen> {
     final vKnown = widget.controller.units.map((pUnit) => pUnit.host).toSet();
     List<String> vFound;
     try {
-      vFound = (await widget.controller.discover().toList()).where((pHost) => !vKnown.contains(pHost)).toList();
+      vFound = (await widget.controller.discover().toList())
+          .where((pHost) => !vKnown.contains(pHost))
+          .toList();
     } on Object {
       vFound = [];
     }
@@ -183,9 +188,7 @@ class AcCard extends StatelessWidget {
     final vTexts = AppLocalizations.of(pContext);
     final vOk = await pSend();
     if (!vOk && pContext.mounted) {
-      ScaffoldMessenger.of(
-        pContext,
-      ).showSnackBar(SnackBar(content: Text(vTexts.acCommandFailed)));
+      ScaffoldMessenger.of(pContext).showSnackBar(SnackBar(content: Text(vTexts.acCommandFailed)));
     }
   }
 
@@ -324,7 +327,10 @@ class AcCard extends StatelessWidget {
             ),
             if (vReading != null)
               Text(
-                vTexts.acSensorReading(vNumber.format(vReading.temp), vNumber.format(vReading.humidity)),
+                vTexts.acSensorReading(
+                  vNumber.format(vReading.temp),
+                  vNumber.format(vReading.humidity),
+                ),
                 style: vTheme.bodySmall,
               ),
           ],

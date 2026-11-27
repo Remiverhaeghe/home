@@ -37,16 +37,19 @@ void main() {
       expect(vController.units.single.name, 'Séjour');
     });
 
-    test('un nom vide laisse le nom du module, et sans nom du tout l\'adresse sert de nom', () async {
-      await vController.add(vHost, pName: '  ');
-      expect(vController.units.single.name, 'Salon');
+    test(
+      'un nom vide laisse le nom du module, et sans nom du tout l\'adresse sert de nom',
+      () async {
+        await vController.add(vHost, pName: '  ');
+        expect(vController.units.single.name, 'Salon');
 
-      vLink
-        ..names['192.168.1.21'] = ''
-        ..states['192.168.1.21'] = FakeDaikinLink.coolingAt22();
-      await vController.add('192.168.1.21');
-      expect(vController.units.last.name, '192.168.1.21');
-    });
+        vLink
+          ..names['192.168.1.21'] = ''
+          ..states['192.168.1.21'] = FakeDaikinLink.coolingAt22();
+        await vController.add('192.168.1.21');
+        expect(vController.units.last.name, '192.168.1.21');
+      },
+    );
 
     test('une adresse d\'Internet est refusée sans appeler le module', () async {
       vLink.names['8.8.8.8'] = 'Intrus';

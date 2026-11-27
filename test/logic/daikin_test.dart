@@ -1,8 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:home/logic/daikin.dart';
 
-const _control =
-    'ret=OK,pow=1,mode=3,adv=,stemp=22.0,shum=0,dt1=25.0,f_rate=A,f_dir=0,alert=255';
+const _control = 'ret=OK,pow=1,mode=3,adv=,stemp=22.0,shum=0,dt1=25.0,f_rate=A,f_dir=0,alert=255';
 
 void main() {
   group('réponse du module', () {
@@ -44,7 +43,11 @@ void main() {
             .where((pPart) => !pPart.startsWith('$vMissing='))
             .join(',');
 
-        expect(() => DaikinControl.parse(vReply), throwsA(isA<DaikinException>()), reason: vMissing);
+        expect(
+          () => DaikinControl.parse(vReply),
+          throwsA(isA<DaikinException>()),
+          reason: vMissing,
+        );
       }
     });
 
@@ -82,7 +85,9 @@ void main() {
     });
 
     test('depuis le mode sec, la consigne par défaut est envoyée', () {
-      final vDry = DaikinControl.parse(_control.replaceAll('mode=3', 'mode=2').replaceAll('stemp=22.0', 'stemp=M'));
+      final vDry = DaikinControl.parse(
+        _control.replaceAll('mode=3', 'mode=2').replaceAll('stemp=22.0', 'stemp=M'),
+      );
 
       final vNew = vDry.withMode(DaikinMode.cool)!;
 

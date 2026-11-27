@@ -15,7 +15,10 @@ Future<void> main() async {
   final vFolder = await getApplicationDocumentsDirectory();
   final vController = SensorsController(FileSensorStore(File('${vFolder.path}/capteurs.json')));
   await vController.load();
-  final vAc = AcController(FileAcStore(File('${vFolder.path}/climatisations.json')), HttpDaikinLink());
+  final vAc = AcController(
+    FileAcStore(File('${vFolder.path}/climatisations.json')),
+    HttpDaikinLink(),
+  );
   await vAc.load();
   runApp(HomeApp(controller: vController, acController: vAc));
 }
