@@ -53,8 +53,11 @@ class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
 
   /// Relit les climatisations puis applique le plan.
   Future<void> _runPlan() async {
+    final vNow = DateTime.now();
+    // Le service d'arrière-plan s'efface tant que l'appli se signale
+    await widget.files?.markAppOpen(vNow);
     await widget.acController!.refresh();
-    await widget.planController!.tick(DateTime.now());
+    await widget.planController!.tick(vNow);
   }
 
   @override

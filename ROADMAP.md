@@ -10,7 +10,8 @@ Tout doit marcher avec le téléphone seul : pas de NAS, pas de serveur, pas de 
 - [ ] Lot 4 ter : historique du capteur (dates décodées d'après les trames du diagnostic)
 - [x] Lot 5 : pilotage (température souhaitée par pièce et profil, planning, fenêtre ouverte, vacances, alertes affichées)
 - [x] Lot 5 bis : règles de seuil ajoutées et supprimées à l'écran
-- [ ] Lot 5 ter : notifications d'alerte, plan appliqué en arrière-plan appli fermée
+- [x] Lot 5 ter : plan appliqué en arrière-plan appli fermée, alertes dans la notification du service
+- [ ] Lot 5 quater : notifications d'alerte à part (son, bannière), qui demandent un paquet de notifications locales
 - [ ] Lot iOS : clés `Info.plist` (Bluetooth, réseau local, HTTP vers les clims), CI macOS sans signature, relevé limité à l'appli ouverte, installation sans compte payant
 - [ ] Lot 4 bis : modules BRP072C à clé (HTTPS), si c'est ton module
 

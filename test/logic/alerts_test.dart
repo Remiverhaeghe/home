@@ -66,4 +66,31 @@ void main() {
       expect(freshAlerts(vCurrent, {}), hasLength(2));
     });
   });
+
+  group('phrase de notification', () {
+    test('aucune alerte, aucune phrase', () {
+      expect(alertSummary(const []), '');
+    });
+
+    test('gel, humidité et capteur muet, séparés par des points médians', () {
+      final vText = alertSummary(const [
+        SensorAlert(sensorName: 'Salon', kind: AlertKind.frost, value: 3),
+        SensorAlert(sensorName: 'Bain', kind: AlertKind.humidity, value: 74.4),
+        SensorAlert(sensorName: 'Cave', kind: AlertKind.silent),
+      ]);
+
+      expect(vText, 'Gel : Salon (3,0 °C) · Humidité : Bain (74 %) · Capteur muet : Cave');
+    });
+
+    test('une alerte sans mesure ne casse pas la phrase', () {
+      expect(
+        alertSummary(const [SensorAlert(sensorName: 'A', kind: AlertKind.frost)]),
+        'Gel : A (0,0 °C)',
+      );
+      expect(
+        alertSummary(const [SensorAlert(sensorName: 'A', kind: AlertKind.humidity)]),
+        'Humidité : A (0 %)',
+      );
+    });
+  });
 }

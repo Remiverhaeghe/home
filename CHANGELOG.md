@@ -4,6 +4,9 @@
 
 ### Ajouté
 
+- Plan appliqué en arrière-plan, appli fermée : le service relève les capteurs puis commande les climatisations selon les profils, le planning, les règles et le mode vacances, à partir des relevés en attente
+- Alertes de gel, d'humidité et de capteur muet affichées dans la notification du service
+- Quand l'appli est ouverte, c'est elle qui applique le plan : le service s'efface tant qu'elle s'est signalée depuis moins de 7 minutes
 - Pilotage de la maison : température souhaitée par pièce et par profil (confort, nuit, éco, absent), planning de la semaine éditable par pièce, plan appliqué toutes les 5 minutes appli ouverte
 - Détection d'une fenêtre ouverte (chute de 1,5 °C en 10 minutes) : la clim se met au repos 30 minutes
 - Règles de seuil sur l'humidité et la température du capteur, avec un délai minimal entre deux commandes ; écran pour les ajouter et les supprimer (seuil contrôlé, nom proposé, consigne facultative)
