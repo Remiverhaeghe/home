@@ -34,8 +34,11 @@ void main() {
   /// Seule l'attente est en vrai temps : les rendus restent dans le temps du test.
   Future<void> real(WidgetTester pTester, Future<void> Function() pAction) async {
     await pAction();
-    await pTester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 150)));
-    await pTester.pump();
+    // Chaque étape réelle d'un fichier ne reprend qu'au rendu suivant : plusieurs tours.
+    for (var vRound = 0; vRound < 8; vRound++) {
+      await pTester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 20)));
+      await pTester.pump();
+    }
   }
 
   testWidgets('à l\'ouverture, les relevés pris en arrière-plan sont rangés', (pTester) async {

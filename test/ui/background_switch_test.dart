@@ -26,6 +26,15 @@ void main() {
   });
   tearDown(() => vFolder.deleteSync(recursive: true));
 
+  /// Laisse les lectures et écritures de fichiers aller jusqu'au bout : chacune enchaîne
+  /// plusieurs étapes réelles, et chaque étape ne reprend qu'au rendu suivant.
+  Future<void> settle(WidgetTester pTester) async {
+    for (var vRound = 0; vRound < 8; vRound++) {
+      await pTester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 20)));
+      await pTester.pump();
+    }
+  }
+
   Future<void> follow(WidgetTester pTester, {bool pWithBackground = true}) async {
     await pTester.pumpWidget(
       localized(
@@ -37,13 +46,10 @@ void main() {
         ),
       ),
     );
-    // La lecture du fichier des capteurs suivis se fait en vrai temps
-    await pTester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 100)));
-    await pTester.pump();
     vLink.devices.add((id: 'AA', name: 'TP357 (1A2B)'));
     await pTester.pump();
     await pTester.tap(find.text('Suivre'));
-    await pTester.pump();
+    await settle(pTester);
   }
 
   testWidgets('sans service ni fichiers, l\'interrupteur n\'apparaît pas', (pTester) async {
@@ -57,8 +63,7 @@ void main() {
     expect(find.text('Relever en arrière-plan'), findsOneWidget);
 
     await pTester.tap(find.byType(Switch));
-    await pTester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 100)));
-    await pTester.pump();
+    await settle(pTester);
 
     expect(vBackground.starts, 1);
     expect(vBackground.lastTitle, 'Home relève les capteurs');
@@ -74,8 +79,7 @@ void main() {
     await follow(pTester);
 
     await pTester.tap(find.byType(Switch));
-    await pTester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 100)));
-    await pTester.pump();
+    await settle(pTester);
 
     expect(find.textContaining('accord pour les notifications'), findsOneWidget);
     expect(pTester.widget<Switch>(find.byType(Switch)).value, isFalse);
@@ -87,12 +91,10 @@ void main() {
   ) async {
     await follow(pTester);
     await pTester.tap(find.byType(Switch));
-    await pTester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 100)));
-    await pTester.pump();
+    await settle(pTester);
 
     await pTester.tap(find.byType(Switch));
-    await pTester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 100)));
-    await pTester.pump();
+    await settle(pTester);
 
     expect(vBackground.stops, 1);
     expect(pTester.widget<Switch>(find.byType(Switch)).value, isFalse);
@@ -100,15 +102,13 @@ void main() {
   });
 
   testWidgets('un autre capteur suivi garde le service en marche', (pTester) async {
-    await vFiles.saveFollowed([const FollowedDevice(id: 'BB', name: 'TP357 (3C4D)')]);
+    await pTester.runAsync(() => vFiles.saveFollowed([const FollowedDevice(id: 'BB', name: 'TP357 (3C4D)')]));
     await follow(pTester);
     await pTester.tap(find.byType(Switch));
-    await pTester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 100)));
-    await pTester.pump();
+    await settle(pTester);
 
     await pTester.tap(find.byType(Switch));
-    await pTester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 100)));
-    await pTester.pump();
+    await settle(pTester);
 
     expect(vBackground.stops, 0);
     final vSaved = await pTester.runAsync(vFiles.loadFollowed);
@@ -116,7 +116,7 @@ void main() {
   });
 
   testWidgets('un capteur déjà suivi s\'affiche activé', (pTester) async {
-    await vFiles.saveFollowed([const FollowedDevice(id: 'AA', name: 'TP357 (1A2B)')]);
+    await pTester.runAsync(() => vFiles.saveFollowed([const FollowedDevice(id: 'AA', name: 'TP357 (1A2B)')]));
 
     await follow(pTester);
 
