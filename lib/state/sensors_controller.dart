@@ -20,9 +20,8 @@ class SensorsController extends ChangeNotifier {
   ExchangeProblem? _problem;
 
   /// Les capteurs avec le nom que l'utilisateur leur a donné.
-  List<Sensor> get sensors => List.unmodifiable([
-    for (final vSensor in _sensors) vSensor.withLabel(_labels[vSensor.name]),
-  ]);
+  List<Sensor> get sensors =>
+      List.unmodifiable([for (final vSensor in _sensors) vSensor.withLabel(_labels[vSensor.name])]);
 
   /// Donne un nom à un capteur, par exemple l'endroit où il se trouve. Un nom vide le retire.
   Future<void> rename(String pSensorName, String pLabel) async {

@@ -71,7 +71,8 @@ class _SensorDetailScreenState extends State<SensorDetailScreen> {
     final vNumber = NumberFormat('0.0', Localizations.localeOf(pContext).toString());
     final vAll = dailyAverages(sensor.readings);
     final vDays = vAll.length > SensorDetailScreen.shownDays
-        ? vAll.sublist(vAll.length - SensorDetailScreen.shownDays) : vAll;
+        ? vAll.sublist(vAll.length - SensorDetailScreen.shownDays)
+        : vAll;
     final vTemps = vDays.map((pDay) => pDay.temp);
     final vHumidities = vDays.map((pDay) => pDay.humidity);
 

@@ -86,7 +86,9 @@ List<WallTile> buildWallTiles({
   }
   for (final vSensor in pSensors) {
     if (!vLinked.contains(vSensor.name)) {
-      rTiles.add(WallTile(name: vSensor.title, reading: vSensor.last, stale: isStale(vSensor.last)));
+      rTiles.add(
+        WallTile(name: vSensor.title, reading: vSensor.last, stale: isStale(vSensor.last)),
+      );
     }
   }
 
