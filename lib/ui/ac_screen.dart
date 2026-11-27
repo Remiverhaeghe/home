@@ -48,39 +48,12 @@ class _AcScreenState extends State<AcScreen> {
   }
 
   Future<void> _askAddress() async {
-    final vTexts = AppLocalizations.of(context);
-    final vHost = TextEditingController();
-    final vName = TextEditingController();
-    final vOk = await showDialog<bool>(
+    final vAnswer = await showDialog<({String host, String name})>(
       context: context,
-      builder: (pDialog) => AlertDialog(
-        title: Text(vTexts.acAdd),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: vHost,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(labelText: vTexts.acAddressLabel),
-            ),
-            TextField(
-              controller: vName,
-              decoration: InputDecoration(labelText: vTexts.acNameLabel),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(pDialog, false), child: Text(vTexts.cancel)),
-          FilledButton(onPressed: () => Navigator.pop(pDialog, true), child: Text(vTexts.save)),
-        ],
-      ),
+      builder: (_) => const _AddDialog(),
     );
-    final vHostText = vHost.text;
-    final vNameText = vName.text;
-    vHost.dispose();
-    vName.dispose();
-    if (vOk ?? false) {
-      await _add(vHostText, pName: vNameText);
+    if (vAnswer != null) {
+      await _add(vAnswer.host, pName: vAnswer.name);
     }
   }
 
@@ -172,6 +145,54 @@ class _AcScreenState extends State<AcScreen> {
           );
         },
       ),
+    );
+  }
+}
+
+/// Saisie de l'adresse et du nom d'une climatisation. Les champs vivent dans cette boîte : ils ne
+/// sont détruits qu'avec elle, après sa fermeture.
+class _AddDialog extends StatefulWidget {
+  const _AddDialog();
+
+  @override
+  State<_AddDialog> createState() => _AddDialogState();
+}
+
+class _AddDialogState extends State<_AddDialog> {
+  final _host = TextEditingController();
+  final _name = TextEditingController();
+
+  @override
+  void dispose() {
+    _host.dispose();
+    _name.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext pContext) {
+    final vTexts = AppLocalizations.of(pContext);
+
+    return AlertDialog(
+      title: Text(vTexts.acAdd),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+            controller: _host,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(labelText: vTexts.acAddressLabel),
+          ),
+          TextField(controller: _name, decoration: InputDecoration(labelText: vTexts.acNameLabel)),
+        ],
+      ),
+      actions: [
+        TextButton(onPressed: () => Navigator.pop(pContext), child: Text(vTexts.cancel)),
+        FilledButton(
+          onPressed: () => Navigator.pop(pContext, (host: _host.text, name: _name.text)),
+          child: Text(vTexts.save),
+        ),
+      ],
     );
   }
 }

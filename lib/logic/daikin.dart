@@ -194,6 +194,9 @@ class DaikinInfo {
     String vName;
     try {
       vName = Uri.decodeComponent(vRawName);
+    } on ArgumentError {
+      // Encodage coupé (« 100% ») : le nom est gardé tel que le module l'a donné
+      vName = vRawName;
     } on FormatException {
       vName = vRawName;
     }
