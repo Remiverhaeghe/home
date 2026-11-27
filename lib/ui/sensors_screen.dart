@@ -9,7 +9,9 @@ import '../l10n/gen/app_localizations.dart';
 import '../logic/climate_exchange.dart';
 import '../logic/climate_stats.dart';
 import '../logic/reading.dart';
+import '../state/ac_controller.dart';
 import '../state/sensors_controller.dart';
+import 'ac_screen.dart';
 import 'live_screen.dart';
 import 'theme.dart';
 
@@ -30,6 +32,7 @@ class SensorsScreen extends StatelessWidget {
     required this.controller,
     this.pickFile = pickTextFile,
     this.link,
+    this.acController,
   });
 
   final SensorsController controller;
@@ -37,6 +40,9 @@ class SensorsScreen extends StatelessWidget {
 
   /// Liaison Bluetooth ; créée à l'ouverture de l'écran des capteurs à portée si absente.
   final Tp357Link? link;
+
+  /// Climatisations ; le bouton qui les ouvre n'apparaît que si elles sont fournies.
+  final AcController? acController;
 
   Future<void> _import(BuildContext pContext) async {
     final vText = await pickFile();
@@ -66,6 +72,17 @@ class SensorsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(vTexts.sensorsTitle),
         actions: [
+          if (acController != null)
+            IconButton(
+              tooltip: vTexts.acOpen,
+              icon: const Icon(Icons.ac_unit),
+              onPressed: () => Navigator.push<void>(
+                pContext,
+                MaterialPageRoute(
+                  builder: (_) => AcScreen(controller: acController!, sensors: controller),
+                ),
+              ),
+            ),
           IconButton(
             tooltip: vTexts.liveOpen,
             icon: const Icon(Icons.bluetooth_searching),
