@@ -4,7 +4,7 @@ Application Android en Flutter qui suit la température et l'humidité de la mai
 
 - Règles dans `lib/logic/`, en Dart pur, sans Flutter, testées unitairement et couvertes à 95 % au moins (contrôlé par la CI).
 - Aucun texte affiché en dur dans un widget : tout passe par `lib/l10n/app_fr.arb`.
-- Données sur le téléphone uniquement, rien sur Internet (seul accès réseau : voir plus bas). Les capteurs sont rangés au format d'échange JSON décrit dans `docs/echange-climat.md`, le même que lit Atelier.
+- Données sur le téléphone uniquement, rien sur Internet, sauf la météo extérieure : récupération désactivée au départ, vers le seul serveur Open-Meteo, avec les seules coordonnées de la maison (`lib/net/weather_link.dart`). Autre accès réseau : voir plus bas. Les capteurs sont rangés au format d'échange JSON décrit dans `docs/echange-climat.md`, le même que lit Atelier.
 - Palette sombre unique (`lib/ui/theme.dart`) : ambre pour la température, bleu pour l'humidité.
 - Android : seuls `android/app/build.gradle.kts` et le manifeste sont versionnés ; `flutter create --platforms=android --org fr.remiverhaeghe --project-name home .` recrée le reste.
 - Réseau : seulement vers les climatisations de la maison, en HTTP sur un réseau privé (`isPrivateAddress` refuse le reste). Tout passe par `lib/net/daikin_link.dart`, remplacée par une fausse dans les tests.

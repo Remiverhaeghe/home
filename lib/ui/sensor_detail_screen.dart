@@ -10,7 +10,13 @@ import 'theme.dart';
 
 /// Détail d'un capteur : courbes des quatorze derniers jours, minimum et maximum.
 class SensorDetailScreen extends StatefulWidget {
-  const SensorDetailScreen({super.key, required this.sensor, this.onRename, this.onEditPlace});
+  const SensorDetailScreen({
+    super.key,
+    required this.sensor,
+    this.onRename,
+    this.onEditPlace,
+    this.outdoor = const [],
+  });
 
   final Sensor sensor;
 
@@ -19,6 +25,9 @@ class SensorDetailScreen extends StatefulWidget {
 
   /// Ouvre la saisie de l'emplacement ; sans lui, le bouton n'apparaît pas.
   final Future<void> Function()? onEditPlace;
+
+  /// Relevés extérieurs pour comparer ; vides sans météo.
+  final List<Reading> outdoor;
 
   /// Nombre de jours montrés sur les courbes.
   static const shownDays = 14;
@@ -82,7 +91,7 @@ class _SensorDetailScreenState extends State<SensorDetailScreen> {
         padding: const EdgeInsets.all(16),
         children: [
           Text(vTexts.detailReadings(sensor.readings.length), style: vTheme.bodySmall),
-          AnalysisSection(readings: sensor.readings),
+          AnalysisSection(readings: sensor.readings, outdoor: widget.outdoor),
           const SizedBox(height: 16),
           Text(vTexts.detailChartTitle, style: vTheme.titleMedium),
           const SizedBox(height: 12),

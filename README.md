@@ -1,6 +1,6 @@
 # Home
 
-Application Android qui suit la température et l'humidité de la maison à partir de thermo-hygromètres. Tout reste sur le téléphone : pas de compte, pas de serveur, rien sur Internet. Le seul accès réseau sert à parler aux climatisations Daikin sur le Wi-Fi de la maison.
+Application Android qui suit la température et l'humidité de la maison à partir de thermo-hygromètres. Tout reste sur le téléphone : pas de compte, pas de serveur, rien sur Internet par défaut. L'accès réseau sert à parler aux climatisations, au poêle et aux relais sur le Wi-Fi de la maison ; la météo extérieure est la seule exception, désactivée au départ (voir `docs/decisions.md`).
 
 Home sert de tableau de bord. Atelier, de son côté, s'en sert pour savoir quand une pièce est assez sèche pour poser un parquet ou une peinture : les deux applis échangent le même fichier JSON.
 

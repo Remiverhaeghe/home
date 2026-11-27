@@ -4,11 +4,14 @@ import 'package:home/logic/house.dart';
 import 'package:home/logic/reading.dart';
 import 'package:home/state/house_controller.dart';
 import 'package:home/state/sensors_controller.dart';
+import 'package:home/state/weather_controller.dart';
+import 'package:home/storage/weather_store.dart';
 import 'package:home/storage/house_store.dart';
 import 'package:home/storage/sensor_store.dart';
 import 'package:home/ui/house_screen.dart';
 import 'package:home/ui/sensors_screen.dart';
 
+import '../support/fake_weather.dart';
 import '../support/localized.dart';
 
 void main() {
@@ -84,4 +87,34 @@ void main() {
 
     expect(vStore.saved.placeOf('Haut').room, 'Salon');
   });
+
+  testWidgets('la météo est désactivée au départ, puis récupérée une fois autorisée', (pTester) async {
+    final vLink = FakeWeatherLink([
+      Reading(at: DateTime(2026, 11, 27, 10), temp: 5, humidity: 80),
+    ]);
+    final vWeather = WeatherController(MemoryWeatherStore(), vLink);
+    final vHouse = HouseController(
+      MemoryHouseStore(
+        const House(location: HouseLocation(label: 'Lyon', latitude: 45.76, longitude: 4.83)),
+      ),
+    );
+    await vHouse.load();
+    await pTester.pumpWidget(
+      localized(HouseScreen(controller: vHouse, weather: vWeather)),
+    );
+    await pTester.scrollUntilVisible(find.byType(Switch), 200, scrollable: find.byType(Scrollable));
+
+    expect(vLink.calls, 0);
+    expect(find.text('Actualiser'), findsNothing);
+
+    await pTester.tap(find.byType(Switch));
+    await pTester.pumpAndSettle();
+    await pTester.scrollUntilVisible(find.text('Actualiser'), 200, scrollable: find.byType(Scrollable));
+    await pTester.tap(find.text('Actualiser'));
+    await pTester.pumpAndSettle();
+
+    expect(vLink.calls, 1);
+    expect(find.textContaining('1 relevés gardés'), findsOneWidget);
+  });
 }
+

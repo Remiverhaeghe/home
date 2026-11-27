@@ -8,6 +8,8 @@
 
 ### Ajouté
 
+- Météo extérieure (écran « La maison ») : récupération par Internet des températures et humidités horaires du lieu de la maison auprès d'Open-Meteo, désactivée au départ ; seules les coordonnées partent. Archive de 400 jours sur le téléphone (`meteo.json`), actualisée au plus une fois par heure, copiable en CSV pour un tableur
+- Analyses : écart moyen avec l'extérieur sur les mêmes heures et part des variations du dehors qui passe à l'intérieur sur une journée
 - La maison (bouton « La maison » de la liste des capteurs) : lieu saisi à la main (nom, latitude, longitude, sans GPS) pour les analyses avec la météo extérieure, rangé dans `maison.json`
 - Emplacement des capteurs : pièce, niveau (sous-sol à combles) ou extérieur, choisi depuis le détail du capteur ; la liste est groupée par niveau, l'extérieur à part
 - Analyses dans le détail d'un capteur, sur les trente derniers jours : heures de confort (18 à 24 °C, 40 à 60 %), eau dans l'air en g/m³, risque de moisissure d'après la plus longue période à 70 % d'humidité, capteur figé ou saut de valeur

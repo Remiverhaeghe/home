@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../l10n/gen/app_localizations.dart';
 import '../logic/analysis.dart';
 import '../logic/reading.dart';
+import '../logic/weather.dart';
 
 /// Jours de relevés pris en compte dans les analyses.
 const analysisDays = 30;
@@ -11,9 +12,12 @@ const analysisDays = 30;
 /// Analyses d'un capteur sur les trente derniers jours : confort, humidité absolue, risque de
 /// moisissure et anomalies.
 class AnalysisSection extends StatelessWidget {
-  const AnalysisSection({super.key, required this.readings});
+  const AnalysisSection({super.key, required this.readings, this.outdoor = const []});
 
   final List<Reading> readings;
+
+  /// Relevés extérieurs de la météo ; vides tant que la récupération n'est pas autorisée.
+  final List<Reading> outdoor;
 
   @override
   Widget build(BuildContext pContext) {
@@ -31,6 +35,8 @@ class AnalysisSection extends StatelessWidget {
     final vMold = moldRisk(vRecent);
     final vAnomalies = findAnomalies(vRecent);
     final vLast = readings.last;
+    final vOutdoor = compareWithOutdoor(vRecent, outdoor);
+    final vDamping = vOutdoor?.damping;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,6 +57,14 @@ class AnalysisSection extends StatelessWidget {
           MoldLevel.watch => vTexts.analysisMoldWatch(vNumber.format(vMold.longestHours.round())),
           MoldLevel.high => vTexts.analysisMoldHigh(vNumber.format(vMold.longestHours.round())),
         }),
+        if (vOutdoor != null)
+          Text(
+            vTexts.analysisOutdoor(
+              '${vOutdoor.meanDelta >= 0 ? '+' : ''}${vNumber.format(vOutdoor.meanDelta)}',
+              vOutdoor.hours,
+            ),
+          ),
+        if (vDamping != null) Text(vTexts.analysisDamping((vDamping * 100).round())),
         if (vAnomalies.isEmpty)
           Text(vTexts.analysisNoAnomaly)
         else

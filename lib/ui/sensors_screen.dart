@@ -16,6 +16,7 @@ import '../state/plan_controller.dart';
 import '../logic/house.dart';
 import '../state/house_controller.dart';
 import '../state/pellet_controller.dart';
+import '../state/weather_controller.dart';
 import '../state/relay_controller.dart';
 import '../state/sensors_controller.dart';
 import '../storage/background_files.dart';
@@ -65,6 +66,7 @@ class SensorsScreen extends StatelessWidget {
     this.relayController,
     this.pelletController,
     this.houseController,
+    this.weatherController,
   });
 
   final SensorsController controller;
@@ -91,6 +93,7 @@ class SensorsScreen extends StatelessWidget {
   final RelayController? relayController;
   final PelletController? pelletController;
   final HouseController? houseController;
+  final WeatherController? weatherController;
 
   Future<void> _import(BuildContext pContext) async {
     final vText = await pickFile();
@@ -164,7 +167,7 @@ class SensorsScreen extends StatelessWidget {
               icon: const Icon(Icons.home_work_outlined),
               onPressed: () => Navigator.push<void>(
                 pContext,
-                MaterialPageRoute(builder: (_) => HouseScreen(controller: houseController!)),
+                MaterialPageRoute(builder: (_) => HouseScreen(controller: houseController!, weather: weatherController)),
               ),
             ),
           if (pelletController != null)
@@ -260,6 +263,7 @@ class SensorsScreen extends StatelessWidget {
                       builder: (_) => SensorDetailScreen(
                         sensor: vSensor,
                         onRename: (pLabel) => controller.rename(vSensor.name, pLabel),
+                        outdoor: weatherController?.readings ?? const [],
                         onEditPlace: houseController == null
                             ? null
                             : () async {

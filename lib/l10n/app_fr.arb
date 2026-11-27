@@ -456,5 +456,22 @@
   "analysisStuck": "Capteur figé depuis le {date} : mêmes valeurs pendant des heures, pile ou position à vérifier",
   "@analysisStuck": {"placeholders": {"date": {"type": "String"}}},
   "analysisJump": "Saut de valeur le {date} : variation trop brusque pour être réelle",
-  "@analysisJump": {"placeholders": {"date": {"type": "String"}}}
+  "@analysisJump": {"placeholders": {"date": {"type": "String"}}},
+  "weatherTitle": "Météo extérieure",
+  "weatherSwitch": "Récupérer la météo par Internet",
+  "weatherSwitchHelp": "Désactivé au départ. Home interroge le service Open-Meteo avec les seules coordonnées de la maison, et rien d'autre ne sort de l'appli. Les relevés sont gardés sur le téléphone.",
+  "weatherNone": "Aucun relevé extérieur pour l'instant.",
+  "weatherStored": "{count} relevés gardés, le dernier du {date}",
+  "@weatherStored": {"placeholders": {"count": {"type": "int"}, "date": {"type": "String"}}},
+  "weatherRefresh": "Actualiser",
+  "weatherCopy": "Copier en CSV",
+  "weatherCopied": "Relevés copiés : colle-les dans un tableur.",
+  "weatherDone": "Relevés à jour.",
+  "weatherDisabled": "Active d'abord la récupération par Internet.",
+  "weatherNoLocation": "Enregistre d'abord le lieu de la maison.",
+  "weatherFailed": "Le service météo n'a pas répondu.",
+  "analysisOutdoor": "Écart moyen avec l'extérieur : {delta} °C sur {hours} h",
+  "@analysisOutdoor": {"placeholders": {"delta": {"type": "String"}, "hours": {"type": "int"}}},
+  "analysisDamping": "Le bâtiment garde {percent} % des variations du dehors sur une journée",
+  "@analysisDamping": {"placeholders": {"percent": {"type": "int"}}}
 }

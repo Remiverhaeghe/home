@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 import '../l10n/gen/app_localizations.dart';
 import '../logic/house.dart';
 import '../state/house_controller.dart';
+import '../state/weather_controller.dart';
 
 /// Nom d'un niveau, pour les listes et les titres de groupe.
 String floorName(AppLocalizations pTexts, int pFloor) => switch (pFloor) {
@@ -15,9 +18,12 @@ String floorName(AppLocalizations pTexts, int pFloor) => switch (pFloor) {
 
 /// La maison : son lieu, saisi à la main (nom et coordonnées), pour les analyses météo à venir.
 class HouseScreen extends StatefulWidget {
-  const HouseScreen({super.key, required this.controller});
+  const HouseScreen({super.key, required this.controller, this.weather});
 
   final HouseController controller;
+
+  /// Météo extérieure ; sans lui, la section n'apparaît pas.
+  final WeatherController? weather;
 
   @override
   State<HouseScreen> createState() => _HouseScreenState();
@@ -104,8 +110,96 @@ class _HouseScreenState extends State<HouseScreen> {
               TextButton(onPressed: _clear, child: Text(vTexts.houseClear)),
             ],
           ),
+          if (widget.weather != null) _WeatherSection(house: widget.controller, weather: widget.weather!),
         ],
       ),
+    );
+  }
+}
+
+/// Météo extérieure : accès à Internet autorisé ou non, récupération et export CSV.
+class _WeatherSection extends StatelessWidget {
+  const _WeatherSection({required this.house, required this.weather});
+
+  final HouseController house;
+  final WeatherController weather;
+
+  Future<void> _refresh(BuildContext pContext) async {
+    final vTexts = AppLocalizations.of(pContext);
+    final vMessenger = ScaffoldMessenger.of(pContext);
+    final vResult = await weather.refresh(house.house.location, pForce: true);
+    vMessenger.hideCurrentSnackBar();
+    vMessenger.showSnackBar(
+      SnackBar(
+        content: Text(switch (vResult) {
+          WeatherResult.done => vTexts.weatherDone,
+          WeatherResult.disabled => vTexts.weatherDisabled,
+          WeatherResult.noLocation => vTexts.weatherNoLocation,
+          WeatherResult.failed => vTexts.weatherFailed,
+        }),
+      ),
+    );
+  }
+
+  Future<void> _copy(BuildContext pContext) async {
+    final vTexts = AppLocalizations.of(pContext);
+    final vMessenger = ScaffoldMessenger.of(pContext);
+    await Clipboard.setData(ClipboardData(text: weather.csv));
+    vMessenger.hideCurrentSnackBar();
+    vMessenger.showSnackBar(SnackBar(content: Text(vTexts.weatherCopied)));
+  }
+
+  @override
+  Widget build(BuildContext pContext) {
+    final vTexts = AppLocalizations.of(pContext);
+
+    return ListenableBuilder(
+      listenable: weather,
+      builder: (pContext, _) {
+        final vReadings = weather.readings;
+        final vLast = vReadings.isEmpty ? null : vReadings.last.at;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 24),
+            Text(vTexts.weatherTitle, style: Theme.of(pContext).textTheme.titleMedium),
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(vTexts.weatherSwitch),
+              subtitle: Text(vTexts.weatherSwitchHelp),
+              value: weather.enabled,
+              onChanged: (pOn) => weather.setEnabled(pEnabled: pOn),
+            ),
+            if (weather.enabled) ...[
+              Text(
+                vLast == null
+                    ? vTexts.weatherNone
+                    : vTexts.weatherStored(
+                        vReadings.length,
+                        DateFormat.MMMd(
+                          Localizations.localeOf(pContext).toString(),
+                        ).add_Hm().format(vLast),
+                      ),
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  FilledButton(
+                    onPressed: () => _refresh(pContext),
+                    child: Text(vTexts.weatherRefresh),
+                  ),
+                  const SizedBox(width: 12),
+                  TextButton(
+                    onPressed: vReadings.isEmpty ? null : () => _copy(pContext),
+                    child: Text(vTexts.weatherCopy),
+                  ),
+                ],
+              ),
+            ],
+          ],
+        );
+      },
     );
   }
 }
