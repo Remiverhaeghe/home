@@ -13,12 +13,14 @@ import '../logic/climate_stats.dart';
 import '../logic/reading.dart';
 import '../state/ac_controller.dart';
 import '../state/plan_controller.dart';
+import '../state/pellet_controller.dart';
 import '../state/relay_controller.dart';
 import '../state/sensors_controller.dart';
 import '../storage/background_files.dart';
 import 'ac_screen.dart';
 import 'live_screen.dart';
 import 'plan_screen.dart';
+import 'pellet_screen.dart';
 import 'relay_screen.dart';
 import 'sensor_detail_screen.dart';
 import 'theme.dart';
@@ -58,6 +60,7 @@ class SensorsScreen extends StatelessWidget {
     this.files,
     this.wallDisplay,
     this.relayController,
+    this.pelletController,
   });
 
   final SensorsController controller;
@@ -82,6 +85,7 @@ class SensorsScreen extends StatelessWidget {
 
   /// Garage et Velux ; le bouton qui les ouvre n'apparaît que s'ils sont fournis.
   final RelayController? relayController;
+  final PelletController? pelletController;
 
   Future<void> _import(BuildContext pContext) async {
     final vText = await pickFile();
@@ -147,6 +151,15 @@ class SensorsScreen extends StatelessWidget {
               onPressed: () => Navigator.push<void>(
                 pContext,
                 MaterialPageRoute(builder: (_) => RelayScreen(controller: relayController!)),
+              ),
+            ),
+          if (pelletController != null)
+            IconButton(
+              tooltip: vTexts.pelletOpen,
+              icon: const Icon(Icons.local_fire_department_outlined),
+              onPressed: () => Navigator.push<void>(
+                pContext,
+                MaterialPageRoute(builder: (_) => PelletScreen(controller: pelletController!)),
               ),
             ),
           if (acController != null)

@@ -8,9 +8,11 @@ import 'app.dart';
 import 'background/alert_notifier.dart';
 import 'background/background_control.dart';
 import 'net/daikin_link.dart';
+import 'net/pellet_link.dart';
 import 'net/relay_link.dart';
 import 'state/ac_controller.dart';
 import 'state/plan_controller.dart';
+import 'state/pellet_controller.dart';
 import 'state/relay_controller.dart';
 import 'state/sensors_controller.dart';
 import 'storage/ac_store.dart';
@@ -18,6 +20,7 @@ import 'storage/background_files.dart';
 import 'storage/file_sensor_store.dart';
 import 'storage/label_store.dart';
 import 'storage/plan_store.dart';
+import 'storage/pellet_store.dart';
 import 'storage/relay_store.dart';
 
 Future<void> main() async {
@@ -41,6 +44,11 @@ Future<void> main() async {
     HttpRelayLink(),
   );
   await vRelays.load();
+  final vPellet = PelletController(
+    FilePelletStore(File('${vFolder.path}/poele.json')),
+    HttpsPelletLink(),
+  );
+  await vPellet.load();
   final vNotifier = LocalAlertNotifier();
   await vNotifier.requestPermission();
   runApp(
@@ -49,6 +57,7 @@ Future<void> main() async {
       acController: vAc,
       planController: vPlan,
       relayController: vRelays,
+      pelletController: vPellet,
       notifier: vNotifier,
       background: ForegroundBackgroundControl(),
       files: BackgroundFiles(vFolder),

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import '../logic/relay.dart';
+import 'local_network.dart';
 
 /// Le relais n'a pas pris l'ordre.
 class RelayException implements Exception {
@@ -30,6 +31,9 @@ class HttpRelayLink implements RelayLink {
       vUri = relayRequest(pButton);
     } on FormatException {
       throw const RelayException('adresse hors du réseau de la maison');
+    }
+    if (!await requestLocalNetworkAccess()) {
+      throw const RelayException('accès au réseau local refusé');
     }
     final vClient = HttpClient()..connectionTimeout = _timeout;
     try {
