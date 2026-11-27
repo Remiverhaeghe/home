@@ -25,7 +25,9 @@ void main() {
     pTester.view.devicePixelRatio = 1;
     addTearDown(pTester.view.reset);
     vStore = MemoryPlanStore(
-      PlanSettings(rooms: [Room(acHost: vUnit.host, schedule: pSlots)]),
+      PlanSettings(
+        rooms: [Room(acHost: vUnit.host, schedule: pSlots)],
+      ),
     );
     vPlan = PlanController(
       vStore,
@@ -66,7 +68,9 @@ void main() {
   testWidgets('supprimer une plage l\'enlève du planning enregistré', (pTester) async {
     await open(
       pTester,
-      pSlots: const [ScheduleSlot(weekdays: {1}, minute: 420, profile: ProfileKind.comfort)],
+      pSlots: const [
+        ScheduleSlot(weekdays: {1}, minute: 420, profile: ProfileKind.comfort),
+      ],
     );
 
     await pTester.tap(find.byTooltip('Supprimer la plage'));
@@ -122,6 +126,9 @@ void main() {
     }
     await pTester.pump();
 
-    expect(pTester.widget<FilledButton>(find.widgetWithText(FilledButton, 'Enregistrer')).onPressed, isNull);
+    expect(
+      pTester.widget<FilledButton>(find.widgetWithText(FilledButton, 'Enregistrer')).onPressed,
+      isNull,
+    );
   });
 }
