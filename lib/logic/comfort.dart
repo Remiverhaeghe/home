@@ -30,6 +30,12 @@ class ScheduleSlot {
   final ProfileKind profile;
 }
 
+/// Planning de départ d'une pièce : confort de 7 h à 22 h 30 tous les jours, nuit ensuite.
+const defaultSchedule = [
+  ScheduleSlot(weekdays: {1, 2, 3, 4, 5, 6, 7}, minute: 420, profile: ProfileKind.comfort),
+  ScheduleSlot(weekdays: {1, 2, 3, 4, 5, 6, 7}, minute: 1350, profile: ProfileKind.night),
+];
+
 /// Profil en vigueur à l'instant [pNow] : celui de la plage la plus récente, en remontant jusqu'à
 /// une semaine en arrière. [pFallback] quand aucune plage ne s'applique.
 ProfileKind profileAt(

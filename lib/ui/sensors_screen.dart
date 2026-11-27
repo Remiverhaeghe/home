@@ -11,10 +11,12 @@ import '../logic/climate_exchange.dart';
 import '../logic/climate_stats.dart';
 import '../logic/reading.dart';
 import '../state/ac_controller.dart';
+import '../state/plan_controller.dart';
 import '../state/sensors_controller.dart';
 import '../storage/background_files.dart';
 import 'ac_screen.dart';
 import 'live_screen.dart';
+import 'plan_screen.dart';
 import 'sensor_detail_screen.dart';
 import 'theme.dart';
 
@@ -36,6 +38,7 @@ class SensorsScreen extends StatelessWidget {
     this.pickFile = pickTextFile,
     this.link,
     this.acController,
+    this.planController,
     this.background,
     this.files,
   });
@@ -48,6 +51,9 @@ class SensorsScreen extends StatelessWidget {
 
   /// Climatisations ; le bouton qui les ouvre n'apparaît que si elles sont fournies.
   final AcController? acController;
+
+  /// Pilotage ; son bouton n'apparaît que si les climatisations et le pilotage sont fournis.
+  final PlanController? planController;
 
   /// Relevé en arrière-plan, transmis à l'écran des capteurs à portée.
   final BackgroundControl? background;
@@ -89,6 +95,21 @@ class SensorsScreen extends StatelessWidget {
                 pContext,
                 MaterialPageRoute(
                   builder: (_) => AcScreen(controller: acController!, sensors: controller),
+                ),
+              ),
+            ),
+          if (acController != null && planController != null)
+            IconButton(
+              tooltip: vTexts.planOpen,
+              icon: const Icon(Icons.tune),
+              onPressed: () => Navigator.push<void>(
+                pContext,
+                MaterialPageRoute(
+                  builder: (_) => PlanScreen(
+                    plan: planController!,
+                    ac: acController!,
+                    sensors: controller,
+                  ),
                 ),
               ),
             ),

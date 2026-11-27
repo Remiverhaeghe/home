@@ -199,5 +199,87 @@
         "type": "int"
       }
     }
+  },
+  "planOpen": "Pilotage",
+  "planTitle": "Pilotage de la maison",
+  "planNoUnits": "Ajoute d'abord une climatisation pour régler ses températures.",
+  "planScheduleNote": "Planning de chaque pièce : confort de 7 h à 22 h 30, nuit le reste du temps.",
+  "planProfileComfort": "Confort",
+  "planProfileNight": "Nuit",
+  "planProfileEco": "Éco",
+  "planProfileAway": "Absent",
+  "planTarget": "{profile} : {value} °C",
+  "planLower": "Baisser {profile}",
+  "planRaise": "Monter {profile}",
+  "planVacationTitle": "Vacances",
+  "planVacationNone": "Aucune absence prévue : les pièces suivent leur planning.",
+  "planVacationSet": "Programmer une absence",
+  "planVacationActive": "Absent du {from} au {to} : la maison reste hors gel, puis remonte en température la veille du retour.",
+  "planVacationStop": "Annuler l'absence",
+  "planAlertsTitle": "Alertes",
+  "planAlertsNone": "Aucune alerte.",
+  "planAlertFrost": "{sensor} : risque de gel, {value} °C",
+  "planAlertHumidity": "{sensor} : humidité haute, {value} %",
+  "planAlertSilent": "{sensor} : aucun relevé depuis plus de 30 minutes",
+  "@planTarget": {
+    "placeholders": {
+      "profile": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "@planLower": {
+    "placeholders": {
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "@planRaise": {
+    "placeholders": {
+      "profile": {
+        "type": "String"
+      }
+    }
+  },
+  "@planVacationActive": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "@planAlertFrost": {
+    "placeholders": {
+      "sensor": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "@planAlertHumidity": {
+    "placeholders": {
+      "sensor": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "@planAlertSilent": {
+    "placeholders": {
+      "sensor": {
+        "type": "String"
+      }
+    }
   }
 }
