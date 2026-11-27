@@ -58,7 +58,8 @@ List<WallTile> buildWallTiles({
   required Map<String, DaikinControl?> pControls,
   required DateTime pNow,
 }) {
-  bool isStale(Reading? pReading) => pReading != null && pNow.difference(pReading.at) > staleReading;
+  bool isStale(Reading? pReading) =>
+      pReading != null && pNow.difference(pReading.at) > staleReading;
   final vLinked = <String>{};
   final rTiles = <WallTile>[];
   for (final vUnit in pUnits) {
@@ -85,9 +86,7 @@ List<WallTile> buildWallTiles({
   }
   for (final vSensor in pSensors) {
     if (!vLinked.contains(vSensor.name)) {
-      rTiles.add(
-        WallTile(name: vSensor.name, reading: vSensor.last, stale: isStale(vSensor.last)),
-      );
+      rTiles.add(WallTile(name: vSensor.name, reading: vSensor.last, stale: isStale(vSensor.last)));
     }
   }
 

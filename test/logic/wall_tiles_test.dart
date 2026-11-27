@@ -71,6 +71,9 @@ void main() {
   });
 
   test('sans clim ni capteur, rien à afficher', () {
-    expect(buildWallTiles(pSensors: const [], pUnits: const [], pControls: const {}, pNow: vNow), isEmpty);
+    expect(
+      buildWallTiles(pSensors: const [], pUnits: const [], pControls: const {}, pNow: vNow),
+      isEmpty,
+    );
   });
 }

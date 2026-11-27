@@ -83,7 +83,10 @@ class _WallScreenState extends State<WallScreen> {
                   Text(DateFormat.Hm(vLocale).format(vNow), style: vTheme.displayMedium),
                   const SizedBox(width: 20),
                   Expanded(
-                    child: Text(DateFormat.MMMMEEEEd(vLocale).format(vNow), style: vTheme.titleLarge),
+                    child: Text(
+                      DateFormat.MMMMEEEEd(vLocale).format(vNow),
+                      style: vTheme.titleLarge,
+                    ),
                   ),
                   IconButton.filledTonal(
                     tooltip: vTexts.wallClose,
