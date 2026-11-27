@@ -10,6 +10,7 @@ import 'state/ac_controller.dart';
 import 'state/plan_controller.dart';
 import 'state/house_controller.dart';
 import 'state/pellet_controller.dart';
+import 'storage/backup_files.dart';
 import 'state/weather_controller.dart';
 import 'state/relay_controller.dart';
 import 'state/sensors_controller.dart';
@@ -27,6 +28,8 @@ class HomeApp extends StatefulWidget {
     this.pelletController,
     this.houseController,
     this.weatherController,
+    this.backupFiles,
+    this.onRestored,
     this.notifier,
     this.background,
     this.files,
@@ -41,6 +44,8 @@ class HomeApp extends StatefulWidget {
   final PelletController? pelletController;
   final HouseController? houseController;
   final WeatherController? weatherController;
+  final BackupFiles? backupFiles;
+  final Future<void> Function()? onRestored;
 
   /// Notifications d'alerte ; sans elles, les alertes restent visibles dans l'écran Pilotage.
   final AlertNotifier? notifier;
@@ -122,6 +127,8 @@ class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
       pelletController: widget.pelletController,
       houseController: widget.houseController,
       weatherController: widget.weatherController,
+      backupFiles: widget.backupFiles,
+      onRestored: widget.onRestored,
       background: widget.background,
       files: widget.files,
     ),

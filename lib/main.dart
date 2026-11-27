@@ -20,6 +20,7 @@ import 'state/weather_controller.dart';
 import 'state/relay_controller.dart';
 import 'state/sensors_controller.dart';
 import 'storage/ac_store.dart';
+import 'storage/backup_files.dart';
 import 'storage/background_files.dart';
 import 'storage/file_sensor_store.dart';
 import 'storage/house_store.dart';
@@ -75,6 +76,16 @@ Future<void> main() async {
       pelletController: vPellet,
       houseController: vHouse,
       weatherController: vWeather,
+      backupFiles: BackupFiles(vFolder),
+      onRestored: () async {
+        await vController.load();
+        await vAc.load();
+        await vPlan.load();
+        await vRelays.load();
+        await vPellet.load();
+        await vHouse.load();
+        await vWeather.load();
+      },
       notifier: vNotifier,
       background: ForegroundBackgroundControl(),
       files: BackgroundFiles(vFolder),
