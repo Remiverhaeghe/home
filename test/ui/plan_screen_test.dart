@@ -25,7 +25,13 @@ void main() {
   DateTimeRange? vChosen;
 
   Future<void> open(WidgetTester pTester, {List<AcUnit>? pUnits, double pTemp = 20}) async {
-    vAc = AcController(MemoryAcStore(pUnits ?? [const AcUnit(name: 'Salon', host: vHost)]), FakeDaikinLink());
+    pTester.view.physicalSize = const Size(800, 1800);
+    pTester.view.devicePixelRatio = 1;
+    addTearDown(pTester.view.reset);
+    vAc = AcController(
+      MemoryAcStore(pUnits ?? [const AcUnit(name: 'Salon', host: vHost)]),
+      FakeDaikinLink(),
+    );
     vSensors = SensorsController(
       MemorySensorStore([
         Sensor(name: 'Salon', readings: [Reading(at: vNow, temp: pTemp, humidity: 50)]),
@@ -73,7 +79,7 @@ void main() {
 
   testWidgets('une température reste entre 10 et 30 °C', (pTester) async {
     await open(pTester);
-    vPlan.setRoom(
+    await vPlan.setRoom(
       const Room(
         acHost: vHost,
         targets: RoomTargets(comfort: 30, night: 10),
