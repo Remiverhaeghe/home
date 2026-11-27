@@ -60,4 +60,24 @@ void main() {
 
     expect(await vFiles.takePending(), hasLength(1));
   });
+
+  test('regarder les relevés en attente ne les retire pas', () async {
+    expect(await vFiles.peekPending(), isEmpty);
+    await vFiles.appendPending(line('A', 0));
+
+    expect((await vFiles.peekPending()).single.sensor, 'A');
+    expect((await vFiles.peekPending()).single.sensor, 'A');
+    expect(await vFiles.takePending(), hasLength(1));
+  });
+
+  test('l\'appli ouverte se signale pour une durée limitée', () async {
+    final vNow = DateTime(2026, 12, 1, 8);
+    const vWindow = Duration(minutes: 7);
+    expect(await vFiles.isAppOpen(vNow, vWindow), isFalse);
+
+    await vFiles.markAppOpen(vNow);
+
+    expect(await vFiles.isAppOpen(vNow.add(const Duration(minutes: 6)), vWindow), isTrue);
+    expect(await vFiles.isAppOpen(vNow.add(const Duration(minutes: 7)), vWindow), isFalse);
+  });
 }

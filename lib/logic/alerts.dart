@@ -50,3 +50,17 @@ List<SensorAlert> evaluateAlerts(List<Sensor> pSensors, DateTime pNow) {
 /// Alertes de [pCurrent] pas encore signalées, d'après les clés déjà connues [pKnown].
 List<SensorAlert> freshAlerts(List<SensorAlert> pCurrent, Set<String> pKnown) =>
     pCurrent.where((pAlert) => !pKnown.contains(pAlert.key)).toList();
+
+/// Une phrase pour la notification du service : « Gel : Salon (3,0 °C) · Humidité : Bain (74 %) ».
+/// Vide quand il n'y a aucune alerte.
+String alertSummary(List<SensorAlert> pAlerts) => pAlerts
+    .map(
+      (pAlert) => switch (pAlert.kind) {
+        AlertKind.frost => 'Gel : ${pAlert.sensorName} (${_decimal(pAlert.value ?? 0)} °C)',
+        AlertKind.humidity => 'Humidité : ${pAlert.sensorName} (${(pAlert.value ?? 0).round()} %)',
+        AlertKind.silent => 'Capteur muet : ${pAlert.sensorName}',
+      },
+    )
+    .join(' · ');
+
+String _decimal(double pValue) => pValue.toStringAsFixed(1).replaceAll('.', ',');
