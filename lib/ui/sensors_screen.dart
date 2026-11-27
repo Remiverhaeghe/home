@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -30,12 +31,22 @@ Future<String?> pickTextFile() async {
   return rText;
 }
 
+/// Enregistrement d'un fichier choisi par l'utilisateur ; renvoie false s'il renonce.
+typedef FileSaver = Future<bool> Function(String pFileName, Uint8List pBytes);
+
+Future<bool> saveFileDialog(String pFileName, Uint8List pBytes) async {
+  final vSaved = await FilePicker.saveFile(fileName: pFileName, bytes: pBytes);
+
+  return vSaved != null;
+}
+
 /// Écran unique du premier lot : un capteur par carte, avec le dernier relevé.
 class SensorsScreen extends StatelessWidget {
   const SensorsScreen({
     super.key,
     required this.controller,
     this.pickFile = pickTextFile,
+    this.saveFile = saveFileDialog,
     this.link,
     this.acController,
     this.planController,
@@ -45,6 +56,7 @@ class SensorsScreen extends StatelessWidget {
 
   final SensorsController controller;
   final TextFilePicker pickFile;
+  final FileSaver saveFile;
 
   /// Liaison Bluetooth ; créée à l'ouverture de l'écran des capteurs à portée si absente.
   final Tp357Link? link;
@@ -79,6 +91,16 @@ class SensorsScreen extends StatelessWidget {
     ScaffoldMessenger.of(pContext).showSnackBar(SnackBar(content: Text(vMessage)));
   }
 
+  /// Enregistre tous les capteurs dans un fichier d'échange que l'on ouvre ensuite dans Atelier.
+  Future<void> _export(BuildContext pContext) async {
+    final vTexts = AppLocalizations.of(pContext);
+    final vBytes = Uint8List.fromList(utf8.encode(exchangeJson(controller.sensors)));
+    final vSaved = await saveFile('home-climat.json', vBytes);
+    if (vSaved && pContext.mounted) {
+      ScaffoldMessenger.of(pContext).showSnackBar(SnackBar(content: Text(vTexts.exportDone)));
+    }
+  }
+
   @override
   Widget build(BuildContext pContext) {
     final vTexts = AppLocalizations.of(pContext);
@@ -87,6 +109,14 @@ class SensorsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(vTexts.sensorsTitle),
         actions: [
+          ListenableBuilder(
+            listenable: controller,
+            builder: (pContext, _) => IconButton(
+              tooltip: vTexts.exportFile,
+              icon: const Icon(Icons.ios_share),
+              onPressed: controller.sensors.isEmpty ? null : () => _export(pContext),
+            ),
+          ),
           if (acController != null)
             IconButton(
               tooltip: vTexts.acOpen,

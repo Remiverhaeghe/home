@@ -346,5 +346,7 @@
         "type": "String"
       }
     }
-  }
+  },
+  "exportFile": "Exporter pour Atelier",
+  "exportDone": "Fichier enregistré. Ouvre-le dans Atelier, écran « Capteurs de la maison »."
 }

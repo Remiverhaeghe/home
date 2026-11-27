@@ -4,6 +4,7 @@
 
 ### Ajouté
 
+- Export des capteurs en fichier d'échange (`home-climat.json`), à enregistrer depuis le téléphone puis à ouvrir dans Atelier, écran « Capteurs de la maison »
 - Plan appliqué en arrière-plan, appli fermée : le service relève les capteurs puis commande les climatisations selon les profils, le planning, les règles et le mode vacances, à partir des relevés en attente
 - Alertes de gel, d'humidité et de capteur muet affichées dans la notification du service
 - Quand l'appli est ouverte, c'est elle qui applique le plan : le service s'efface tant qu'elle s'est signalée depuis moins de 7 minutes

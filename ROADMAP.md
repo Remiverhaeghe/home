@@ -23,7 +23,7 @@ Tout doit marcher avec le téléphone seul : pas de NAS, pas de serveur, pas de 
 - [ ] Porte de garage : relais Wi-Fi sur le contact sec du moteur, confirmation obligatoire à chaque commande
 - [ ] Poêle à pellets Ecoforest : état et commande par le réseau de la maison, si le modèle a le module réseau
 - [ ] Prises de courant connectées : marche/arrêt et consommation, marque à choisir
-- [ ] Export du fichier d'échange pour Atelier, partagé depuis le téléphone
+- [x] Export du fichier d'échange pour Atelier, enregistré depuis le téléphone
 
 ## Écran mural
 
