@@ -10,6 +10,7 @@ import '../logic/pending_readings.dart';
 import '../logic/reading.dart';
 import '../net/daikin_link.dart';
 import '../storage/background_files.dart';
+import 'alert_notifier.dart';
 import 'plan_runner.dart';
 
 /// Point d'entrée du service, appelé dans son propre processus Dart.
@@ -42,6 +43,7 @@ class ReadingsTaskHandler extends TaskHandler {
   void onReceiveData(Object data) {}
 
   PlanRunner? _runner;
+  final AlertNotifier _notifier = LocalAlertNotifier();
 
   /// Applique le plan de la maison, puis montre les nouvelles alertes dans la notification du
   /// service. Un échec ici ne doit jamais arrêter les relevés.
@@ -50,6 +52,7 @@ class ReadingsTaskHandler extends TaskHandler {
       final vRunner = _runner ??= PlanRunner(pFolder: pFolder, pLink: HttpDaikinLink());
       final vAlerts = await vRunner.run(DateTime.now());
       if (vAlerts.isNotEmpty) {
+        await _notifier.show(vAlerts);
         await FlutterForegroundTask.updateService(
           notificationTitle: 'Alerte',
           notificationText: alertSummary(vAlerts),

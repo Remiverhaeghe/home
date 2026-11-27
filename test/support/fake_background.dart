@@ -1,4 +1,6 @@
+import 'package:home/background/alert_notifier.dart';
 import 'package:home/background/background_control.dart';
+import 'package:home/logic/alerts.dart';
 
 /// Service d'arrière-plan de test : il note ce qu'on lui demande.
 class FakeBackgroundControl implements BackgroundControl {
@@ -27,4 +29,12 @@ class FakeBackgroundControl implements BackgroundControl {
     stops++;
     running = false;
   }
+}
+
+/// Notifications de test : elles notent les alertes montrées.
+class FakeAlertNotifier implements AlertNotifier {
+  final shown = <List<SensorAlert>>[];
+
+  @override
+  Future<void> show(List<SensorAlert> pAlerts) async => shown.add(pAlerts);
 }

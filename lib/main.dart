@@ -5,6 +5,7 @@ import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'app.dart';
+import 'background/alert_notifier.dart';
 import 'background/background_control.dart';
 import 'net/daikin_link.dart';
 import 'state/ac_controller.dart';
@@ -28,11 +29,14 @@ Future<void> main() async {
   await vAc.load();
   final vPlan = PlanController(FilePlanStore(vFolder), vAc, vController);
   await vPlan.load();
+  final vNotifier = LocalAlertNotifier();
+  await vNotifier.requestPermission();
   runApp(
     HomeApp(
       controller: vController,
       acController: vAc,
       planController: vPlan,
+      notifier: vNotifier,
       background: ForegroundBackgroundControl(),
       files: BackgroundFiles(vFolder),
     ),

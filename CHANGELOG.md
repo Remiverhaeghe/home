@@ -4,6 +4,7 @@
 
 ### Ajouté
 
+- Notifications d'alerte avec son et bannière (gel, humidité haute, capteur muet), une par alerte, appli ouverte ou fermée ; l'accord est demandé au démarrage
 - Plan appliqué en arrière-plan, appli fermée : le service relève les capteurs puis commande les climatisations selon les profils, le planning, les règles et le mode vacances, à partir des relevés en attente
 - Alertes de gel, d'humidité et de capteur muet affichées dans la notification du service
 - Quand l'appli est ouverte, c'est elle qui applique le plan : le service s'efface tant qu'elle s'est signalée depuis moins de 7 minutes

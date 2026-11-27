@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'background/alert_notifier.dart';
 import 'background/background_control.dart';
 import 'l10n/gen/app_localizations.dart';
 import 'state/ac_controller.dart';
@@ -18,6 +19,7 @@ class HomeApp extends StatefulWidget {
     required this.controller,
     this.acController,
     this.planController,
+    this.notifier,
     this.background,
     this.files,
   });
@@ -25,6 +27,9 @@ class HomeApp extends StatefulWidget {
   final SensorsController controller;
   final AcController? acController;
   final PlanController? planController;
+
+  /// Notifications d'alerte ; sans elles, les alertes restent visibles dans l'écran Pilotage.
+  final AlertNotifier? notifier;
 
   /// Service de relevé en arrière-plan et fichiers qu'il partage avec l'appli.
   final BackgroundControl? background;
@@ -57,7 +62,8 @@ class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
     // Le service d'arrière-plan s'efface tant que l'appli se signale
     await widget.files?.markAppOpen(vNow);
     await widget.acController!.refresh();
-    await widget.planController!.tick(vNow);
+    final vFresh = await widget.planController!.tick(vNow);
+    await widget.notifier?.show(vFresh);
   }
 
   @override
