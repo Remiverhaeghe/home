@@ -31,7 +31,8 @@ class _SensorDetailScreenState extends State<SensorDetailScreen> {
   Future<void> _rename() async {
     final vLabel = await showDialog<String>(
       context: context,
-      builder: (_) => _RenameDialog(current: _title == sensor.name ? '' : _title, device: sensor.name),
+      builder: (_) =>
+          _RenameDialog(current: _title == sensor.name ? '' : _title, device: sensor.name),
     );
     if (vLabel == null) {
       return;
