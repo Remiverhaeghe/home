@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:home/logic/climate_exchange.dart';
+import 'package:home/logic/pending_readings.dart';
 import 'package:home/logic/reading.dart';
 import 'package:home/state/sensors_controller.dart';
 import 'package:home/storage/sensor_store.dart';
@@ -95,5 +96,58 @@ void main() {
 
     expect(vController.sensors.single.readings, hasLength(1));
     expect(vNotified, 0);
+  });
+
+  group('relevés pris en arrière-plan', () {
+    PendingReading pending(String pSensor, DateTime pAt) => PendingReading(
+      sensor: pSensor,
+      reading: Reading(at: pAt, temp: 20, humidity: 55),
+    );
+
+    test('ils sont rangés, enregistrés et signalés', () async {
+      final vStore = MemorySensorStore();
+      final vController = SensorsController(vStore);
+      var vNotified = 0;
+      vController.addListener(() => vNotified++);
+
+      await vController.syncPending(
+        () async => [
+          pending('TP357 (1A2B)', DateTime(2026, 12, 1, 8)),
+          pending('TP357 (1A2B)', DateTime(2026, 12, 1, 8, 5)),
+        ],
+      );
+
+      expect(vController.sensors.single.readings, hasLength(2));
+      expect(vStore.saved.single.name, 'TP357 (1A2B)');
+      expect(vNotified, 1);
+    });
+
+    test('sans relevé en attente, rien n\'est écrit ni signalé', () async {
+      final vStore = MemorySensorStore();
+      final vController = SensorsController(vStore);
+      var vNotified = 0;
+      vController.addListener(() => vNotified++);
+
+      await vController.syncPending(() async => []);
+
+      expect(vNotified, 0);
+      expect(vStore.saved, isEmpty);
+    });
+
+    test('des relevés tous trop proches des précédents ne changent rien', () async {
+      final vStore = MemorySensorStore();
+      final vController = SensorsController(vStore);
+      await vController.addLiveReading(
+        'Cave',
+        Reading(at: DateTime(2026, 12, 1, 8), temp: 12, humidity: 70),
+      );
+      var vNotified = 0;
+      vController.addListener(() => vNotified++);
+
+      await vController.syncPending(() async => [pending('Cave', DateTime(2026, 12, 1, 8, 0, 20))]);
+
+      expect(vController.sensors.single.readings, hasLength(1));
+      expect(vNotified, 0);
+    });
   });
 }
