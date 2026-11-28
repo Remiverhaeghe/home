@@ -17,7 +17,7 @@ class Room {
 }
 
 /// Pourquoi une commande est envoyée.
-enum PlanReason { windowOpen, vacation, comfort, rule }
+enum PlanReason { windowOpen, vacation, comfort, rule, stove }
 
 /// Une commande à envoyer à la clim [host].
 class PlanCommand {
@@ -46,6 +46,10 @@ class PlanResult {
 const windowDrop = 1.5;
 const windowSpan = Duration(minutes: 10);
 const windowHold = Duration(minutes: 30);
+
+/// Quand le poêle marche, la clim ne chauffe pas en plus tant que la pièce est à cette température
+/// ou plus. En dessous, il fait trop froid : les deux peuvent tourner ensemble.
+const stoveColdBelow = 16.0;
 
 /// Délais minimaux entre deux commandes de même nature sur une clim.
 const comfortGap = Duration(minutes: 10);
@@ -91,6 +95,8 @@ PlanResult evaluatePlan({
   Map<String, double> pOutdoors = const {},
   Map<String, DateTime> pLastRuns = const {},
   Map<String, DateTime> pWindowSince = const {},
+  bool pStoveRunning = false,
+  double pStoveColdBelow = stoveColdBelow,
 }) {
   final vCommands = <PlanCommand>[];
   final vWindowHosts = <String>{};
@@ -147,6 +153,17 @@ PlanResult evaluatePlan({
           pOutdoor: pOutdoors[vHost],
         );
         vReason = PlanReason.comfort;
+      }
+    }
+    if (vReason == PlanReason.comfort && pStoveRunning && vReading.temp >= pStoveColdBelow) {
+      // Le poêle chauffe déjà : la clim ne chauffe pas en plus, et s'arrête si elle chauffait
+      final vHeating = vControl.power && vControl.mode == DaikinMode.heat;
+      if (vTarget != null && vTarget.power && vTarget.mode == DaikinMode.heat) {
+        vTarget = vHeating ? vControl.copyWith(power: false) : null;
+        vReason = PlanReason.stove;
+      } else if (vTarget == null && vHeating) {
+        vTarget = vControl.copyWith(power: false);
+        vReason = PlanReason.stove;
       }
     }
     if (vTarget != null && vReason != null) {
