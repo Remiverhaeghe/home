@@ -68,22 +68,26 @@ class _AboutDetailSectionState extends State<AboutDetailSection> {
             ),
             if (vText.isEmpty)
               Text(vTexts.aboutDetailEmpty)
-            else ...[
-              SelectableText(vText, style: const TextStyle(fontFamily: 'monospace', fontSize: 12)),
-              const SizedBox(height: 12),
-              Wrap(
-                spacing: 8,
-                children: [
+            else
+              SelectableText(
+                vText,
+                style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
+              ),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              children: [
+                if (vText.isNotEmpty)
                   FilledButton.icon(
                     onPressed: () => _save(vText),
                     icon: const Icon(Icons.ios_share),
                     label: Text(vTexts.aboutSave),
                   ),
+                if (vText.isNotEmpty)
                   OutlinedButton(onPressed: _clear, child: Text(vTexts.aboutClear)),
-                  OutlinedButton(onPressed: _reload, child: Text(vTexts.aboutDetailReload)),
-                ],
-              ),
-            ],
+                OutlinedButton(onPressed: _reload, child: Text(vTexts.aboutDetailReload)),
+              ],
+            ),
           ],
         );
       },

@@ -117,6 +117,7 @@ void main() {
     expect(vDetail.on, isTrue);
 
     await vDetail.note('tour', 'début');
+    await pTester.scrollUntilVisible(find.text('Actualiser'), 200);
     await pTester.tap(find.text('Actualiser'));
     await pTester.pumpAndSettle();
     expect(find.textContaining('[tour] début'), findsOneWidget);
