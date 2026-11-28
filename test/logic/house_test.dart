@@ -71,4 +71,33 @@ void main() {
     expect(vBack.places.keys, ['A']);
     expect(vBack.placeOf('A').floor, isNull);
   });
+
+  test('la hauteur sous plafond se lit avec une virgule ou un point, dans les bornes', () {
+    expect(parseCeiling('5,5'), 5.5);
+    expect(parseCeiling(' 6 '), 6);
+    expect(parseCeiling('1,4'), isNull);
+    expect(parseCeiling('13'), isNull);
+    expect(parseCeiling('haut'), isNull);
+    expect(parseCeiling(''), isNull);
+  });
+
+  test('la hauteur sous plafond est rangée et relue avec l\'emplacement', () {
+    final vHouse = const House().withPlace(
+      'A',
+      const SensorPlace(room: 'Salon', floor: 0, ceiling: 5.5),
+    );
+
+    expect(parseHouse(houseJson(vHouse)).placeOf('A').ceiling, 5.5);
+  });
+
+  test('une hauteur seule suffit à garder l\'emplacement, une hauteur absurde est ignorée', () {
+    final vOnly = const House().withPlace('A', const SensorPlace(ceiling: 6));
+    expect(vOnly.places.keys, ['A']);
+
+    final vBad = parseHouse(
+      '{"version":1,"places":{"A":{"room":"Salon","floor":0,"outdoor":false,"ceiling":99}}}',
+    );
+    expect(vBad.placeOf('A').room, 'Salon');
+    expect(vBad.placeOf('A').ceiling, isNull);
+  });
 }

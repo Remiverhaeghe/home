@@ -223,12 +223,16 @@ class _PlaceDialog extends StatefulWidget {
 
 class _PlaceDialogState extends State<_PlaceDialog> {
   late final _room = TextEditingController(text: widget.current.room);
+  late final _ceiling = TextEditingController(
+    text: widget.current.ceiling == null ? '' : '${widget.current.ceiling}'.replaceAll('.', ','),
+  );
   late int? _floor = widget.current.floor;
   late bool _outdoor = widget.current.outdoor;
 
   @override
   void dispose() {
     _room.dispose();
+    _ceiling.dispose();
     super.dispose();
   }
 
@@ -246,6 +250,16 @@ class _PlaceDialogState extends State<_PlaceDialog> {
               controller: _room,
               decoration: InputDecoration(labelText: vTexts.placeRoom),
             ),
+            if (!_outdoor)
+              TextField(
+                key: const Key('place-ceiling'),
+                controller: _ceiling,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                decoration: InputDecoration(
+                  labelText: vTexts.placeCeiling,
+                  helperText: vTexts.placeCeilingHelp,
+                ),
+              ),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
               title: Text(vTexts.placeOutdoor),
@@ -272,7 +286,12 @@ class _PlaceDialogState extends State<_PlaceDialog> {
         FilledButton(
           onPressed: () => Navigator.pop(
             pContext,
-            SensorPlace(room: _room.text, floor: _floor, outdoor: _outdoor),
+            SensorPlace(
+              room: _room.text,
+              floor: _floor,
+              outdoor: _outdoor,
+              ceiling: _outdoor ? null : parseCeiling(_ceiling.text),
+            ),
           ),
           child: Text(vTexts.save),
         ),
