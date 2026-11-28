@@ -12,12 +12,14 @@ import 'net/pellet_link.dart';
 import 'net/relay_link.dart';
 import 'state/ac_controller.dart';
 import 'state/plan_controller.dart';
+import 'state/house_controller.dart';
 import 'state/pellet_controller.dart';
 import 'state/relay_controller.dart';
 import 'state/sensors_controller.dart';
 import 'storage/ac_store.dart';
 import 'storage/background_files.dart';
 import 'storage/file_sensor_store.dart';
+import 'storage/house_store.dart';
 import 'storage/label_store.dart';
 import 'storage/plan_store.dart';
 import 'storage/pellet_store.dart';
@@ -49,6 +51,8 @@ Future<void> main() async {
     HttpsPelletLink(),
   );
   await vPellet.load();
+  final vHouse = HouseController(FileHouseStore(File('${vFolder.path}/maison.json')));
+  await vHouse.load();
   final vNotifier = LocalAlertNotifier();
   await vNotifier.requestPermission();
   runApp(
@@ -58,6 +62,7 @@ Future<void> main() async {
       planController: vPlan,
       relayController: vRelays,
       pelletController: vPellet,
+      houseController: vHouse,
       notifier: vNotifier,
       background: ForegroundBackgroundControl(),
       files: BackgroundFiles(vFolder),

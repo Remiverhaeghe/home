@@ -33,3 +33,4 @@ Home sur un écran dans la pièce principale, avec une vue 3D de la maison et la
 - [x] Mode écran mural : paysage, plein écran, écran allumé, grosses commandes lisibles à deux mètres
 - [ ] Vue 3D de la maison : plan repris d'Atelier, pièces colorées selon la température et l'humidité, toucher une pièce pour régler clim, fenêtres, poêle et prises
 - [ ] La tablette murale, toujours allumée, sert de centrale : relevés et automatismes tournent dessus, sans NAS
+- [x] Lieu de la maison saisi à la main et emplacement des capteurs (pièce, niveau, extérieur), liste groupée par niveau
