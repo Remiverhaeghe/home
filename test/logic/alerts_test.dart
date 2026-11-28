@@ -33,6 +33,13 @@ void main() {
       expect(vAlerts.single.value, 70.1);
     });
 
+    test('le seuil d\'humidité est réglable', () {
+      final vSensors = [_sensor('A', 20, 66), _sensor('B', 20, 60)];
+
+      expect(evaluateAlerts(vSensors, _now), isEmpty);
+      expect(evaluateAlerts(vSensors, _now, pHumidityLevel: 62).single.sensorName, 'A');
+    });
+
     test('gel et humidité peuvent s\'ajouter sur le même capteur', () {
       final vAlerts = evaluateAlerts([_sensor('A', 3, 90)], _now);
 
