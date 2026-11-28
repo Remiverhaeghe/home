@@ -102,7 +102,8 @@ HouseCalendar parseCalendar(String pText) {
     return const HouseCalendar();
   }
   final vWeekdays = vRoot['remoteWeekdays'];
-  final vRule = HolidayRule.values.where((pRule) => pRule.name == vRoot['holidays']);
+  final vRuleName = vRoot['holidays'];
+  final vRule = HolidayRule.values.where((pRule) => pRule.name == vRuleName);
   final vRaw = vRoot['overrides'];
   final vOverrides = <DateTime, DayOverride>{};
   if (vRaw is Map) {
