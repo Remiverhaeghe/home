@@ -195,7 +195,8 @@ class _PelletScreenState extends State<PelletScreen> {
                 if (vState.powerLevel != null)
                   ListTile(title: Text(vTexts.pelletLevel), subtitle: Text('${vState.powerLevel}')),
               ],
-              if (widget.controller.stove != null) PelletUsageSection(controller: widget.controller),
+              if (widget.controller.stove != null)
+                PelletUsageSection(controller: widget.controller),
             ],
           );
         },
