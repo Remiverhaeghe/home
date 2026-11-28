@@ -287,7 +287,10 @@ class _PlaceDialogState extends State<_PlaceDialog> {
                   return Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
-                      vTexts.placeVolume(vVolume.round(), (airEnergyKwh(vVolume, 1) * 1000).round()),
+                      vTexts.placeVolume(
+                        vVolume.round(),
+                        (airEnergyKwh(vVolume, 1) * 1000).round(),
+                      ),
                       key: const Key('place-volume'),
                     ),
                   );
