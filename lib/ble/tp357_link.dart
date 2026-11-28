@@ -23,6 +23,10 @@ abstract interface class Tp357Link {
 class BleTp357Link implements Tp357Link {
   final _aBle = FlutterReactiveBle();
 
+  /// Reçoit une phrase à chaque étape d'une connexion (état, abonnement, trames), pour le journal
+  /// détaillé : sans elle, un délai dépassé ne dit pas où la connexion s'est arrêtée.
+  void Function(String pStep)? onTrace;
+
   Future<bool> _allowed() async {
     final vStatus = await [
       Permission.bluetoothScan,
@@ -76,22 +80,33 @@ class BleTp357Link implements Tp357Link {
     var vStarted = false;
     rController = StreamController<List<int>>(
       onListen: () {
+        onTrace?.call('connexion lancée');
         vConnection = _aBle.connectToDevice(id: pDeviceId).listen((pUpdate) async {
+          onTrace?.call('connexion : ${pUpdate.connectionState.name}');
           if (pUpdate.connectionState != DeviceConnectionState.connected || vStarted) {
             return;
           }
           // Marqué tout de suite : une deuxième mise à jour ne doit pas rouvrir l'abonnement
           vStarted = true;
           final vNotify = await _find(pDeviceId, tp357NotifyCharacteristic);
+          onTrace?.call(
+            vNotify == null ? 'caractéristique introuvable' : 'caractéristique trouvée, abonnement',
+          );
           if (vNotify == null) {
             rController.addError(StateError('Caractéristique du TP357 introuvable'));
             return;
           }
           vFrames = _aBle
               .subscribeToCharacteristic(vNotify)
-              .listen(rController.add, onError: rController.addError);
+              .listen((pFrame) {
+                onTrace?.call('trame de ${pFrame.length} octets');
+                rController.add(pFrame);
+              }, onError: rController.addError);
           await pOnReady(pDeviceId);
-        }, onError: rController.addError);
+        }, onError: (Object pError) {
+          onTrace?.call('connexion en erreur : ${pError.runtimeType}');
+          rController.addError(pError);
+        });
       },
       onCancel: () async {
         await vFrames?.cancel();

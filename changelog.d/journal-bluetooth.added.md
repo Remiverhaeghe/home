@@ -1,0 +1,1 @@
+- Journal détaillé : chaque connexion Bluetooth en arrière-plan note ses étapes (connexion lancée, état de la connexion, caractéristique trouvée, trames reçues), pour voir où s'arrête un capteur muet. Les notes s'écrivent l'une après l'autre, sans en perdre.

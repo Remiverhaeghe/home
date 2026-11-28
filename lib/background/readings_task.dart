@@ -89,6 +89,7 @@ class ReadingsTaskHandler extends TaskHandler {
     for (var vTry = 0; vTry < _tries; vTry++) {
       try {
         final vStart = DateTime.now();
+        _link.onTrace = (pStep) => unawaited(pDetail.note('capteur $pRank', pStep));
         final vValue = await _link.live(pDevice.id).first.timeout(_wait);
         await pFiles.appendPending(
           pendingLine(
