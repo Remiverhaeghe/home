@@ -173,4 +173,46 @@ void main() {
       );
     });
   });
+
+  group('aération', () {
+    List<Reading> humidities(List<(int, double)> pPoints) => [
+      for (final vPoint in pPoints)
+        Reading(at: _now.subtract(Duration(minutes: vPoint.$1)), temp: 20, humidity: vPoint.$2),
+    ];
+
+    test('une humidité qui monte de 12 points ou plus en une demi-heure conseille d\'aérer', () {
+      final vReadings = humidities([(30, 50), (20, 55), (10, 62), (0, 68)]);
+
+      expect(isRisingFast(vReadings), isTrue);
+      final vAlert = evaluateAlerts([Sensor(name: 'Bain', readings: vReadings)], _now).single;
+      expect(vAlert.kind, AlertKind.ventilate);
+      expect(vAlert.value, 68);
+      expect(alertSummary([vAlert]), 'Aérer : Bain');
+    });
+
+    test('une montée lente, un air encore sec ou des relevés trop rapprochés ne disent rien', () {
+      expect(isRisingFast(humidities([(30, 60), (20, 62), (10, 64), (0, 66)])), isFalse);
+      expect(isRisingFast(humidities([(30, 40), (0, 55)])), isFalse);
+      expect(isRisingFast(humidities([(5, 50), (0, 68)])), isFalse);
+      expect(isRisingFast(humidities([(0, 68)])), isFalse);
+      expect(isRisingFast(const []), isFalse);
+    });
+
+    test('un relevé plus vieux que la fenêtre n\'entre pas dans le calcul', () {
+      expect(isRisingFast(humidities([(60, 45), (10, 62), (0, 64)])), isFalse);
+    });
+
+    test('un capteur placé dehors n\'est pas concerné', () {
+      final vSensors = [Sensor(name: 'Jardin', readings: humidities([(30, 50), (0, 70.5)]))];
+
+      expect(
+        evaluateAlerts(vSensors, _now, pOutdoor: {'Jardin'}).map((pAlert) => pAlert.kind),
+        [AlertKind.humidity],
+      );
+      expect(
+        evaluateAlerts(vSensors, _now).map((pAlert) => pAlert.kind),
+        containsAll([AlertKind.ventilate, AlertKind.humidity]),
+      );
+    });
+  });
 }

@@ -1,7 +1,7 @@
 import 'reading.dart';
 
 /// Ce qui mérite une notification.
-enum AlertKind { frost, humidity, silent, stuck }
+enum AlertKind { frost, humidity, silent, stuck, ventilate }
 
 /// Seuils des alertes.
 const frostAlertTemp = 5.0;
@@ -19,6 +19,39 @@ const silentAfter = Duration(minutes: 60);
 /// est figé : pile faible ou capteur bloqué.
 const stuckAfter = Duration(hours: 6);
 const stuckMinReadings = 12;
+
+/// Une douche ou une cuisson fait monter vite l'humidité : au moins [ventilateRise] points en
+/// [ventilateWindow], pour une humidité qui dépasse déjà [ventilateFrom]. Ce sont des repères de
+/// prudence, pas des mesures : ils servent à conseiller d'aérer, pas à diagnostiquer.
+const ventilateWindow = Duration(minutes: 30);
+const ventilateRise = 12.0;
+const ventilateFrom = 60.0;
+
+/// Au moins deux relevés écartés d'un quart d'heure, pour ne pas conclure sur du bruit.
+const ventilateMinSpan = Duration(minutes: 15);
+
+/// L'humidité vient-elle de monter vite, d'après les relevés des dernières [ventilateWindow] ?
+bool isRisingFast(List<Reading> pReadings) {
+  if (pReadings.length < 2) {
+    return false;
+  }
+  final vLast = pReadings.last;
+  if (vLast.humidity < ventilateFrom) {
+    return false;
+  }
+  Reading? vLow;
+  for (var vIndex = pReadings.length - 2; vIndex >= 0; vIndex--) {
+    final vAge = vLast.at.difference(pReadings[vIndex].at);
+    if (vAge > ventilateWindow) {
+      break;
+    }
+    if (vAge >= ventilateMinSpan && (vLow == null || pReadings[vIndex].humidity < vLow.humidity)) {
+      vLow = pReadings[vIndex];
+    }
+  }
+
+  return vLow != null && vLast.humidity - vLow.humidity >= ventilateRise;
+}
 
 /// Les derniers relevés sont-ils identiques depuis [stuckAfter] ? Ne lit que la fin de la liste.
 bool isStuck(List<Reading> pReadings) {
@@ -50,7 +83,8 @@ class SensorAlert {
 }
 
 /// Alertes à l'instant [pNow] : gel sous [frostAlertTemp], humidité au-dessus de
-/// [pHumidityLevel] (70 % au départ, réglable), capteur sans relevé depuis [silentAfter]. Un capteur sans aucun relevé
+/// [pHumidityLevel] (70 % au départ, réglable), capteur sans relevé depuis [silentAfter], humidité qui
+/// monte vite (conseil d'aérer, sauf pour les capteurs de [pOutdoor]). Un capteur sans aucun relevé
 /// n'alerte pas : il n'a encore jamais parlé. Seuls les capteurs de [pWatched] (ceux que le service
 /// d'arrière-plan suit) peuvent être muets : les autres ne donnent un relevé que quand on ouvre
 /// l'appli. Sans [pWatched], tous les capteurs sont surveillés.
@@ -59,6 +93,7 @@ List<SensorAlert> evaluateAlerts(
   DateTime pNow, {
   Set<String>? pWatched,
   double pHumidityLevel = humidityAlertLevel,
+  Set<String> pOutdoor = const {},
 }) {
   final rAlerts = <SensorAlert>[];
   for (final vSensor in pSensors) {
@@ -76,6 +111,11 @@ List<SensorAlert> evaluateAlerts(
     }
     if (isStuck(vSensor.readings)) {
       rAlerts.add(SensorAlert(sensorName: vSensor.name, kind: AlertKind.stuck));
+    }
+    if (!pOutdoor.contains(vSensor.name) && isRisingFast(vSensor.readings)) {
+      rAlerts.add(
+        SensorAlert(sensorName: vSensor.name, kind: AlertKind.ventilate, value: vLast.humidity),
+      );
     }
     if (vLast.temp < frostAlertTemp) {
       rAlerts.add(SensorAlert(sensorName: vSensor.name, kind: AlertKind.frost, value: vLast.temp));
@@ -103,6 +143,7 @@ String alertSummary(List<SensorAlert> pAlerts) => pAlerts
         AlertKind.humidity => 'Humidité : ${pAlert.sensorName} (${(pAlert.value ?? 0).round()} %)',
         AlertKind.silent => 'Capteur muet : ${pAlert.sensorName}',
         AlertKind.stuck => 'Capteur figé : ${pAlert.sensorName}',
+        AlertKind.ventilate => 'Aérer : ${pAlert.sensorName}',
       },
     )
     .join(' · ');

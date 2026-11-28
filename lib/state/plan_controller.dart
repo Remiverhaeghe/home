@@ -21,6 +21,9 @@ class PlanController extends ChangeNotifier {
   /// lecture de la liste, tous sont alors surveillés.
   Set<String>? watched;
 
+  /// Capteurs placés dehors : l'humidité de l'air extérieur ne dit pas d'aérer la maison.
+  Set<String> outdoor = const {};
+
   /// Le poêle à pellets est allumé : la clim ne chauffe pas en plus, sauf s'il fait très froid.
   bool stoveRunning = false;
 
@@ -264,6 +267,7 @@ class PlanController extends ChangeNotifier {
       pNow,
       pWatched: watched,
       pHumidityLevel: humidityAlertAt,
+      pOutdoor: outdoor,
     );
     final rFresh = freshAlerts(vCurrent, _knownAlerts);
     _knownAlerts = {for (final vAlert in vCurrent) vAlert.key};

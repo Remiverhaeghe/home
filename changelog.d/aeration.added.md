@@ -1,0 +1,1 @@
+- Conseil d'aérer : quand l'humidité d'un capteur monte de 12 points ou plus en une demi-heure (douche, cuisson) et dépasse 60 %, une alerte « pensez à aérer » apparaît, avec une notification en arrière-plan. Les capteurs placés dehors sont ignorés.

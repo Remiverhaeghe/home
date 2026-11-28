@@ -94,4 +94,5 @@ String alertTitle(SensorAlert pAlert) => switch (pAlert.kind) {
   AlertKind.humidity => 'Humidité haute',
   AlertKind.silent => 'Capteur muet',
   AlertKind.stuck => 'Capteur figé',
+  AlertKind.ventilate => 'Aération conseillée',
 };
