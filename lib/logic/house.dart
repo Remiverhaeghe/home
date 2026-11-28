@@ -52,13 +52,7 @@ double airEnergyKwh(double pVolume, double pDegrees) => pVolume * pDegrees * air
 
 /// Où se trouve un capteur : la pièce, le niveau, ou dehors.
 class SensorPlace {
-  const SensorPlace({
-    this.room = '',
-    this.floor,
-    this.outdoor = false,
-    this.ceiling,
-    this.area,
-  });
+  const SensorPlace({this.room = '', this.floor, this.outdoor = false, this.ceiling, this.area});
 
   final String room;
 
