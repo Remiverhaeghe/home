@@ -35,7 +35,8 @@ AppearanceSettings parseAppearance(String pText) {
   if (vRoot is! Map<String, dynamic> || vRoot['version'] != 1) {
     return const AppearanceSettings();
   }
-  final vTheme = ThemeChoice.values.where((pChoice) => pChoice.name == vRoot['theme']);
+  final vThemeName = vRoot['theme'];
+  final vTheme = ThemeChoice.values.where((pChoice) => pChoice.name == vThemeName);
   final vScale = vRoot['textScale'];
 
   return AppearanceSettings(
