@@ -177,7 +177,11 @@ void main() {
   group('aération', () {
     List<Reading> humidities(List<(int, double)> pPoints) => [
       for (final vPoint in pPoints)
-        Reading(at: _now.subtract(Duration(minutes: vPoint.$1)), temp: 20, humidity: vPoint.$2),
+        Reading(
+          at: _now.subtract(Duration(minutes: vPoint.$1)),
+          temp: 20,
+          humidity: vPoint.$2,
+        ),
     ];
 
     test('une humidité qui monte de 12 points ou plus en une demi-heure conseille d\'aérer', () {
@@ -203,12 +207,13 @@ void main() {
     });
 
     test('un capteur placé dehors n\'est pas concerné', () {
-      final vSensors = [Sensor(name: 'Jardin', readings: humidities([(30, 50), (0, 70.5)]))];
+      final vSensors = [
+        Sensor(name: 'Jardin', readings: humidities([(30, 50), (0, 70.5)])),
+      ];
 
-      expect(
-        evaluateAlerts(vSensors, _now, pOutdoor: {'Jardin'}).map((pAlert) => pAlert.kind),
-        [AlertKind.humidity],
-      );
+      expect(evaluateAlerts(vSensors, _now, pOutdoor: {'Jardin'}).map((pAlert) => pAlert.kind), [
+        AlertKind.humidity,
+      ]);
       expect(
         evaluateAlerts(vSensors, _now).map((pAlert) => pAlert.kind),
         containsAll([AlertKind.ventilate, AlertKind.humidity]),
