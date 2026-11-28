@@ -8,6 +8,7 @@ import 'analysis_section.dart';
 import '../state/notes_controller.dart';
 import 'day_chart.dart';
 import 'notes_section.dart';
+import 'periods_section.dart';
 import 'theme.dart';
 
 /// Détail d'un capteur : courbes des quatorze derniers jours, minimum et maximum.
@@ -19,6 +20,7 @@ class SensorDetailScreen extends StatefulWidget {
     this.onEditPlace,
     this.outdoor = const [],
     this.notes,
+    this.onSplit,
   });
 
   final Sensor sensor;
@@ -34,6 +36,9 @@ class SensorDetailScreen extends StatefulWidget {
 
   /// Notes datées ; sans lui, la section n'apparaît pas.
   final NotesController? notes;
+
+  /// Déplace une période de mesure vers un autre capteur ; sans lui, la section n'apparaît pas.
+  final Future<bool> Function(DateTime pFrom, DateTime pTo, String pName)? onSplit;
 
   /// Nombre de jours montrés sur les courbes.
   static const shownDays = 14;
@@ -98,6 +103,19 @@ class _SensorDetailScreenState extends State<SensorDetailScreen> {
         children: [
           Text(vTexts.detailReadings(sensor.readings.length), style: vTheme.bodySmall),
           AnalysisSection(readings: sensor.readings, outdoor: widget.outdoor),
+          if (widget.onSplit != null)
+            PeriodsSection(
+              sensor: sensor,
+              onSplit: (pFrom, pTo, pName) async {
+                final vDone = await widget.onSplit!(pFrom, pTo, pName);
+                if (vDone && mounted) {
+                  // La fiche montre l'ancien capteur : on revient à la liste, à jour
+                  Navigator.pop(context);
+                }
+
+                return vDone;
+              },
+            ),
           if (widget.notes != null) NotesSection(controller: widget.notes!, sensor: sensor),
           const SizedBox(height: 16),
           Text(vTexts.detailChartTitle, style: vTheme.titleMedium),

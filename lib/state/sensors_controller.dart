@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import '../ble/tp357_link.dart';
 import '../logic/climate_exchange.dart';
 import '../logic/pending_readings.dart';
+import '../logic/periods.dart';
 import '../logic/reading.dart';
 import '../logic/sensor_log.dart';
 import '../logic/sensor_merge.dart';
@@ -86,6 +87,36 @@ class SensorsController extends ChangeNotifier {
     }
     await _store.save(_sensors);
     notifyListeners();
+  }
+
+  /// Déplace les relevés de la période [pFrom] à [pTo] du capteur [pSensorName] vers le capteur
+  /// [pNewName], créé s'il n'existe pas : un capteur qui a changé de pièce devient un capteur par
+  /// pièce. Refuse (false) un nom vide ou identique, un capteur inconnu, une période sans relevé
+  /// ou qui est tout le capteur.
+  Future<bool> splitPeriod(
+    String pSensorName,
+    DateTime pFrom,
+    DateTime pTo,
+    String pNewName,
+  ) async {
+    final vName = pNewName.trim();
+    final vSource = _sensors.where((pSensor) => pSensor.name == pSensorName).firstOrNull;
+    if (vSource == null || vName.isEmpty || vName.toLowerCase() == pSensorName.toLowerCase()) {
+      return false;
+    }
+    final vSplit = separatePeriod(vSource.readings, pFrom, pTo);
+    if (vSplit.moved.isEmpty || vSplit.kept.isEmpty) {
+      return false;
+    }
+    final vRest = Sensor(name: vSource.name, readings: vSplit.kept);
+    _sensors = mergeSensors(
+      [for (final vSensor in _sensors) vSensor.name == vSource.name ? vRest : vSensor],
+      [Sensor(name: vName, readings: vSplit.moved)],
+    );
+    await _store.save(_sensors);
+    notifyListeners();
+
+    return true;
   }
 
   /// Cherche les capteurs à portée pendant [pScan], puis lit une mesure sur chacun (au plus [pWait]
