@@ -21,6 +21,7 @@ Home sert de tableau de bord. Atelier, de son côté, s'en sert pour savoir quan
 - Import d'un fichier d'échange JSON contenant plusieurs capteurs.
 - Une carte par capteur : température, humidité, point de rosée, niveau de l'air (sec sous 40 %, humide au-delà de 60 %) et date du dernier relevé.
 - Ré-importer un fichier ajoute les nouveaux relevés sans doubler les anciens.
+- Import d'un export CSV de l'appli ThermoPro, pour récupérer l'historique gardé par les capteurs.
 - Écran des pièces : température et humidité du moment par pièce, pièce la plus fraîche et la plus humide, humidité visée et conseils d'aération (avec la météo extérieure si elle est autorisée).
 
 La suite est dans [ROADMAP.md](ROADMAP.md).

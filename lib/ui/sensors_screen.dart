@@ -14,6 +14,7 @@ import '../logic/reading.dart';
 import '../state/ac_controller.dart';
 import '../state/plan_controller.dart';
 import '../logic/house.dart';
+import '../logic/thermopro_csv.dart';
 import '../state/appearance_controller.dart';
 import '../state/house_controller.dart';
 import '../state/notes_controller.dart';
@@ -48,6 +49,18 @@ Future<String?> pickTextFile() async {
   return rText;
 }
 
+/// Fichier choisi avec son nom : celui d'un export ThermoPro donne le nom du capteur.
+typedef NamedFilePicker = Future<({String name, String text})?> Function();
+
+Future<({String name, String text})?> pickNamedTextFile() async {
+  final vFile = await FilePicker.pickFile();
+  if (vFile == null) {
+    return null;
+  }
+
+  return (name: vFile.name, text: utf8.decode(await vFile.readAsBytes(), allowMalformed: true));
+}
+
 /// Enregistrement d'un fichier choisi par l'utilisateur ; renvoie false s'il renonce.
 typedef FileSaver = Future<bool> Function(String pFileName, Uint8List pBytes);
 
@@ -63,6 +76,7 @@ class SensorsScreen extends StatelessWidget {
     super.key,
     required this.controller,
     this.pickFile = pickTextFile,
+    this.pickCsv = pickNamedTextFile,
     this.saveFile = saveFileDialog,
     this.link,
     this.acController,
@@ -82,6 +96,7 @@ class SensorsScreen extends StatelessWidget {
 
   final SensorsController controller;
   final TextFilePicker pickFile;
+  final NamedFilePicker pickCsv;
   final FileSaver saveFile;
 
   /// Liaison Bluetooth ; créée à l'ouverture de l'écran des capteurs à portée si absente.
@@ -132,6 +147,46 @@ class SensorsScreen extends StatelessWidget {
     ScaffoldMessenger.of(pContext).showSnackBar(SnackBar(content: Text(vMessage)));
   }
 
+  /// Importe un export CSV de l'appli ThermoPro dans un capteur au choix ou dans un nouveau.
+  Future<void> _importCsv(BuildContext pContext) async {
+    final vTexts = AppLocalizations.of(pContext);
+    final vMessenger = ScaffoldMessenger.of(pContext);
+    final vFile = await pickCsv();
+    if (vFile == null || !pContext.mounted) {
+      return;
+    }
+    final vCsv = parseThermoproCsv(vFile.text, vFile.name);
+    if (vCsv == null || vCsv.readings.isEmpty) {
+      vMessenger.showSnackBar(
+        SnackBar(content: Text(vCsv == null ? vTexts.csvNotCsv : vTexts.csvEmpty)),
+      );
+
+      return;
+    }
+    final vTarget = await showDialog<String>(
+      context: pContext,
+      builder: (pDialog) => SimpleDialog(
+        title: Text(vTexts.csvTitle),
+        children: [
+          SimpleDialogOption(
+            onPressed: () => Navigator.pop(pDialog, vCsv.sensorName),
+            child: Text(vTexts.csvNew(vCsv.sensorName)),
+          ),
+          for (final vSensor in controller.sensors)
+            SimpleDialogOption(
+              onPressed: () => Navigator.pop(pDialog, vSensor.name),
+              child: Text(vSensor.title),
+            ),
+        ],
+      ),
+    );
+    if (vTarget == null) {
+      return;
+    }
+    final vCount = await controller.importReadings(vTarget, vCsv.readings);
+    vMessenger.showSnackBar(SnackBar(content: Text(vTexts.csvDone(vCount, vTarget, vCsv.skipped))));
+  }
+
   /// Enregistre tous les capteurs dans un fichier d'échange que l'on ouvre ensuite dans Atelier.
   Future<void> _export(BuildContext pContext) async {
     final vTexts = AppLocalizations.of(pContext);
@@ -157,6 +212,11 @@ class SensorsScreen extends StatelessWidget {
               icon: const Icon(Icons.ios_share),
               onPressed: controller.sensors.isEmpty ? null : () => _export(pContext),
             ),
+          ),
+          IconButton(
+            tooltip: vTexts.csvOpen,
+            icon: const Icon(Icons.history),
+            onPressed: () => _importCsv(pContext),
           ),
           if (acController != null)
             IconButton(

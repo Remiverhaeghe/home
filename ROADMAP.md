@@ -41,3 +41,5 @@ Home sur un écran dans la pièce principale, avec une vue 3D de la maison et la
 - [ ] Bilan mensuel en PDF : demande une bibliothèque PDF à ajouter et à vérifier en CI
 - [x] Écran des pièces : mesure du moment, pièce la plus fraîche et la plus humide, humidité visée par pièce, conseils d'aération
 - [ ] Écran À propos avec journal d'erreurs partageable : demande un journal local et un partage de fichier à ajouter
+- [x] Import des exports CSV de l'appli ThermoPro (historique des capteurs, sans décoder les trames Bluetooth)
+- [ ] Découper un export en périodes (trous, changement de pièce) et rattacher chaque période à sa pièce

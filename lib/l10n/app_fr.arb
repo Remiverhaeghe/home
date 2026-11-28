@@ -699,5 +699,13 @@
   "adviceKeepClosed": "Garde {room} fermée : l'air du dehors ne l'assécherait pas.",
   "@adviceKeepClosed": {"placeholders": {"room": {"type": "String"}}},
   "adviceDryAir": "L'air de {room} est sec.",
-  "@adviceDryAir": {"placeholders": {"room": {"type": "String"}}}
+  "@adviceDryAir": {"placeholders": {"room": {"type": "String"}}},
+  "csvOpen": "Importer un export ThermoPro",
+  "csvTitle": "Importer dans quel capteur ?",
+  "csvNew": "Nouveau capteur « {name} »",
+  "@csvNew": {"placeholders": {"name": {"type": "String"}}},
+  "csvDone": "{count} relevés importés dans {sensor} ({skipped} lignes sans mesure ignorées).",
+  "@csvDone": {"placeholders": {"count": {"type": "int"}, "sensor": {"type": "String"}, "skipped": {"type": "int"}}},
+  "csvNotCsv": "Ce fichier n'est pas un export de l'appli ThermoPro.",
+  "csvEmpty": "Aucun relevé valide dans ce fichier."
 }

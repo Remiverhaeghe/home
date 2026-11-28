@@ -66,6 +66,16 @@ class SensorsController extends ChangeNotifier {
     return rCount;
   }
 
+  /// Range des relevés (un export ThermoPro) dans le capteur [pSensorName], créé s'il n'existe pas ;
+  /// un relevé à la même date est remplacé. Renvoie le nombre de relevés rangés.
+  Future<int> importReadings(String pSensorName, List<Reading> pReadings) async {
+    _sensors = mergeSensors(_sensors, [Sensor(name: pSensorName, readings: pReadings)]);
+    await _store.save(_sensors);
+    notifyListeners();
+
+    return pReadings.length;
+  }
+
   /// Garde une mesure lue en direct sur un capteur, sauf si elle suit de trop près la précédente.
   Future<void> addLiveReading(String pName, Reading pReading) async {
     final vBefore = _sensors;
