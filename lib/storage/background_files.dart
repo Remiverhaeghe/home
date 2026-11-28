@@ -23,6 +23,7 @@ class BackgroundFiles {
       _health = File('${pFolder.path}/sante-releves.json'),
       _interval = File('${pFolder.path}/releve_intervalle.txt'),
       _reminders = File('${pFolder.path}/rappels.json'),
+      _airing = File('${pFolder.path}/aeration_jusqua.txt'),
       _quiet = File('${pFolder.path}/heures-silencieuses.txt'),
       _alerts = File('${pFolder.path}/historique-alertes.jsonl');
 
@@ -34,6 +35,7 @@ class BackgroundFiles {
   final File _health;
   final File _summaryHour;
   final File _quiet;
+  final File _airing;
   final File _reminders;
   final File _interval;
   final File _alerts;
@@ -112,6 +114,13 @@ class BackgroundFiles {
 
   Future<void> saveReminders(List<Reminder> pReminders) =>
       _reminders.writeAsString(remindersJson(pReminders), flush: true);
+
+  /// Fin de l'aération lancée par le scénario, null quand il n'y en a pas.
+  Future<DateTime?> airingUntil() async =>
+      await _airing.exists() ? DateTime.tryParse((await _airing.readAsString()).trim()) : null;
+
+  Future<void> setAiringUntil(DateTime? pUntil) =>
+      _airing.writeAsString(pUntil?.toIso8601String() ?? '', flush: true);
 
   /// Heures silencieuses (« 22-7 »), null quand il n'y en a pas : seul le gel sonne dans la plage.
   Future<OffPeak?> quietHours() async {

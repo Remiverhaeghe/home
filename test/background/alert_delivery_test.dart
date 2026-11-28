@@ -91,4 +91,27 @@ void main() {
     expect(vNotifier.shown.single.single.sensorName, 'Filtres');
     expect((await vFiles.loadAlertHistory()).single.kind, AlertKind.maintenance);
   });
+
+  test('la fin d\'aération est notifiée, et reste silencieuse la nuit', () async {
+    await vFiles.setAiringUntil(DateTime(2026, 11, 28, 23, 15));
+    await vFiles.setQuietHours(const OffPeak(startHour: 22, endHour: 7));
+
+    final vNight = await deliverAlerts(
+      pFiles: vFiles,
+      pNotifier: vNotifier,
+      pAlerts: const [],
+      pNow: DateTime(2026, 11, 28, 23, 20),
+    );
+    expect(vNight, isEmpty);
+    expect((await vFiles.loadAlertHistory()).single.kind, AlertKind.airing);
+
+    await vFiles.setQuietHours(null);
+    final vDay = await deliverAlerts(
+      pFiles: vFiles,
+      pNotifier: vNotifier,
+      pAlerts: const [],
+      pNow: DateTime(2026, 11, 28, 23, 20),
+    );
+    expect(vDay.single.kind, AlertKind.airing);
+  });
 }

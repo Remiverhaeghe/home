@@ -9,8 +9,8 @@ const alertHistoryMax = 100;
 /// Une alerte qui dure n'est notée qu'une fois par tranche de cette durée.
 const alertHistoryRepeat = Duration(hours: 6);
 
-/// Alertes qui sonnent à l'instant [pNow] : pendant les heures silencieuses [pQuiet], seul le gel
-/// passe. Les autres restent visibles sur l'écran du plan et dans l'historique.
+/// Alertes qui sonnent à l'instant [pNow] : pendant les heures silencieuses [pQuiet], seules les
+/// alertes critiques (le gel) passent. Les autres restent visibles sur l'écran du plan et dans l'historique.
 List<SensorAlert> audibleAlerts(List<SensorAlert> pAlerts, DateTime pNow, OffPeak? pQuiet) {
   if (pQuiet == null || !pQuiet.isValid || !pQuiet.contains(pNow)) {
     return pAlerts;
@@ -18,7 +18,7 @@ List<SensorAlert> audibleAlerts(List<SensorAlert> pAlerts, DateTime pNow, OffPea
 
   return [
     for (final vAlert in pAlerts)
-      if (vAlert.kind == AlertKind.frost) vAlert,
+      if (alertLevel(vAlert.kind) == AlertLevel.critical) vAlert,
   ];
 }
 

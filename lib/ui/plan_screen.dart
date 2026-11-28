@@ -10,6 +10,7 @@ import '../logic/vacation.dart';
 import '../state/ac_controller.dart';
 import '../state/pellet_controller.dart';
 import '../state/plan_controller.dart';
+import '../state/relay_controller.dart';
 import '../state/sensors_controller.dart';
 import '../storage/background_files.dart';
 import 'boost_dialog.dart';
@@ -53,6 +54,7 @@ class PlanScreen extends StatelessWidget {
     this.clock = DateTime.now,
     this.pellet,
     this.files,
+    this.relays,
   });
 
   /// Poêle, pour le bilan du chauffage.
@@ -60,6 +62,9 @@ class PlanScreen extends StatelessWidget {
 
   /// Fichiers partagés avec le service d'arrière-plan ; sans eux, pas de résumé du matin.
   final BackgroundFiles? files;
+
+  /// Velux, pour le scénario Aération.
+  final RelayController? relays;
   final PlanController plan;
   final AcController ac;
   final SensorsController sensors;
@@ -123,6 +128,7 @@ class PlanScreen extends StatelessWidget {
       AlertKind.stuck => pTexts.planAlertStuck(pAlert.sensorName),
       AlertKind.ventilate => pTexts.planAlertVentilate(pAlert.sensorName),
       AlertKind.maintenance => pTexts.planAlertMaintenance(pAlert.sensorName),
+      AlertKind.airing => pTexts.planAlertAiring,
     };
   }
 
@@ -171,7 +177,14 @@ class PlanScreen extends StatelessWidget {
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              ScenariosSection(plan: plan, clock: clock, pellet: pellet, pickDay: pickDay),
+              ScenariosSection(
+                plan: plan,
+                clock: clock,
+                pellet: pellet,
+                pickDay: pickDay,
+                relays: relays,
+                files: files,
+              ),
               const SizedBox(height: 24),
               if (ac.units.isEmpty)
                 Text(vTexts.planNoUnits)
@@ -264,7 +277,11 @@ class PlanScreen extends StatelessWidget {
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: Icon(
-                      vAlert.kind == AlertKind.frost ? Icons.ac_unit : Icons.warning_amber,
+                      switch (alertLevel(vAlert.kind)) {
+                        AlertLevel.critical => Icons.ac_unit,
+                        AlertLevel.important => Icons.warning_amber,
+                        AlertLevel.info => Icons.info_outline,
+                      },
                     ),
                     title: Text(_alertText(vTexts, vAlert, vUnits, vNumber)),
                   ),

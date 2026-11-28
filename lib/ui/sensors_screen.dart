@@ -300,6 +300,7 @@ class SensorsScreen extends StatelessWidget {
                 sensors: controller,
                 pellet: pelletController,
                 files: files,
+                relays: relayController,
               ),
             ),
           ),

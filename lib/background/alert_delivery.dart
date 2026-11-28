@@ -1,6 +1,7 @@
 import '../logic/alert_history.dart';
 import '../logic/alerts.dart';
 import '../logic/reminders.dart';
+import '../logic/scenarios.dart';
 import '../storage/background_files.dart';
 import 'alert_notifier.dart';
 
@@ -13,7 +14,11 @@ Future<List<SensorAlert>> deliverAlerts({
   required DateTime pNow,
 }) async {
   // Les entretiens échus voyagent avec les alertes : même historique, mêmes heures silencieuses
-  final vAlerts = [...pAlerts, ...dueReminderAlerts(await pFiles.loadReminders(), pNow)];
+  final vAlerts = [
+    ...pAlerts,
+    ...dueReminderAlerts(await pFiles.loadReminders(), pNow),
+    ...airingAlerts(await pFiles.airingUntil(), pNow),
+  ];
   if (vAlerts.isEmpty) {
     return const [];
   }

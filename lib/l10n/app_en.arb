@@ -367,7 +367,7 @@
   "alertHistoryOpen": "Alert history",
   "alertHistoryTitle": "Alert history",
   "alertHistoryEmpty": "No alert recorded yet.",
-  "alertHistoryLine": "{sensor}: {kind, select, frost{frost risk} humidity{high humidity} silent{silent sensor} stuck{stuck sensor} ventilate{ventilation advised} maintenance{maintenance due} other{alert}}",
+  "alertHistoryLine": "{sensor}: {kind, select, frost{frost risk} humidity{high humidity} silent{silent sensor} stuck{stuck sensor} ventilate{ventilation advised} maintenance{maintenance due} airing{airing over} other{alert}}",
   "@alertHistoryLine": {"placeholders": {"sensor": {"type": "String"}, "kind": {"type": "String"}}},
   "roomsPdfOpen": "Export the report as PDF",
   "roomsPdfSaved": "Report saved.",

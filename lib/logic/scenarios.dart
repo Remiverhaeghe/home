@@ -2,6 +2,7 @@
 /// que Home sait déjà faire (mode vacances, calendrier) ; les règles restent dans leurs fichiers.
 library;
 
+import 'alerts.dart';
 import 'boost.dart';
 import 'house_calendar.dart';
 import 'plan.dart';
@@ -60,3 +61,14 @@ List<Boost> nightBoosts(List<Room> pRooms, DateTime pNow) => [
 /// La nuit est-elle lancée, d'après les coups de chaud encore en cours ?
 bool isNightOn(List<Boost> pBoosts, DateTime pNow) =>
     activeBoosts(pBoosts, pNow).values.any((pBoost) => pBoost.kind == BoostKind.night);
+
+/// Durée d'une aération avant le rappel de refermer ou de renvoyer l'impulsion du Velux. Les
+/// boîtiers de la maison sont des boutons sans retour d'état : Home ne sait pas si la fenêtre est
+/// ouverte, il rappelle seulement le temps écoulé.
+const airingMinutes = 15;
+
+/// L'alerte de fin d'aération, une fois [pUntil] passé ; rien tant qu'aucune aération n'est lancée.
+List<SensorAlert> airingAlerts(DateTime? pUntil, DateTime pNow) => [
+  if (pUntil != null && !pNow.isBefore(pUntil))
+    const SensorAlert(sensorName: 'Aération', kind: AlertKind.airing),
+];
