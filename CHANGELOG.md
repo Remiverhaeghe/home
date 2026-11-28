@@ -10,6 +10,7 @@
 ### Ajouté
 
 - Écran « À propos » (bouton i de la liste des capteurs) : version de l'appli et journal local des erreurs (`journal-erreurs.txt`, 300 lignes au plus, adresses réseau masquées), à enregistrer dans un fichier ou à vider. Rien n'est envoyé.
+- Coup de chaud par pièce (écran du plan, bouton « Douche, bain, lessive ») : la clim chauffe à la température choisie pendant la durée choisie (douche 24 °C 45 min, bain 25 °C 90 min, lessive 22 °C 3 h au départ), puis le planning reprend. Réglage dans la sauvegarde.
 - Seuil de froid réglable (écran du plan, de 10 à 22 °C par demi-degré) : sous ce seuil la clim peut chauffer en plus du poêle ; le réglage est dans la sauvegarde.
 - Mode vacances et poêle : pendant l'absence (hors remontée avant le retour), un poêle à pellets resté allumé est éteint par l'appli ouverte.
 - Poêle et clim sans conflit : quand le poêle à pellets marche, le plan n'allume plus la clim en chauffage et l'éteint si elle chauffait, sauf s'il fait moins de 16 °C dans la pièce, où les deux peuvent tourner ensemble.

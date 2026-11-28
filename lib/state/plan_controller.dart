@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import '../logic/alerts.dart';
 import '../logic/automations.dart';
+import '../logic/boost.dart';
 import '../logic/comfort.dart';
 import '../logic/daikin.dart';
 import '../logic/plan.dart';
@@ -36,6 +37,9 @@ class PlanController extends ChangeNotifier {
 
   /// Sous cette température, la clim peut chauffer en plus du poêle.
   double get stoveColdBelow => _settings.stoveColdBelow;
+
+  /// Coups de chaud enregistrés, en cours ou passés.
+  List<Boost> get boosts => _settings.boosts;
   VacationMode? get vacation => _settings.vacation;
 
   /// Commandes envoyées lors du dernier passage.
@@ -65,6 +69,7 @@ class PlanController extends ChangeNotifier {
       rules: rules,
       vacation: vacation,
       stoveColdBelow: stoveColdBelow,
+      boosts: boosts,
     ),
   );
 
@@ -78,12 +83,24 @@ class PlanController extends ChangeNotifier {
   }
 
   Future<void> setRules(List<AutoRule> pRules) => _save(
-    PlanSettings(rooms: rooms, rules: pRules, vacation: vacation, stoveColdBelow: stoveColdBelow),
+    PlanSettings(
+      rooms: rooms,
+      rules: pRules,
+      vacation: vacation,
+      stoveColdBelow: stoveColdBelow,
+      boosts: boosts,
+    ),
   );
 
   /// Règle le mode vacances, ou le retire avec null.
   Future<void> setVacation(VacationMode? pVacation) => _save(
-    PlanSettings(rooms: rooms, rules: rules, vacation: pVacation, stoveColdBelow: stoveColdBelow),
+    PlanSettings(
+      rooms: rooms,
+      rules: rules,
+      vacation: pVacation,
+      stoveColdBelow: stoveColdBelow,
+      boosts: boosts,
+    ),
   );
 
   /// Règle le seuil de froid sous lequel la clim chauffe en plus du poêle : borné et arrondi au
@@ -92,9 +109,64 @@ class PlanController extends ChangeNotifier {
     final vValue = (pValue.clamp(stoveColdMin, stoveColdMax) * 2).round() / 2;
 
     return _save(
-      PlanSettings(rooms: rooms, rules: rules, vacation: vacation, stoveColdBelow: vValue),
+      PlanSettings(
+        rooms: rooms,
+        rules: rules,
+        vacation: vacation,
+        stoveColdBelow: vValue,
+        boosts: boosts,
+      ),
     );
   }
+
+  /// Lance un coup de chaud dans la pièce de la clim [pHost] : [pTemp] °C pendant [pMinutes]
+  /// minutes. Un coup de chaud déjà en cours sur cette clim est remplacé, les finis sont retirés.
+  Future<void> startBoost(
+    String pHost,
+    BoostKind pKind,
+    double pTemp,
+    int pMinutes,
+    DateTime pNow,
+  ) {
+    final vTemp = (pTemp.clamp(boostMinTemp, boostMaxTemp) * 2).round() / 2;
+    final vMinutes = pMinutes.clamp(boostMinMinutes, boostMaxMinutes).toInt();
+    final vKept = activeBoosts(boosts, pNow).values.where((pBoost) => pBoost.host != pHost);
+
+    return _save(
+      PlanSettings(
+        rooms: rooms,
+        rules: rules,
+        vacation: vacation,
+        stoveColdBelow: stoveColdBelow,
+        boosts: [
+          ...vKept,
+          Boost(
+            host: pHost,
+            kind: pKind,
+            temp: vTemp,
+            until: pNow.add(Duration(minutes: vMinutes)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Arrête le coup de chaud de la clim [pHost] ; le planning reprend au prochain tour.
+  Future<void> stopBoost(String pHost) => _save(
+    PlanSettings(
+      rooms: rooms,
+      rules: rules,
+      vacation: vacation,
+      stoveColdBelow: stoveColdBelow,
+      boosts: [
+        for (final vBoost in boosts)
+          if (vBoost.host != pHost) vBoost,
+      ],
+    ),
+  );
+
+  /// Coup de chaud en cours sur la clim [pHost] à l'instant [pNow], s'il y en a un.
+  Boost? boostOf(String pHost, DateTime pNow) => activeBoosts(boosts, pNow)[pHost];
 
   /// Évalue le plan à l'instant [pNow], envoie les commandes et renvoie les alertes qui viennent
   /// d'apparaître. Les états des climatisations doivent être à jour (voir [AcController.refresh]).
@@ -125,6 +197,7 @@ class PlanController extends ChangeNotifier {
       pWindowSince: _windowSince,
       pStoveRunning: stoveRunning,
       pStoveColdBelow: stoveColdBelow,
+      pBoosts: activeBoosts(boosts, pNow),
     );
     for (final vHost in vResult.windowHosts) {
       _windowSince[vHost] = pNow;

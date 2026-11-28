@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import '../logic/automations.dart';
+import '../logic/boost.dart';
 import '../logic/plan.dart';
 import '../logic/rooms_file.dart';
 import '../logic/vacation.dart';
@@ -13,6 +14,7 @@ class PlanSettings {
     this.rules = const [],
     this.vacation,
     this.stoveColdBelow = defaultStoveColdBelow,
+    this.boosts = const [],
   });
 
   final List<Room> rooms;
@@ -21,6 +23,9 @@ class PlanSettings {
 
   /// Sous cette température, la clim peut chauffer en plus du poêle.
   final double stoveColdBelow;
+
+  /// Coups de chaud (douche, bain, lessive), en cours ou passés.
+  final List<Boost> boosts;
 }
 
 /// Où vivent ces réglages : trois fichiers sur le téléphone, ou la mémoire dans les tests.
@@ -75,6 +80,7 @@ class FilePlanStore implements PlanStore {
       rules: vRules == null ? [] : parseAutoRules(vRules),
       vacation: vVacation == null ? null : parseVacation(vVacation),
       stoveColdBelow: vOptions == null ? defaultStoveColdBelow : parseStoveColdBelow(vOptions),
+      boosts: vOptions == null ? [] : parseBoostsFile(vOptions),
     );
   }
 
@@ -82,7 +88,7 @@ class FilePlanStore implements PlanStore {
   Future<void> save(PlanSettings pSettings) async {
     await _write('pieces.json', roomsJson(pSettings.rooms));
     await _write('automatismes.json', autoRulesJson(pSettings.rules));
-    await _write('reglages-plan.json', stoveColdBelowJson(pSettings.stoveColdBelow));
+    await _write('reglages-plan.json', planOptionsJson(pSettings.stoveColdBelow, pSettings.boosts));
     final vVacation = pSettings.vacation;
     if (vVacation == null) {
       final vFile = _file('vacances.json');
@@ -99,7 +105,22 @@ class FilePlanStore implements PlanStore {
 const stoveColdMin = 10.0;
 const stoveColdMax = 22.0;
 
-String stoveColdBelowJson(double pValue) => jsonEncode({'poeleFroidSous': pValue});
+/// Contenu de `reglages-plan.json` : le seuil de froid et les coups de chaud.
+String planOptionsJson(double pStoveColdBelow, List<Boost> pBoosts) => jsonEncode({
+  'poeleFroidSous': pStoveColdBelow,
+  'coupsDeChaud': jsonDecode(boostsToJson(pBoosts)),
+});
+
+/// Coups de chaud lus dans `reglages-plan.json` ; fichier abîmé, aucun.
+List<Boost> parseBoostsFile(String pJson) {
+  try {
+    final vRoot = jsonDecode(pJson);
+
+    return vRoot is Map<String, dynamic> ? parseBoosts(vRoot['coupsDeChaud']) : [];
+  } on FormatException {
+    return [];
+  }
+}
 
 /// Seuil lu dans `reglages-plan.json` ; une valeur absente, illisible ou hors bornes redonne la
 /// valeur par défaut.
