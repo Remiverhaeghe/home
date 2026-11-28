@@ -118,7 +118,9 @@ void main() {
     expect(pTester.widget<FilterChip>(find.byKey(const Key('scenario-remote'))).selected, isFalse);
   });
 
-  testWidgets('Nuit règle chaque pièce sur sa température de nuit jusqu\'au matin', (pTester) async {
+  testWidgets('Nuit règle chaque pièce sur sa température de nuit jusqu\'au matin', (
+    pTester,
+  ) async {
     await open(pTester);
     await vPlan.setRoom(const Room(acHost: '192.168.1.20', targets: RoomTargets(night: 16)));
     await vPlan.setRoom(const Room(acHost: '192.168.1.21'));

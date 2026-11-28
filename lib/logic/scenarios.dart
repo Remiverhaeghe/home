@@ -40,7 +40,9 @@ const nightEndMinute = 420;
 DateTime nightEnd(DateTime pNow) {
   final vToday = DateTime(pNow.year, pNow.month, pNow.day, 0, nightEndMinute);
 
-  return vToday.isAfter(pNow) ? vToday : DateTime(pNow.year, pNow.month, pNow.day + 1, 0, nightEndMinute);
+  return vToday.isAfter(pNow)
+      ? vToday
+      : DateTime(pNow.year, pNow.month, pNow.day + 1, 0, nightEndMinute);
 }
 
 /// Une consigne de nuit par pièce, jusqu'au prochain réveil : la température « nuit » de chaque

@@ -222,7 +222,10 @@ class PlanController extends ChangeNotifier {
   Future<void> startNight(DateTime pNow) {
     final vNight = nightBoosts(rooms, pNow);
     final vHosts = {for (final vBoost in vNight) vBoost.host};
-    final vKept = activeBoosts(boosts, pNow).values.where((pBoost) => !vHosts.contains(pBoost.host));
+    final vKept = activeBoosts(
+      boosts,
+      pNow,
+    ).values.where((pBoost) => !vHosts.contains(pBoost.host));
 
     return _save(
       PlanSettings(
