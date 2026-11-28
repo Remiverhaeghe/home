@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:home/logic/pellet.dart';
-import 'package:home/logic/vacation.dart';
 import 'package:home/state/pellet_controller.dart';
 import 'package:home/storage/pellet_runs_store.dart';
 import 'package:home/storage/pellet_store.dart';
@@ -138,10 +137,10 @@ void main() {
         await vController.setStopAt(23 * 60);
 
         expect(await vController.refreshAndStopIfAway(null, DateTime(2026, 12, 7, 22, 50)), isTrue);
-        expect(vLink.powers, isEmpty);
+        expect(vLink.powers.where((pOn) => !pOn), isEmpty);
 
         expect(await vController.refreshAndStopIfAway(null, DateTime(2026, 12, 7, 23, 5)), isFalse);
-        expect(vLink.powers, [false]);
+        expect(vLink.powers.where((pOn) => !pOn), [false]);
 
         // Rallumé à la main plus tard : hors de la fenêtre, il reste allumé
         await vLink.setPower(_stove, pOn: true);

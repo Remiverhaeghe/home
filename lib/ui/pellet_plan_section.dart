@@ -24,34 +24,10 @@ class PelletPlanSection extends StatelessWidget {
   final TimePicker pickTime;
 
   Future<void> _editStock(BuildContext pContext) async {
-    final vText = TextEditingController(text: _text(controller.runs.stockBags));
-    final vTexts = AppLocalizations.of(pContext);
     final vChoice = await showDialog<double?>(
       context: pContext,
-      builder: (pContext) => AlertDialog(
-        title: Text(vTexts.pelletStockSet),
-        content: TextField(
-          controller: vText,
-          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          decoration: InputDecoration(labelText: vTexts.pelletStockBags),
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(pContext), child: Text(vTexts.cancel)),
-          TextButton(
-            onPressed: () => Navigator.pop(pContext, -1.0),
-            child: Text(vTexts.pelletStockClear),
-          ),
-          FilledButton(
-            onPressed: () {
-              final vValue = double.tryParse(vText.text.trim().replaceAll(',', '.'));
-              Navigator.pop(pContext, vValue != null && vValue >= 0 ? vValue : null);
-            },
-            child: Text(vTexts.save),
-          ),
-        ],
-      ),
+      builder: (_) => _StockDialog(initial: _text(controller.runs.stockBags)),
     );
-    vText.dispose();
     if (vChoice != null) {
       await controller.setStock(vChoice < 0 ? null : vChoice);
     }
@@ -142,6 +118,54 @@ class PelletPlanSection extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+/// Saisie du nombre de sacs ; rend -1 pour effacer le stock, null si rien ne change.
+class _StockDialog extends StatefulWidget {
+  const _StockDialog({required this.initial});
+
+  final String initial;
+
+  @override
+  State<_StockDialog> createState() => _StockDialogState();
+}
+
+class _StockDialogState extends State<_StockDialog> {
+  late final TextEditingController _text = TextEditingController(text: widget.initial);
+
+  @override
+  void dispose() {
+    _text.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext pContext) {
+    final vTexts = AppLocalizations.of(pContext);
+
+    return AlertDialog(
+      title: Text(vTexts.pelletStockSet),
+      content: TextField(
+        controller: _text,
+        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        decoration: InputDecoration(labelText: vTexts.pelletStockBags),
+      ),
+      actions: [
+        TextButton(onPressed: () => Navigator.pop(pContext), child: Text(vTexts.cancel)),
+        TextButton(
+          onPressed: () => Navigator.pop(pContext, -1.0),
+          child: Text(vTexts.pelletStockClear),
+        ),
+        FilledButton(
+          onPressed: () {
+            final vValue = double.tryParse(_text.text.trim().replaceAll(',', '.'));
+            Navigator.pop(pContext, vValue != null && vValue >= 0 ? vValue : null);
+          },
+          child: Text(vTexts.save),
+        ),
+      ],
     );
   }
 }
