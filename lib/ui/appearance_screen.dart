@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../l10n/gen/app_localizations.dart';
 import '../logic/appearance.dart';
+import '../logic/units.dart';
 import '../state/appearance_controller.dart';
 
 /// Thème (clair, sombre, celui du téléphone) et taille du texte.
@@ -48,8 +49,25 @@ class AppearanceScreen extends StatelessWidget {
                 selected: {vSettings.textScale},
                 onSelectionChanged: (pScale) => controller.setTextScale(pScale.first),
               ),
+              const SizedBox(height: 24),
+              Text(vTexts.appearanceUnit, style: Theme.of(pContext).textTheme.titleMedium),
+              const SizedBox(height: 8),
+              SegmentedButton<TemperatureUnit>(
+                segments: [
+                  ButtonSegment(value: TemperatureUnit.celsius, label: Text(vTexts.unitCelsius)),
+                  ButtonSegment(
+                    value: TemperatureUnit.fahrenheit,
+                    label: Text(vTexts.unitFahrenheit),
+                  ),
+                ],
+                selected: {vSettings.temperatureUnit},
+                onSelectionChanged: (pUnit) => controller.setTemperatureUnit(pUnit.first),
+              ),
               const SizedBox(height: 16),
-              Text(vTexts.appearanceSample, style: Theme.of(pContext).textTheme.bodyLarge),
+              Text(
+                vTexts.appearanceSample(Units(temperature: vSettings.temperatureUnit).temp(21.5)),
+                style: Theme.of(pContext).textTheme.bodyLarge,
+              ),
             ],
           );
         },

@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 
 import '../l10n/gen/app_localizations.dart';
 import '../logic/boost.dart';
+import 'units_scope.dart';
 
 /// Choix de l'utilisateur : lancer un coup de chaud, ou l'arrêter quand [kind] est null.
 typedef BoostChoice = ({BoostKind? kind, double temp, int minutes});
@@ -48,7 +49,7 @@ class _BoostDialogState extends State<_BoostDialog> {
   @override
   Widget build(BuildContext pContext) {
     final vTexts = AppLocalizations.of(pContext);
-    final vNumber = NumberFormat('0.0', Localizations.localeOf(pContext).toString());
+    final vUnits = UnitsScope.of(pContext);
     final vActive = widget.active;
 
     return AlertDialog(
@@ -73,7 +74,7 @@ class _BoostDialogState extends State<_BoostDialog> {
               onSelectionChanged: (pSelected) => _pick(pSelected.first),
             ),
             const SizedBox(height: 12),
-            Text(vTexts.boostTemp(vNumber.format(_temp))),
+            Text(vTexts.boostTemp(vUnits.temp(_temp))),
             Slider(
               value: _temp,
               min: boostMinTemp,

@@ -40,6 +40,7 @@ import 'sensor_detail_screen.dart';
 import 'theme.dart';
 import 'wall_display.dart';
 import 'wall_screen.dart';
+import 'units_scope.dart';
 
 /// Choix d'un fichier d'échange ; renvoie son texte, ou null si l'utilisateur renonce.
 typedef TextFilePicker = Future<String?> Function();
@@ -522,6 +523,7 @@ class SensorCard extends StatelessWidget {
     final vLast = sensor.last;
     final vLocale = Localizations.localeOf(pContext).toString();
     final vNumber = NumberFormat('0.0', vLocale);
+    final vUnits = UnitsScope.of(pContext);
 
     return Card(
       clipBehavior: Clip.antiAlias,
@@ -550,7 +552,7 @@ class SensorCard extends StatelessWidget {
                       textBaseline: TextBaseline.alphabetic,
                       children: [
                         Text(
-                          vTexts.temperatureValue(vNumber.format(vLast.temp)),
+                          vTexts.temperatureValue(vUnits.temp(vLast.temp)),
                           style: vTheme.headlineMedium?.copyWith(color: vColors.temperature),
                         ),
                         const SizedBox(width: 20),
@@ -569,9 +571,7 @@ class SensorCard extends StatelessWidget {
                             : vColors.warning,
                       ),
                     ),
-                    Text(
-                      vTexts.dewPointValue(vNumber.format(dewPoint(vLast.temp, vLast.humidity))),
-                    ),
+                    Text(vTexts.dewPointValue(vUnits.temp(dewPoint(vLast.temp, vLast.humidity)))),
                     Text(
                       vTexts.lastReading(DateFormat.yMMMd(vLocale).add_Hm().format(vLast.at)),
                       style: vTheme.bodySmall,

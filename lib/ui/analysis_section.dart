@@ -5,6 +5,7 @@ import '../l10n/gen/app_localizations.dart';
 import '../logic/analysis.dart';
 import '../logic/reading.dart';
 import '../logic/weather.dart';
+import 'units_scope.dart';
 
 /// Jours de relevés pris en compte dans les analyses.
 const analysisDays = 30;
@@ -60,7 +61,7 @@ class AnalysisSection extends StatelessWidget {
         if (vOutdoor != null)
           Text(
             vTexts.analysisOutdoor(
-              '${vOutdoor.meanDelta >= 0 ? '+' : ''}${vNumber.format(vOutdoor.meanDelta)}',
+              UnitsScope.of(pContext).delta(vOutdoor.meanDelta),
               vOutdoor.hours,
             ),
           ),

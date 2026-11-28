@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:home/app.dart';
 import 'package:home/logic/appearance.dart';
+import 'package:home/logic/units.dart';
 import 'package:home/state/appearance_controller.dart';
 import 'package:home/state/sensors_controller.dart';
 import 'package:home/storage/appearance_store.dart';
@@ -24,6 +25,20 @@ void main() {
 
     expect(vStore.saved.theme, ThemeChoice.light);
     expect(vStore.saved.textScale, 1.3);
+  });
+
+  testWidgets('le choix de l\'unité est rangé et change l\'exemple', (pTester) async {
+    final vStore = MemoryAppearanceStore();
+    final vController = AppearanceController(vStore);
+    await pTester.pumpWidget(localized(AppearanceScreen(controller: vController)));
+
+    expect(find.textContaining('21,5 °C, 48 %'), findsOneWidget);
+
+    await pTester.tap(find.text('Degrés Fahrenheit (°F)'));
+    await pTester.pumpAndSettle();
+
+    expect(vStore.saved.temperatureUnit, TemperatureUnit.fahrenheit);
+    expect(find.textContaining('70,7 °F, 48 %'), findsOneWidget);
   });
 
   test('le thème clair a une palette plus sombre pour rester lisible', () {

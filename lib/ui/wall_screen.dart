@@ -9,6 +9,7 @@ import '../state/ac_controller.dart';
 import '../state/sensors_controller.dart';
 import 'theme.dart';
 import 'wall_display.dart';
+import 'units_scope.dart';
 
 /// Intervalle entre deux lectures des climatisations tant que l'affichage mural est ouvert.
 const wallRefresh = Duration(seconds: 30);
@@ -150,6 +151,7 @@ class _WallTileCard extends StatelessWidget {
     final vTheme = Theme.of(pContext).textTheme;
     final vColors = HomeColors.of(pContext);
     final vNumber = NumberFormat('0.0', Localizations.localeOf(pContext).toString());
+    final vUnits = UnitsScope.of(pContext);
     final vReading = tile.reading;
     final vControl = tile.control;
     final vSetpoint = vControl?.setpointDegrees;
@@ -173,7 +175,7 @@ class _WallTileCard extends StatelessWidget {
                   textBaseline: TextBaseline.alphabetic,
                   children: [
                     Text(
-                      vTexts.temperatureValue(vNumber.format(vReading.temp)),
+                      vTexts.temperatureValue(vUnits.temp(vReading.temp)),
                       style: vTheme.displayMedium?.copyWith(color: vColors.temperature),
                     ),
                     const SizedBox(width: 16),
@@ -217,7 +219,7 @@ class _WallTileCard extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: Text(
-                          vTexts.temperatureValue(vNumber.format(vSetpoint)),
+                          vTexts.temperatureValue(vUnits.temp(vSetpoint)),
                           style: vTheme.headlineSmall?.copyWith(color: vColors.temperature),
                         ),
                       ),

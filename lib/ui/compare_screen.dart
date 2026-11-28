@@ -5,6 +5,7 @@ import '../l10n/gen/app_localizations.dart';
 import '../logic/compare.dart';
 import '../logic/reading.dart';
 import '../state/sensors_controller.dart';
+import 'units_scope.dart';
 
 /// Deux capteurs sur les mêmes courbes, avec une seule échelle pour les voir s'écarter.
 class CompareScreen extends StatefulWidget {
@@ -102,7 +103,7 @@ class _CompareScreenState extends State<CompareScreen> {
             if (vGap != null)
               Text(
                 vTexts.compareGap(
-                  '${vGap.temp >= 0 ? '+' : ''}${vNumber.format(vGap.temp)}',
+                  UnitsScope.of(pContext).delta(vGap.temp),
                   '${vGap.humidity >= 0 ? '+' : ''}${vNumber.format(vGap.humidity)}',
                   vShown.length,
                 ),

@@ -10,6 +10,7 @@ import 'day_chart.dart';
 import 'notes_section.dart';
 import 'periods_section.dart';
 import 'theme.dart';
+import 'units_scope.dart';
 
 /// Détail d'un capteur : courbes des quatorze derniers jours, minimum et maximum.
 class SensorDetailScreen extends StatefulWidget {
@@ -73,6 +74,7 @@ class _SensorDetailScreenState extends State<SensorDetailScreen> {
     final vTheme = Theme.of(pContext).textTheme;
     final vColors = HomeColors.of(pContext);
     final vNumber = NumberFormat('0.0', Localizations.localeOf(pContext).toString());
+    final vUnits = UnitsScope.of(pContext);
     final vAll = dailyAverages(sensor.readings);
     final vDays = vAll.length > SensorDetailScreen.shownDays
         ? vAll.sublist(vAll.length - SensorDetailScreen.shownDays)
@@ -131,12 +133,8 @@ class _SensorDetailScreenState extends State<SensorDetailScreen> {
             ),
             Text(
               vTexts.detailRange(
-                vTexts.temperatureValue(
-                  vNumber.format(vTemps.reduce((pA, pB) => pA < pB ? pA : pB)),
-                ),
-                vTexts.temperatureValue(
-                  vNumber.format(vTemps.reduce((pA, pB) => pA > pB ? pA : pB)),
-                ),
+                vTexts.temperatureValue(vUnits.temp(vTemps.reduce((pA, pB) => pA < pB ? pA : pB))),
+                vTexts.temperatureValue(vUnits.temp(vTemps.reduce((pA, pB) => pA > pB ? pA : pB))),
               ),
             ),
             const SizedBox(height: 8),

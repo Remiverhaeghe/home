@@ -5,6 +5,7 @@ import '../logic/pellet.dart';
 import '../state/pellet_controller.dart';
 import 'pellet_plan_section.dart';
 import 'pellet_usage_section.dart';
+import 'units_scope.dart';
 
 /// Poêle à pellets : température de la pièce, état, marche ou arrêt, consigne par pas de 0,5 °C.
 class PelletScreen extends StatefulWidget {
@@ -22,8 +23,6 @@ class _PelletScreenState extends State<PelletScreen> {
     super.initState();
     widget.controller.refresh();
   }
-
-  static String _degrees(double pValue) => pValue.toStringAsFixed(1).replaceAll('.', ',');
 
   void _say(String pMessage) {
     final vMessenger = ScaffoldMessenger.of(context);
@@ -167,7 +166,7 @@ class _PelletScreenState extends State<PelletScreen> {
                   fit: BoxFit.scaleDown,
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    vTexts.pelletRoom(_degrees(vState.roomC)),
+                    vTexts.pelletRoom(UnitsScope.of(pContext).temp(vState.roomC)),
                     style: Theme.of(pContext).textTheme.displayMedium,
                   ),
                 ),
@@ -180,7 +179,7 @@ class _PelletScreenState extends State<PelletScreen> {
                 ),
                 ListTile(
                   title: Text(vTexts.pelletTarget),
-                  subtitle: Text(vTexts.pelletRoom(_degrees(vState.targetC))),
+                  subtitle: Text(vTexts.pelletRoom(UnitsScope.of(pContext).temp(vState.targetC))),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [

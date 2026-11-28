@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../l10n/gen/app_localizations.dart';
 import '../state/plan_controller.dart';
 import '../storage/plan_store.dart';
+import 'units_scope.dart';
 
 /// Seuil de froid : sous cette température, la clim peut chauffer en plus du poêle.
 class StoveColdSection extends StatefulWidget {
@@ -21,7 +21,7 @@ class StoveColdSectionState extends State<StoveColdSection> {
   @override
   Widget build(BuildContext pContext) {
     final vTexts = AppLocalizations.of(pContext);
-    final vNumber = NumberFormat('0.0', Localizations.localeOf(pContext).toString());
+    final vUnits = UnitsScope.of(pContext);
     final vValue = _dragging ?? widget.plan.stoveColdBelow;
 
     return Column(
@@ -29,13 +29,13 @@ class StoveColdSectionState extends State<StoveColdSection> {
       children: [
         Text(vTexts.planStoveTitle, style: Theme.of(pContext).textTheme.titleMedium),
         const SizedBox(height: 4),
-        Text(vTexts.planStoveHint(vNumber.format(vValue))),
+        Text(vTexts.planStoveHint(vUnits.temp(vValue))),
         Slider(
           value: vValue,
           min: stoveColdMin,
           max: stoveColdMax,
           divisions: ((stoveColdMax - stoveColdMin) * 2).round(),
-          label: '${vNumber.format(vValue)} °C',
+          label: vUnits.temp(vValue),
           onChanged: (pNew) => setState(() => _dragging = pNew),
           onChangeEnd: (pNew) async {
             await widget.plan.setStoveColdBelow(pNew);

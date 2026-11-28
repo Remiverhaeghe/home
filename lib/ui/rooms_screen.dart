@@ -11,6 +11,7 @@ import '../state/house_controller.dart';
 import '../state/sensors_controller.dart';
 import '../state/weather_controller.dart';
 import 'house_screen.dart';
+import 'units_scope.dart';
 
 /// Les pièces : mesure du moment, humidité visée, pièce la plus fraîche et la plus humide, et
 /// conseils d'aération.
@@ -46,6 +47,7 @@ class RoomsScreen extends StatelessWidget {
   Widget build(BuildContext pContext) {
     final vTexts = AppLocalizations.of(pContext);
     final vNumber = NumberFormat('0.0', Localizations.localeOf(pContext).toString());
+    final vUnits = UnitsScope.of(pContext);
 
     return Scaffold(
       appBar: AppBar(
@@ -117,10 +119,7 @@ class RoomsScreen extends StatelessWidget {
                       ].join(' · '),
                     ),
                     trailing: Text(
-                      vTexts.roomsReading(
-                        vNumber.format(vRoom.temp),
-                        vNumber.format(vRoom.humidity),
-                      ),
+                      vTexts.roomsReading(vUnits.temp(vRoom.temp), vNumber.format(vRoom.humidity)),
                       style: TextStyle(
                         color: vRoom.state == HumidityState.fine
                             ? null

@@ -9,6 +9,7 @@ import '../logic/daikin.dart';
 import '../state/ac_controller.dart';
 import '../state/sensors_controller.dart';
 import 'theme.dart';
+import 'units_scope.dart';
 
 /// Climatisations Daikin de la maison : état, commandes, et lien avec le capteur de la pièce.
 class AcScreen extends StatefulWidget {
@@ -247,6 +248,7 @@ class AcCard extends StatelessWidget {
     final vTheme = Theme.of(pContext).textTheme;
     final vColors = HomeColors.of(pContext);
     final vNumber = NumberFormat('0.0', Localizations.localeOf(pContext).toString());
+    final vUnits = UnitsScope.of(pContext);
     final vStatus = controller.statusOf(unit.host);
     final vState = vStatus?.state;
     final vControl = vState?.control;
@@ -315,7 +317,7 @@ class AcCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      vTexts.acSetpoint(vNumber.format(vControl.setpointDegrees!)),
+                      vTexts.acSetpoint(vUnits.temp(vControl.setpointDegrees!)),
                       style: vTheme.titleMedium?.copyWith(color: vColors.temperature),
                     ),
                     IconButton(
@@ -329,9 +331,9 @@ class AcCard extends StatelessWidget {
                   ],
                 ),
               if (vState!.sensors.indoorTemp != null)
-                Text(vTexts.acIndoor(vNumber.format(vState.sensors.indoorTemp!))),
+                Text(vTexts.acIndoor(vUnits.temp(vState.sensors.indoorTemp!))),
               if (vState.sensors.outdoorTemp != null)
-                Text(vTexts.acOutdoor(vNumber.format(vState.sensors.outdoorTemp!))),
+                Text(vTexts.acOutdoor(vUnits.temp(vState.sensors.outdoorTemp!))),
             ],
             const SizedBox(height: 8),
             Row(
@@ -352,7 +354,7 @@ class AcCard extends StatelessWidget {
             if (vReading != null)
               Text(
                 vTexts.acSensorReading(
-                  vNumber.format(vReading.temp),
+                  vUnits.temp(vReading.temp),
                   vNumber.format(vReading.humidity),
                 ),
                 style: vTheme.bodySmall,

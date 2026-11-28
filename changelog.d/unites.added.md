@@ -1,0 +1,1 @@
+- Unité de température au choix (°C ou °F) dans Apparence : les relevés, consignes, écarts et le point de rosée s'affichent dans l'unité choisie. Les données restent en °C.

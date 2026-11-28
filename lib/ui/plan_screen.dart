@@ -20,6 +20,8 @@ import 'plan_stove_cold_section.dart';
 import 'plan_summary_section.dart';
 import 'rules_screen.dart';
 import 'schedule_screen.dart';
+import '../logic/units.dart';
+import 'units_scope.dart';
 
 /// Choix des jours d'absence : premier et dernier jour, null si l'utilisateur renonce.
 typedef DateRangePicker = Future<DateTimeRange?> Function(BuildContext pContext);
@@ -102,12 +104,17 @@ class PlanScreen extends StatelessWidget {
     await plan.setVacation(VacationMode(from: DateUtils.dateOnly(vRange.start), until: vReturn));
   }
 
-  String _alertText(AppLocalizations pTexts, SensorAlert pAlert, NumberFormat pNumber) {
-    final vValue = pNumber.format(pAlert.value ?? 0);
+  String _alertText(
+    AppLocalizations pTexts,
+    SensorAlert pAlert,
+    Units pUnits,
+    NumberFormat pNumber,
+  ) {
+    final vValue = pAlert.value ?? 0;
 
     return switch (pAlert.kind) {
-      AlertKind.frost => pTexts.planAlertFrost(pAlert.sensorName, vValue),
-      AlertKind.humidity => pTexts.planAlertHumidity(pAlert.sensorName, vValue),
+      AlertKind.frost => pTexts.planAlertFrost(pAlert.sensorName, pUnits.temp(vValue)),
+      AlertKind.humidity => pTexts.planAlertHumidity(pAlert.sensorName, pNumber.format(vValue)),
       AlertKind.silent => pTexts.planAlertSilent(pAlert.sensorName),
     };
   }
@@ -137,6 +144,7 @@ class PlanScreen extends StatelessWidget {
     final vTexts = AppLocalizations.of(pContext);
     final vLocale = Localizations.localeOf(pContext).toString();
     final vNumber = NumberFormat('0.0', vLocale);
+    final vUnits = UnitsScope.of(pContext);
 
     return Scaffold(
       appBar: AppBar(title: Text(vTexts.planTitle)),
@@ -163,7 +171,7 @@ class PlanScreen extends StatelessWidget {
                     unit: vUnit,
                     targets: plan.roomOf(vUnit.host)?.targets ?? const RoomTargets(),
                     texts: vTexts,
-                    number: vNumber,
+                    units: vUnits,
                     profileName: (pProfile) => _profileName(vTexts, pProfile),
                     onChange: (pProfile, pDelta) => _change(vUnit, pProfile, pDelta),
                     boostUntil: plan.boostOf(vUnit.host, clock())?.until,
@@ -248,7 +256,7 @@ class PlanScreen extends StatelessWidget {
                     leading: Icon(
                       vAlert.kind == AlertKind.frost ? Icons.ac_unit : Icons.warning_amber,
                     ),
-                    title: Text(_alertText(vTexts, vAlert, vNumber)),
+                    title: Text(_alertText(vTexts, vAlert, vUnits, vNumber)),
                   ),
               if (files != null) ...[const SizedBox(height: 24), SummarySection(files: files!)],
             ],
