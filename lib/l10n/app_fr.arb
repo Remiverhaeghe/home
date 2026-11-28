@@ -690,51 +690,201 @@
   "roomsColdest": "La plus fraîche",
   "roomsHumidest": "La plus humide",
   "roomsRange": "Humidité visée : {min} à {max} %",
-  "@roomsRange": {"placeholders": {"min": {"type": "int"}, "max": {"type": "int"}}},
+  "@roomsRange": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "roomsReading": "{temp} °C · {humidity} %",
-  "@roomsReading": {"placeholders": {"temp": {"type": "String"}, "humidity": {"type": "String"}}},
+  "@roomsReading": {
+    "placeholders": {
+      "temp": {
+        "type": "String"
+      },
+      "humidity": {
+        "type": "String"
+      }
+    }
+  },
   "adviceTitle": "Conseils",
   "adviceVentilate": "Aère {room} : l'air du dehors contient moins d'eau.",
-  "@adviceVentilate": {"placeholders": {"room": {"type": "String"}}},
+  "@adviceVentilate": {
+    "placeholders": {
+      "room": {
+        "type": "String"
+      }
+    }
+  },
   "adviceKeepClosed": "Garde {room} fermée : l'air du dehors ne l'assécherait pas.",
-  "@adviceKeepClosed": {"placeholders": {"room": {"type": "String"}}},
+  "@adviceKeepClosed": {
+    "placeholders": {
+      "room": {
+        "type": "String"
+      }
+    }
+  },
   "adviceDryAir": "L'air de {room} est sec.",
-  "@adviceDryAir": {"placeholders": {"room": {"type": "String"}}},
+  "@adviceDryAir": {
+    "placeholders": {
+      "room": {
+        "type": "String"
+      }
+    }
+  },
   "csvOpen": "Importer un export ThermoPro",
   "csvTitle": "Importer dans quel capteur ?",
   "csvNew": "Nouveau capteur « {name} »",
-  "@csvNew": {"placeholders": {"name": {"type": "String"}}},
+  "@csvNew": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "csvDone": "{count} relevés importés dans {sensor} ({skipped} lignes sans mesure ignorées).",
-  "@csvDone": {"placeholders": {"count": {"type": "int"}, "sensor": {"type": "String"}, "skipped": {"type": "int"}}},
+  "@csvDone": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "sensor": {
+        "type": "String"
+      },
+      "skipped": {
+        "type": "int"
+      }
+    }
+  },
   "csvNotCsv": "Ce fichier n'est pas un export de l'appli ThermoPro.",
   "csvEmpty": "Aucun relevé valide dans ce fichier.",
   "refreshOpen": "Actualiser les capteurs",
   "refreshDone": "{count, plural, =0{Aucun capteur à portée} =1{1 capteur mis à jour} other{{count} capteurs mis à jour}}",
-  "@refreshDone": {"placeholders": {"count": {"type": "int"}}},
+  "@refreshDone": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "periodsTitle": "Périodes de mesure",
   "periodsHint": "Un long trou entre deux relevés : le capteur a peut-être changé de place. Sépare chaque période pour la ranger dans sa pièce.",
   "periodsDates": "Du {from} au {to}",
-  "@periodsDates": {"placeholders": {"from": {"type": "String"}, "to": {"type": "String"}}},
+  "@periodsDates": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
   "periodsStats": "{count} relevés, {temp} °C en moyenne",
-  "@periodsStats": {"placeholders": {"count": {"type": "int"}, "temp": {"type": "String"}}},
+  "@periodsStats": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "temp": {
+        "type": "String"
+      }
+    }
+  },
   "periodsSplit": "Séparer",
   "periodsSplitTitle": "Nom du capteur pour cette période",
   "periodsSplitHint": "Par exemple : Bureau en hiver",
   "periodsSplitDone": "Période déplacée vers « {name} ».",
-  "@periodsSplitDone": {"placeholders": {"name": {"type": "String"}}},
+  "@periodsSplitDone": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "periodsSplitFailed": "Choisis un autre nom que celui du capteur.",
   "planStoveTitle": "Poêle et clim ensemble",
   "planStoveHint": "Quand le poêle marche, la clim ne chauffe pas en plus. Sous {temp} °C dans la pièce, les deux peuvent tourner ensemble.",
-  "@planStoveHint": {"placeholders": {"temp": {"type": "String"}}},
+  "@planStoveHint": {
+    "placeholders": {
+      "temp": {
+        "type": "String"
+      }
+    }
+  },
   "pelletUsageTitle": "Marche et pellets",
   "pelletUsageHours": "{week} h de marche sur 7 jours, {month} h sur 30 jours.",
-  "@pelletUsageHours": {"placeholders": {"week": {"type": "String"}, "month": {"type": "String"}}},
+  "@pelletUsageHours": {
+    "placeholders": {
+      "week": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
+      }
+    }
+  },
   "pelletUsageKg": "Environ {week} kg sur 7 jours et {month} kg sur 30 jours, soit {bags} sacs sur 30 jours.",
-  "@pelletUsageKg": {"placeholders": {"week": {"type": "String"}, "month": {"type": "String"}, "bags": {"type": "String"}}},
+  "@pelletUsageKg": {
+    "placeholders": {
+      "week": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
+      },
+      "bags": {
+        "type": "String"
+      }
+    }
+  },
   "pelletUsageNoFlow": "Donne le débit de pellets de ton poêle pour estimer ce qu'il consomme.",
   "pelletUsageNote": "Les heures comptent quand l'appli est ouverte et lit l'état du poêle.",
   "pelletUsageSet": "Débit et sac",
   "pelletUsageFlow": "Débit à pleine marche (kg par heure)",
   "pelletUsageFlowHelp": "Se lit dans la notice du poêle. Laisse vide pour effacer.",
-  "pelletUsageBag": "Poids d'un sac (kg)"
+  "pelletUsageBag": "Poids d'un sac (kg)",
+  "boostOpen": "Douche, bain, lessive",
+  "boostActive": "Coup de chaud jusqu'à {time}",
+  "@boostActive": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "boostTitle": "Coup de chaud : {room}",
+  "@boostTitle": {
+    "placeholders": {
+      "room": {
+        "type": "String"
+      }
+    }
+  },
+  "boostHint": "La clim chauffe à cette température pendant ce temps, puis le planning reprend.",
+  "boostShower": "Douche",
+  "boostBath": "Bain",
+  "boostLaundry": "Lessive",
+  "boostTemp": "Température : {temp} °C",
+  "@boostTemp": {
+    "placeholders": {
+      "temp": {
+        "type": "String"
+      }
+    }
+  },
+  "boostDuration": "Pendant {minutes} min",
+  "@boostDuration": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "boostStart": "Démarrer",
+  "boostStop": "Arrêter"
 }
