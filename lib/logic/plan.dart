@@ -49,7 +49,7 @@ const windowHold = Duration(minutes: 30);
 
 /// Quand le poêle marche, la clim ne chauffe pas en plus tant que la pièce est à cette température
 /// ou plus. En dessous, il fait trop froid : les deux peuvent tourner ensemble.
-const stoveColdBelow = 16.0;
+const defaultStoveColdBelow = 16.0;
 
 /// Délais minimaux entre deux commandes de même nature sur une clim.
 const comfortGap = Duration(minutes: 10);
@@ -96,7 +96,7 @@ PlanResult evaluatePlan({
   Map<String, DateTime> pLastRuns = const {},
   Map<String, DateTime> pWindowSince = const {},
   bool pStoveRunning = false,
-  double pStoveColdBelow = stoveColdBelow,
+  double pStoveColdBelow = defaultStoveColdBelow,
 }) {
   final vCommands = <PlanCommand>[];
   final vWindowHosts = <String>{};

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import '../logic/automations.dart';
@@ -7,11 +8,19 @@ import '../logic/vacation.dart';
 
 /// Tout ce que l'utilisateur règle pour piloter la maison : pièces, règles et mode vacances.
 class PlanSettings {
-  const PlanSettings({this.rooms = const [], this.rules = const [], this.vacation});
+  const PlanSettings({
+    this.rooms = const [],
+    this.rules = const [],
+    this.vacation,
+    this.stoveColdBelow = defaultStoveColdBelow,
+  });
 
   final List<Room> rooms;
   final List<AutoRule> rules;
   final VacationMode? vacation;
+
+  /// Sous cette température, la clim peut chauffer en plus du poêle.
+  final double stoveColdBelow;
 }
 
 /// Où vivent ces réglages : trois fichiers sur le téléphone, ou la mémoire dans les tests.
@@ -33,7 +42,7 @@ class MemoryPlanStore implements PlanStore {
   Future<void> save(PlanSettings pSettings) async => saved = pSettings;
 }
 
-/// `pieces.json`, `automatismes.json` et `vacances.json` dans [directory], chacun écrit sans
+/// `pieces.json`, `automatismes.json`, `vacances.json` et `reglages-plan.json` dans [directory], chacun écrit sans
 /// risque de fichier à moitié écrit. Sans vacances, le fichier est supprimé.
 class FilePlanStore implements PlanStore {
   FilePlanStore(this.directory);
@@ -59,11 +68,13 @@ class FilePlanStore implements PlanStore {
     final vRooms = await _read('pieces.json');
     final vRules = await _read('automatismes.json');
     final vVacation = await _read('vacances.json');
+    final vOptions = await _read('reglages-plan.json');
 
     return PlanSettings(
       rooms: vRooms == null ? [] : parseRooms(vRooms),
       rules: vRules == null ? [] : parseAutoRules(vRules),
       vacation: vVacation == null ? null : parseVacation(vVacation),
+      stoveColdBelow: vOptions == null ? defaultStoveColdBelow : parseStoveColdBelow(vOptions),
     );
   }
 
@@ -71,6 +82,7 @@ class FilePlanStore implements PlanStore {
   Future<void> save(PlanSettings pSettings) async {
     await _write('pieces.json', roomsJson(pSettings.rooms));
     await _write('automatismes.json', autoRulesJson(pSettings.rules));
+    await _write('reglages-plan.json', stoveColdBelowJson(pSettings.stoveColdBelow));
     final vVacation = pSettings.vacation;
     if (vVacation == null) {
       final vFile = _file('vacances.json');
@@ -81,4 +93,26 @@ class FilePlanStore implements PlanStore {
       await _write('vacances.json', vacationJson(vVacation));
     }
   }
+}
+
+/// Bornes du seuil de froid réglable, par pas de 0,5 °C.
+const stoveColdMin = 10.0;
+const stoveColdMax = 22.0;
+
+String stoveColdBelowJson(double pValue) => jsonEncode({'poeleFroidSous': pValue});
+
+/// Seuil lu dans `reglages-plan.json` ; une valeur absente, illisible ou hors bornes redonne la
+/// valeur par défaut.
+double parseStoveColdBelow(String pJson) {
+  try {
+    final vRoot = jsonDecode(pJson);
+    final vValue = vRoot is Map<String, dynamic> ? vRoot['poeleFroidSous'] : null;
+    if (vValue is num && vValue >= stoveColdMin && vValue <= stoveColdMax) {
+      return vValue.toDouble();
+    }
+  } on FormatException {
+    // Fichier abîmé : valeur par défaut
+  }
+
+  return defaultStoveColdBelow;
 }
