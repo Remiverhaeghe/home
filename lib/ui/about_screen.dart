@@ -27,7 +27,10 @@ class _AboutScreenState extends State<AboutScreen> {
   Future<void> _save(String pText) async {
     final vTexts = AppLocalizations.of(context);
     final vMessenger = ScaffoldMessenger.of(context);
-    final vSaved = await widget.saveFile('home-journal.txt', Uint8List.fromList(utf8.encode(pText)));
+    final vSaved = await widget.saveFile(
+      'home-journal.txt',
+      Uint8List.fromList(utf8.encode(pText)),
+    );
     if (vSaved) {
       vMessenger.showSnackBar(SnackBar(content: Text(vTexts.aboutSaved)));
     }
@@ -52,7 +55,10 @@ class _AboutScreenState extends State<AboutScreen> {
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              Text(vTexts.aboutVersion(appVersion), style: Theme.of(pContext).textTheme.titleMedium),
+              Text(
+                vTexts.aboutVersion(appVersion),
+                style: Theme.of(pContext).textTheme.titleMedium,
+              ),
               const SizedBox(height: 4),
               Text(vTexts.aboutPrivacy),
               const SizedBox(height: 16),
@@ -61,7 +67,10 @@ class _AboutScreenState extends State<AboutScreen> {
               if (vText.isEmpty)
                 Text(vTexts.aboutLogEmpty)
               else ...[
-                SelectableText(vText, style: const TextStyle(fontFamily: 'monospace', fontSize: 12)),
+                SelectableText(
+                  vText,
+                  style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
+                ),
                 const SizedBox(height: 12),
                 Wrap(
                   spacing: 8,
