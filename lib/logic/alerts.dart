@@ -10,6 +10,7 @@ const humidityAlertLevel = 70.0;
 /// Bornes du seuil d'humidité réglable, par pas de 1 %.
 const humidityAlertMin = 55.0;
 const humidityAlertMax = 85.0;
+
 /// Un tour de relevé dure 5 minutes et le Bluetooth manque parfois quelques tours : une heure
 /// sans relevé, pas moins, avant de dire qu'un capteur est muet.
 const silentAfter = Duration(minutes: 60);

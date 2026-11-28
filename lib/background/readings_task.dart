@@ -103,9 +103,9 @@ class ReadingsTaskHandler extends TaskHandler {
     _misses[pDevice.id] = vMisses;
     if (shouldLogMiss(vMisses)) {
       try {
-        await FileErrorLogStore(File('${pFolder.path}/journal-erreurs.txt')).append(
-          backgroundMissEntry(DateTime.now(), pRank, vMisses, vError ?? 'inconnue'),
-        );
+        await FileErrorLogStore(
+          File('${pFolder.path}/journal-erreurs.txt'),
+        ).append(backgroundMissEntry(DateTime.now(), pRank, vMisses, vError ?? 'inconnue'));
       } on Object {
         // Le journal ne doit jamais arrêter les relevés
       }

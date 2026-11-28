@@ -74,7 +74,10 @@ void main() {
     });
 
     test('on écrit au troisième tour manqué, puis une fois par heure', () {
-      final vLogged = [for (var vMisses = 1; vMisses <= 40; vMisses++) if (shouldLogMiss(vMisses)) vMisses];
+      final vLogged = [
+        for (var vMisses = 1; vMisses <= 40; vMisses++)
+          if (shouldLogMiss(vMisses)) vMisses,
+      ];
 
       expect(vLogged, [3, 12, 24, 36]);
     });
