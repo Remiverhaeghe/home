@@ -1,0 +1,1 @@
+- Curseurs : la valeur s'affiche en grand dans une pastille, avec les bornes sous les extrémités (coup de chaud, seuil poêle et clim, seuil d'humidité). La durée du coup de chaud devient « Durée » et « 90 min ».

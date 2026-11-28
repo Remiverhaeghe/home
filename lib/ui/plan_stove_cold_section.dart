@@ -4,6 +4,7 @@ import '../l10n/gen/app_localizations.dart';
 import '../state/plan_controller.dart';
 import '../storage/plan_store.dart';
 import 'units_scope.dart';
+import 'value_slider.dart';
 
 /// Seuil de froid : sous cette température, la clim peut chauffer en plus du poêle.
 class StoveColdSection extends StatefulWidget {
@@ -30,12 +31,14 @@ class StoveColdSectionState extends State<StoveColdSection> {
         Text(vTexts.planStoveTitle, style: Theme.of(pContext).textTheme.titleMedium),
         const SizedBox(height: 4),
         Text(vTexts.planStoveHint(vUnits.temp(vValue))),
-        Slider(
+        ValueSlider(
+          valueText: vUnits.temp(vValue),
           value: vValue,
           min: stoveColdMin,
           max: stoveColdMax,
+          minText: vUnits.temp(stoveColdMin),
+          maxText: vUnits.temp(stoveColdMax),
           divisions: ((stoveColdMax - stoveColdMin) * 2).round(),
-          label: vUnits.temp(vValue),
           onChanged: (pNew) => setState(() => _dragging = pNew),
           onChangeEnd: (pNew) async {
             await widget.plan.setStoveColdBelow(pNew);
