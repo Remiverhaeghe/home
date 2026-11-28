@@ -1,0 +1,1 @@
+- Import de plusieurs exports ThermoPro d'un coup : chaque fichier va dans le capteur du nom de son fichier (créé au besoin), les fichiers qui ne sont pas des exports sont comptés et ignorés.
