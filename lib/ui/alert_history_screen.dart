@@ -35,7 +35,9 @@ class AlertHistoryScreen extends StatelessWidget {
             children: [
               for (final vEntry in vEntries)
                 ListTile(
-                  leading: Icon(vEntry.kind == AlertKind.frost ? Icons.ac_unit : Icons.warning_amber),
+                  leading: Icon(
+                    vEntry.kind == AlertKind.frost ? Icons.ac_unit : Icons.warning_amber,
+                  ),
                   title: Text(vTexts.alertHistoryLine(vEntry.sensorName, vEntry.kind.name)),
                   subtitle: Text(vDate.format(vEntry.at)),
                 ),
