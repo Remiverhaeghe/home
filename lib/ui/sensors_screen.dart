@@ -11,6 +11,7 @@ import '../l10n/gen/app_localizations.dart';
 import '../logic/climate_exchange.dart';
 import '../logic/climate_stats.dart';
 import '../logic/reading.dart';
+import '../storage/detail_log.dart';
 import '../storage/error_log_store.dart';
 import '../state/ac_controller.dart';
 import '../state/plan_controller.dart';
@@ -95,6 +96,7 @@ class SensorsScreen extends StatelessWidget {
     this.notes,
     this.onRestored,
     this.errorLog,
+    this.detailLog,
   });
 
   final SensorsController controller;
@@ -133,6 +135,9 @@ class SensorsScreen extends StatelessWidget {
   /// Journal d'erreurs ; son bouton « À propos » n'apparaît que s'il est fourni.
   final ErrorLogStore? errorLog;
 
+  /// Journal détaillé, activable dans « À propos ».
+  final DetailLog? detailLog;
+
   Future<void> _import(BuildContext pContext) async {
     final vText = await pickFile();
     if (vText == null || !pContext.mounted) {
@@ -157,7 +162,10 @@ class SensorsScreen extends StatelessWidget {
   Future<void> _refresh(BuildContext pContext) async {
     final vTexts = AppLocalizations.of(pContext);
     final vMessenger = ScaffoldMessenger.of(pContext);
-    final vCount = await controller.refreshFromBluetooth(link ?? BleTp357Link());
+    final vCount = await controller.refreshFromBluetooth(
+      link ?? BleTp357Link(),
+      pDetail: detailLog,
+    );
     vMessenger.hideCurrentSnackBar();
     vMessenger.showSnackBar(SnackBar(content: Text(vTexts.refreshDone(vCount))));
   }
@@ -331,7 +339,7 @@ class SensorsScreen extends StatelessWidget {
           _MenuEntry(
             Icons.info_outline,
             pTexts.aboutOpen,
-            () => _open(pContext, (_) => AboutScreen(log: errorLog!, saveFile: saveFile)),
+            () => _open(pContext, (_) => AboutScreen(log: errorLog!, saveFile: saveFile, detail: detailLog)),
           ),
       ],
     ].where((pGroup) => pGroup.isNotEmpty).toList();

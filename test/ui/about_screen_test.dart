@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:home/storage/detail_log.dart';
 import 'package:home/storage/error_log_store.dart';
 import 'package:home/ui/about_screen.dart';
 
@@ -96,5 +97,31 @@ void main() {
 
     expect(find.text('Nouveautés'), findsNothing);
     expect(find.textContaining('version 0.1.0'), findsOneWidget);
+  });
+
+  testWidgets('le journal détaillé s\'active, s\'affiche et se vide', (pTester) async {
+    final vDetail = MemoryDetailLog(pNow: () => DateTime(2026, 11, 28, 9));
+    await pTester.pumpWidget(
+      localized(
+        AboutScreen(
+          log: MemoryErrorLogStore(),
+          saveFile: (_, _) async => true,
+          detail: vDetail,
+        ),
+      ),
+    );
+    await pTester.pumpAndSettle();
+
+    expect(find.text('Rien d\'enregistré pour le moment.'), findsOneWidget);
+
+    await pTester.scrollUntilVisible(find.text('Journal détaillé'), 200);
+    await pTester.tap(find.byType(Switch));
+    await pTester.pumpAndSettle();
+    expect(vDetail.on, isTrue);
+
+    await vDetail.note('tour', 'début');
+    await pTester.tap(find.text('Actualiser'));
+    await pTester.pumpAndSettle();
+    expect(find.textContaining('[tour] début'), findsOneWidget);
   });
 }

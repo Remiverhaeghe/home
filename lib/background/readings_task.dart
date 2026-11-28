@@ -12,6 +12,7 @@ import '../logic/reading.dart';
 import '../net/daikin_link.dart';
 import '../net/pellet_link.dart';
 import '../storage/background_files.dart';
+import '../storage/detail_log.dart';
 import '../storage/error_log_store.dart';
 import 'alert_notifier.dart';
 import 'day_summary_runner.dart';
@@ -53,23 +54,25 @@ class ReadingsTaskHandler extends TaskHandler {
 
   /// Applique le plan de la maison, puis montre les nouvelles alertes dans la notification du
   /// service. Un échec ici ne doit jamais arrêter les relevés.
-  Future<void> _plan(Directory pFolder) async {
+  Future<void> _plan(Directory pFolder, DetailLog pDetail) async {
     try {
       final vRunner = _runner ??= PlanRunner(
         pFolder: pFolder,
         pLink: HttpDaikinLink(),
         pPelletLink: HttpsPelletLink(),
       );
-      final vAlerts = await vRunner.run(DateTime.now());
+      final vAlerts = await vRunner.run(DateTime.now(), pDetail: pDetail);
       if (vAlerts.isNotEmpty) {
+        await pDetail.note('plan', '${vAlerts.length} alerte(s) à signaler');
         await _notifier.show(vAlerts);
         await FlutterForegroundTask.updateService(
           notificationTitle: 'Alerte',
           notificationText: alertSummary(vAlerts),
         );
       }
-    } on Object {
+    } on Object catch (pCaught) {
       // Réseau de la maison indisponible, fichier en cours d'écriture : tour suivant
+      await pDetail.note('plan', 'échec : ${pCaught.runtimeType}');
     }
   }
 
@@ -80,10 +83,12 @@ class ReadingsTaskHandler extends TaskHandler {
     BackgroundFiles pFiles,
     FollowedDevice pDevice,
     int pRank,
+    DetailLog pDetail,
   ) async {
     Object? vError;
     for (var vTry = 0; vTry < _tries; vTry++) {
       try {
+        final vStart = DateTime.now();
         final vValue = await _link.live(pDevice.id).first.timeout(_wait);
         await pFiles.appendPending(
           pendingLine(
@@ -91,12 +96,18 @@ class ReadingsTaskHandler extends TaskHandler {
             Reading(at: DateTime.now(), temp: vValue.temp, humidity: vValue.humidity),
           ),
         );
-        _misses.remove(pDevice.id);
+        final vAfter = _misses.remove(pDevice.id);
+        await pDetail.note(
+          'capteur $pRank',
+          'mesure reçue en ${DateTime.now().difference(vStart).inSeconds} s '
+          '(essai ${vTry + 1}${vAfter == null ? '' : ', après $vAfter tours manqués'})',
+        );
 
         return;
       } on Object catch (pCaught) {
         // Capteur hors de portée ou Bluetooth coupé : seconde tentative, puis tour suivant
         vError = pCaught;
+        await pDetail.note('capteur $pRank', 'essai ${vTry + 1} sans mesure : ${pCaught.runtimeType}');
       }
     }
     final vMisses = (_misses[pDevice.id] ?? 0) + 1;
@@ -113,11 +124,12 @@ class ReadingsTaskHandler extends TaskHandler {
   }
 
   /// Résumé du matin ; un échec ici ne doit jamais arrêter les relevés.
-  Future<void> _summary(Directory pFolder) async {
+  Future<void> _summary(Directory pFolder, DetailLog pDetail) async {
     try {
       await sendDaySummaryIfDue(pFolder: pFolder, pNow: DateTime.now(), pNotifier: _notifier);
-    } on Object {
+    } on Object catch (pCaught) {
       // Fichier en cours d'écriture : tour suivant
+      await pDetail.note('résumé', 'échec : ${pCaught.runtimeType}');
     }
   }
 
@@ -130,12 +142,16 @@ class ReadingsTaskHandler extends TaskHandler {
     try {
       final vFolder = await getApplicationDocumentsDirectory();
       final vFiles = BackgroundFiles(vFolder);
+      final vDetail = FileDetailLog(vFolder);
+      final vStart = DateTime.now();
       final vDevices = await vFiles.loadFollowed();
+      await vDetail.note('tour', 'début, ${vDevices.length} capteur(s) suivi(s)');
       for (var vRank = 0; vRank < vDevices.length; vRank++) {
-        await _readOne(vFolder, vFiles, vDevices[vRank], vRank + 1);
+        await _readOne(vFolder, vFiles, vDevices[vRank], vRank + 1, vDetail);
       }
-      await _plan(vFolder);
-      await _summary(vFolder);
+      await _plan(vFolder, vDetail);
+      await _summary(vFolder, vDetail);
+      await vDetail.note('tour', 'fin après ${DateTime.now().difference(vStart).inSeconds} s');
     } finally {
       _busy = false;
     }
