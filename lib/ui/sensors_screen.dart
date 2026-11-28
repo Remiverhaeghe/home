@@ -16,6 +16,7 @@ import '../state/plan_controller.dart';
 import '../logic/house.dart';
 import '../state/appearance_controller.dart';
 import '../state/house_controller.dart';
+import '../state/notes_controller.dart';
 import '../storage/backup_files.dart';
 import '../state/pellet_controller.dart';
 import '../state/weather_controller.dart';
@@ -27,6 +28,7 @@ import 'live_screen.dart';
 import 'plan_screen.dart';
 import 'appearance_screen.dart';
 import 'backup_screen.dart';
+import 'compare_screen.dart';
 import 'house_screen.dart';
 import 'pellet_screen.dart';
 import 'relay_screen.dart';
@@ -73,6 +75,7 @@ class SensorsScreen extends StatelessWidget {
     this.weatherController,
     this.backupFiles,
     this.appearance,
+    this.notes,
     this.onRestored,
   });
 
@@ -105,6 +108,7 @@ class SensorsScreen extends StatelessWidget {
   /// Sauvegarde et restauration ; le bouton n'apparaît que si les fichiers et la relecture sont fournis.
   final BackupFiles? backupFiles;
   final AppearanceController? appearance;
+  final NotesController? notes;
   final Future<void> Function()? onRestored;
 
   Future<void> _import(BuildContext pContext) async {
@@ -173,6 +177,19 @@ class SensorsScreen extends StatelessWidget {
                 MaterialPageRoute(builder: (_) => RelayScreen(controller: relayController!)),
               ),
             ),
+          ListenableBuilder(
+            listenable: controller,
+            builder: (_, _) => controller.sensors.length > 1
+                ? IconButton(
+                    tooltip: vTexts.compareOpen,
+                    icon: const Icon(Icons.compare_arrows),
+                    onPressed: () => Navigator.push<void>(
+                      pContext,
+                      MaterialPageRoute(builder: (_) => CompareScreen(controller: controller)),
+                    ),
+                  )
+                : const SizedBox.shrink(),
+          ),
           if (appearance != null)
             IconButton(
               tooltip: vTexts.appearanceOpen,
@@ -304,6 +321,7 @@ class SensorsScreen extends StatelessWidget {
                         sensor: vSensor,
                         onRename: (pLabel) => controller.rename(vSensor.name, pLabel),
                         outdoor: weatherController?.readings ?? const [],
+                        notes: notes,
                         onEditPlace: houseController == null
                             ? null
                             : () async {

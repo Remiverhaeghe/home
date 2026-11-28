@@ -8,6 +8,8 @@
 
 ### Ajouté
 
+- Comparer deux capteurs (bouton de la liste des capteurs, dès qu'il y en a deux) : température et humidité moyennes par jour sur les mêmes courbes, une seule échelle, et l'écart moyen sur les jours communs
+- Notes datées (détail d'un capteur) : « isolation posée », « fenêtre changée », pour un capteur ou toute la maison, avec l'évolution de la température et de l'humidité sur les deux semaines d'après par rapport aux deux semaines d'avant. Rangées dans `notes.json`, reprises par la sauvegarde
 - Affichage (bouton palette de la liste des capteurs) : thème clair, sombre ou celui du téléphone, et quatre tailles de texte, de normale à maximale, appliqués à toute l'appli. Réglages rangés dans `apparence.json`, repris par la sauvegarde. Le thème sombre reste celui de départ
 - Sauvegarde (bouton « Sauvegarde » de la liste des capteurs) : un seul fichier contient toutes les données (capteurs et noms, climatisations, pièces, règles, vacances, relais, poêle, maison, météo). La restauration relit chaque fichier tel qu'il a été sauvegardé, garde l'ancien à côté en `.avant`, et n'accepte que les fichiers de Home. Le mot de passe du poêle est dans le fichier : à garder en lieu sûr
 - Météo extérieure (écran « La maison ») : récupération par Internet des températures et humidités horaires du lieu de la maison auprès d'Open-Meteo, désactivée au départ ; seules les coordonnées partent. Archive de 400 jours sur le téléphone (`meteo.json`), actualisée au plus une fois par heure, copiable en CSV pour un tableur
