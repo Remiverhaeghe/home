@@ -69,10 +69,7 @@ class _AboutDetailSectionState extends State<AboutDetailSection> {
             if (vText.isEmpty)
               Text(vTexts.aboutDetailEmpty)
             else
-              SelectableText(
-                vText,
-                style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
-              ),
+              SelectableText(vText, style: const TextStyle(fontFamily: 'monospace', fontSize: 12)),
             const SizedBox(height: 12),
             Wrap(
               spacing: 8,
