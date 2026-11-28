@@ -94,9 +94,9 @@ void main() {
           targetC: 21,
           powerLevel: 3,
         );
-      await FilePelletStore(File('${vFolder.path}/poele.json')).save(
-        const PelletStove(name: 'Poêle', host: '192.168.1.40', serial: 'S1', password: 'P1'),
-      );
+      await FilePelletStore(
+        File('${vFolder.path}/poele.json'),
+      ).save(const PelletStove(name: 'Poêle', host: '192.168.1.40', serial: 'S1', password: 'P1'));
     });
 
     Future<void> saveVacation() => FilePlanStore(vFolder).save(
