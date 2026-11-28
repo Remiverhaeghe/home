@@ -6,7 +6,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'background/alert_notifier.dart';
 import 'background/background_control.dart';
 import 'l10n/gen/app_localizations.dart';
-import 'logic/vacation.dart';
 import 'state/ac_controller.dart';
 import 'state/plan_controller.dart';
 import 'state/house_controller.dart';
@@ -104,12 +103,7 @@ class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
     }
     final vPellet = widget.pelletController;
     if (vPellet != null) {
-      await vPellet.refresh();
-      var vOn = !vPellet.failed && (vPellet.state?.isOn ?? false);
-      if (stoveMustStop(widget.planController!.vacation, vNow, pStoveOn: vOn) &&
-          await vPellet.setPower(pOn: false) == PelletResult.done) {
-        vOn = false;
-      }
+      final vOn = await vPellet.refreshAndStopIfAway(widget.planController!.vacation, vNow);
       widget.planController!.stoveRunning = vOn;
     }
     await widget.acController!.refresh();
