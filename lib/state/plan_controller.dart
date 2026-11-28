@@ -33,6 +33,9 @@ class PlanController extends ChangeNotifier {
 
   List<Room> get rooms => _settings.rooms;
   List<AutoRule> get rules => _settings.rules;
+
+  /// Sous cette température, la clim peut chauffer en plus du poêle.
+  double get stoveColdBelow => _settings.stoveColdBelow;
   VacationMode? get vacation => _settings.vacation;
 
   /// Commandes envoyées lors du dernier passage.
@@ -61,6 +64,7 @@ class PlanController extends ChangeNotifier {
       ],
       rules: rules,
       vacation: vacation,
+      stoveColdBelow: stoveColdBelow,
     ),
   );
 
@@ -74,11 +78,40 @@ class PlanController extends ChangeNotifier {
   }
 
   Future<void> setRules(List<AutoRule> pRules) =>
-      _save(PlanSettings(rooms: rooms, rules: pRules, vacation: vacation));
+      _save(
+        PlanSettings(
+          rooms: rooms,
+          rules: pRules,
+          vacation: vacation,
+          stoveColdBelow: stoveColdBelow,
+        ),
+      );
 
   /// Règle le mode vacances, ou le retire avec null.
   Future<void> setVacation(VacationMode? pVacation) =>
-      _save(PlanSettings(rooms: rooms, rules: rules, vacation: pVacation));
+      _save(
+        PlanSettings(
+          rooms: rooms,
+          rules: rules,
+          vacation: pVacation,
+          stoveColdBelow: stoveColdBelow,
+        ),
+      );
+
+  /// Règle le seuil de froid sous lequel la clim chauffe en plus du poêle : borné et arrondi au
+  /// demi-degré.
+  Future<void> setStoveColdBelow(double pValue) {
+    final vValue = (pValue.clamp(stoveColdMin, stoveColdMax) * 2).round() / 2;
+
+    return _save(
+      PlanSettings(
+        rooms: rooms,
+        rules: rules,
+        vacation: vacation,
+        stoveColdBelow: vValue,
+      ),
+    );
+  }
 
   /// Évalue le plan à l'instant [pNow], envoie les commandes et renvoie les alertes qui viennent
   /// d'apparaître. Les états des climatisations doivent être à jour (voir [AcController.refresh]).
@@ -108,6 +141,7 @@ class PlanController extends ChangeNotifier {
       pLastRuns: _lastRuns,
       pWindowSince: _windowSince,
       pStoveRunning: stoveRunning,
+      pStoveColdBelow: stoveColdBelow,
     );
     for (final vHost in vResult.windowHosts) {
       _windowSince[vHost] = pNow;

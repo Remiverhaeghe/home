@@ -10,6 +10,7 @@ import '../logic/vacation.dart';
 import '../state/ac_controller.dart';
 import '../state/plan_controller.dart';
 import '../state/sensors_controller.dart';
+import '../storage/plan_store.dart';
 import 'rules_screen.dart';
 import 'schedule_screen.dart';
 
@@ -151,6 +152,8 @@ class PlanScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
+              _StoveColdSection(plan: plan),
+              const SizedBox(height: 24),
               Text(vTexts.planVacationTitle, style: Theme.of(pContext).textTheme.titleMedium),
               const SizedBox(height: 8),
               if (vVacation == null) ...[
@@ -262,4 +265,48 @@ class _RoomCard extends StatelessWidget {
       ),
     ),
   );
+}
+
+/// Seuil de froid : sous cette température, la clim peut chauffer en plus du poêle.
+class _StoveColdSection extends StatefulWidget {
+  const _StoveColdSection({required this.plan});
+
+  final PlanController plan;
+
+  @override
+  State<_StoveColdSection> createState() => _StoveColdSectionState();
+}
+
+class _StoveColdSectionState extends State<_StoveColdSection> {
+  double? _dragging;
+
+  @override
+  Widget build(BuildContext pContext) {
+    final vTexts = AppLocalizations.of(pContext);
+    final vNumber = NumberFormat('0.0', Localizations.localeOf(pContext).toString());
+    final vValue = _dragging ?? widget.plan.stoveColdBelow;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(vTexts.planStoveTitle, style: Theme.of(pContext).textTheme.titleMedium),
+        const SizedBox(height: 4),
+        Text(vTexts.planStoveHint(vNumber.format(vValue))),
+        Slider(
+          value: vValue,
+          min: stoveColdMin,
+          max: stoveColdMax,
+          divisions: ((stoveColdMax - stoveColdMin) * 2).round(),
+          label: '${vNumber.format(vValue)} °C',
+          onChanged: (pNew) => setState(() => _dragging = pNew),
+          onChangeEnd: (pNew) async {
+            await widget.plan.setStoveColdBelow(pNew);
+            if (mounted) {
+              setState(() => _dragging = null);
+            }
+          },
+        ),
+      ],
+    );
+  }
 }

@@ -11,6 +11,7 @@ const backupFileNames = [
   'climatisations.json',
   'pieces.json',
   'automatismes.json',
+  'reglages-plan.json',
   'vacances.json',
   'relais.json',
   'poele.json',

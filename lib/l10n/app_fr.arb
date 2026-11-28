@@ -722,5 +722,8 @@
   "periodsSplitHint": "Par exemple : Bureau en hiver",
   "periodsSplitDone": "Période déplacée vers « {name} ».",
   "@periodsSplitDone": {"placeholders": {"name": {"type": "String"}}},
-  "periodsSplitFailed": "Choisis un autre nom que celui du capteur."
+  "periodsSplitFailed": "Choisis un autre nom que celui du capteur.",
+  "planStoveTitle": "Poêle et clim ensemble",
+  "planStoveHint": "Quand le poêle marche, la clim ne chauffe pas en plus. Sous {temp} °C dans la pièce, les deux peuvent tourner ensemble.",
+  "@planStoveHint": {"placeholders": {"temp": {"type": "String"}}}
 }
