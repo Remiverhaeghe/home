@@ -39,7 +39,9 @@ void main() {
     expect(find.byType(Sparkline), findsNothing);
   });
 
-  testWidgets('près du point de rosée, la carte conseille d\'aérer ou de chauffer', (pTester) async {
+  testWidgets('près du point de rosée, la carte conseille d\'aérer ou de chauffer', (
+    pTester,
+  ) async {
     await pTester.pumpWidget(localized(SensorCard(sensor: sensor([at(0, 20, 90)]))));
 
     expect(find.textContaining('Risque de buée'), findsOneWidget);
