@@ -38,12 +38,8 @@ PlanResult _plan(double pTemp, {Map<String, Boost> pBoosts = const {}, List<Room
       pBoosts: pBoosts,
     );
 
-Boost _boost({Duration pLeft = const Duration(minutes: 30), double pTemp = 24}) => Boost(
-  host: _host,
-  kind: BoostKind.shower,
-  temp: pTemp,
-  until: _now.add(pLeft),
-);
+Boost _boost({Duration pLeft = const Duration(minutes: 30), double pTemp = 24}) =>
+    Boost(host: _host, kind: BoostKind.shower, temp: pTemp, until: _now.add(pLeft));
 
 void main() {
   test('chaque usage a son réglage de départ', () {

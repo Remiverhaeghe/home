@@ -106,8 +106,10 @@ const stoveColdMin = 10.0;
 const stoveColdMax = 22.0;
 
 /// Contenu de `reglages-plan.json` : le seuil de froid et les coups de chaud.
-String planOptionsJson(double pStoveColdBelow, List<Boost> pBoosts) =>
-    jsonEncode({'poeleFroidSous': pStoveColdBelow, 'coupsDeChaud': jsonDecode(boostsToJson(pBoosts))});
+String planOptionsJson(double pStoveColdBelow, List<Boost> pBoosts) => jsonEncode({
+  'poeleFroidSous': pStoveColdBelow,
+  'coupsDeChaud': jsonDecode(boostsToJson(pBoosts)),
+});
 
 /// Coups de chaud lus dans `reglages-plan.json` ; fichier abîmé, aucun.
 List<Boost> parseBoostsFile(String pJson) {
