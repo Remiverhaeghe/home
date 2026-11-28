@@ -11,6 +11,7 @@ import '../state/sensors_controller.dart';
 import '../storage/ac_runs_store.dart';
 import '../storage/ac_store.dart';
 import '../storage/background_files.dart';
+import '../storage/detail_log.dart';
 import '../storage/file_sensor_store.dart';
 import '../storage/pellet_runs_store.dart';
 import '../storage/pellet_store.dart';
@@ -55,8 +56,10 @@ class PlanRunner {
 
   /// Un tour : renvoie les alertes apparues, ou une liste vide quand l'appli est ouverte (c'est
   /// elle qui applique alors le plan).
-  Future<List<SensorAlert>> run(DateTime pNow) async {
+  Future<List<SensorAlert>> run(DateTime pNow, {DetailLog? pDetail}) async {
     if (await _files.isAppOpen(pNow, appOpenWindow)) {
+      await pDetail?.note('plan', 'appli ouverte : le plan reste à l\'appli');
+
       return [];
     }
     _sensorStore.saved = applyPending(await _sensorFile.load(), await _files.peekPending());
@@ -71,6 +74,9 @@ class PlanRunner {
     }
     await _ac.refresh();
 
-    return _plan.tick(pNow);
+    final vAlerts = await _plan.tick(pNow);
+    await pDetail?.note('plan', 'plan appliqué, ${vAlerts.length} alerte(s)');
+
+    return vAlerts;
   }
 }
