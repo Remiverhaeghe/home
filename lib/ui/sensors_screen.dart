@@ -243,7 +243,12 @@ class SensorsScreen extends StatelessWidget {
             pTexts.planOpen,
             () => _open(
               pContext,
-              (_) => PlanScreen(plan: planController!, ac: acController!, sensors: controller),
+              (_) => PlanScreen(
+                plan: planController!,
+                ac: acController!,
+                sensors: controller,
+                files: files,
+              ),
             ),
           ),
         if (acController != null)

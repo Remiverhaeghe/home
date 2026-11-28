@@ -14,6 +14,7 @@ import '../net/pellet_link.dart';
 import '../storage/background_files.dart';
 import '../storage/error_log_store.dart';
 import 'alert_notifier.dart';
+import 'day_summary_runner.dart';
 import 'plan_runner.dart';
 
 /// Point d'entrée du service, appelé dans son propre processus Dart.
@@ -111,6 +112,15 @@ class ReadingsTaskHandler extends TaskHandler {
     }
   }
 
+  /// Résumé du matin ; un échec ici ne doit jamais arrêter les relevés.
+  Future<void> _summary(Directory pFolder) async {
+    try {
+      await sendDaySummaryIfDue(pFolder: pFolder, pNow: DateTime.now(), pNotifier: _notifier);
+    } on Object {
+      // Fichier en cours d'écriture : tour suivant
+    }
+  }
+
   Future<void> _round() async {
     // Un tour long ne doit pas se superposer au suivant
     if (_busy) {
@@ -125,6 +135,7 @@ class ReadingsTaskHandler extends TaskHandler {
         await _readOne(vFolder, vFiles, vDevices[vRank], vRank + 1);
       }
       await _plan(vFolder);
+      await _summary(vFolder);
     } finally {
       _busy = false;
     }
