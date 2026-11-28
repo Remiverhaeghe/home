@@ -9,6 +9,7 @@
 
 ### Ajouté
 
+- Notes de version : l'écran « À propos » montre les nouveautés de la dernière version (le CHANGELOG, livré avec l'appli), repliées par défaut.
 - Menu « Plus d'options » dans l'écran des capteurs : les appareils, la maison, les données (export, import CSV, sauvegarde) et l'appli y sont rangés par famille ; la barre ne garde que l'actualisation et le Bluetooth.
 - La recherche des climatisations ne dépend plus de la diffusion UDP : elle diffuse aussi sur le réseau du téléphone, puis interroge chaque adresse du même réseau pour trouver les modules que la box ne laisse pas répondre.
 - `docs/architecture.md` : couches du code, données, tests et marche à suivre pour ajouter un appareil.

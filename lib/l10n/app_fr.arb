@@ -404,6 +404,7 @@
   "boostStop": "Arrêter",
   "aboutOpen": "À propos",
   "aboutTitle": "À propos de Home",
+  "aboutNotesTitle": "Nouveautés",
   "aboutVersion": "Home, version {version}",
   "@aboutVersion": {"placeholders": {"version": {"type": "String"}}},
   "aboutPrivacy": "Tout reste sur ce téléphone. Le journal ci-dessous ne contient ni adresse réseau ni donnée de la maison, et rien n'est envoyé.",
