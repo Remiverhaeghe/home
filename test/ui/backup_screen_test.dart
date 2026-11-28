@@ -81,13 +81,12 @@ void main() {
 
     await pTester.tap(find.widgetWithText(FilledButton, 'Restaurer'));
     await pTester.pump();
-    await pTester.runAsync(() async {
-      final vTarget = File('${vFolder.path}/maison.json');
-      for (var vTry = 0; vTry < 100 && !vTarget.existsSync(); vTry++) {
-        await Future<void>.delayed(const Duration(milliseconds: 20));
-      }
-      await Future<void>.delayed(const Duration(milliseconds: 50));
-    });
+    final vTarget = File('${vFolder.path}/maison.json');
+    for (var vTry = 0; vTry < 100 && !vTarget.existsSync(); vTry++) {
+      await pTester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 20)));
+      await pTester.pump();
+    }
+    await pTester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
     await pTester.pumpAndSettle();
 
     expect(File('${vFolder.path}/maison.json').readAsStringSync(), '{"neuf":true}');
