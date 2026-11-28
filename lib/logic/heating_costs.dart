@@ -106,7 +106,10 @@ class AcRuns {
 
   /// Range une lecture de l'état de la clim [pHost].
   AcRuns record(String pHost, DateTime pAt, {required bool pOn}) => AcRuns(
-    logs: {...logs, pHost: logOf(pHost).record(pAt, pOn: pOn)},
+    logs: {
+      ...logs,
+      pHost: logOf(pHost).record(pAt, pOn: pOn),
+    },
     kwByHost: kwByHost,
     pricePerKwh: pricePerKwh,
     monthlyBudget: monthlyBudget,

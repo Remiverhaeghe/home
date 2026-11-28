@@ -116,7 +116,10 @@ void main() {
 
     test('sans stock ou sans débit, rien n\'est annoncé', () {
       expect(vBase.remainingKg(_t0), isNull);
-      expect(vBase.withStock(10, vStart).withFlow(pKgPerHour: null, pBagKg: 15).remainingKg(_t0), isNull);
+      expect(
+        vBase.withStock(10, vStart).withFlow(pKgPerHour: null, pBagKg: 15).remainingKg(_t0),
+        isNull,
+      );
     });
 
     test('le stock diminue de ce que le poêle consomme depuis le comptage', () {
@@ -188,7 +191,10 @@ void main() {
     expect(vRead.stockBags, 4.5);
     expect(vRead.stockAt, DateTime(2026, 12, 1, 9));
     expect(vRead.stopAtMinute, 22 * 60 + 30);
-    expect(parsePelletRuns('{"stockSacs": -1, "stockLe": "2026-12-01T09:00:00"}').stockBags, isNull);
+    expect(
+      parsePelletRuns('{"stockSacs": -1, "stockLe": "2026-12-01T09:00:00"}').stockBags,
+      isNull,
+    );
     expect(parsePelletRuns('{"stockSacs": 3}').stockBags, isNull);
     expect(parsePelletRuns('{"arretMinute": 1440}').stopAtMinute, isNull);
   });

@@ -22,9 +22,13 @@ class AcStatus {
 
 /// Climatisations de la maison, leur état et leurs commandes.
 class AcController extends ChangeNotifier {
-  AcController(this._store, this._link, {AcRunsStore? runsStore, DateTime Function() clock = DateTime.now})
-    : _runsStore = runsStore ?? MemoryAcRunsStore(),
-      _clock = clock;
+  AcController(
+    this._store,
+    this._link, {
+    AcRunsStore? runsStore,
+    DateTime Function() clock = DateTime.now,
+  }) : _runsStore = runsStore ?? MemoryAcRunsStore(),
+       _clock = clock;
 
   final AcStore _store;
   final DaikinLink _link;

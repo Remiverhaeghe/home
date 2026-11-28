@@ -9,12 +9,7 @@ import '../state/pellet_controller.dart';
 /// Bilan du chauffage : heures de marche de chaque clim et du poêle, énergie et coût estimés avec
 /// ce que l'utilisateur a donné (puissance, prix du kWh, prix du sac), et suivi du budget mensuel.
 class HeatingReportScreen extends StatelessWidget {
-  const HeatingReportScreen({
-    super.key,
-    required this.ac,
-    this.pellet,
-    this.clock = DateTime.now,
-  });
+  const HeatingReportScreen({super.key, required this.ac, this.pellet, this.clock = DateTime.now});
 
   final AcController ac;
   final PelletController? pellet;
@@ -59,7 +54,9 @@ class HeatingReportScreen extends StatelessWidget {
           final vClimMonth = vHosts.isEmpty ? 0.0 : vRuns.totalCost(vHosts, 30, vNow);
           final vStoveConfigured = pellet?.stove != null;
           final vStoveMonth = vStoveConfigured ? _stoveCost(30, vNow) : 0.0;
-          final vTotal = vClimMonth == null || vStoveMonth == null ? null : vClimMonth + vStoveMonth;
+          final vTotal = vClimMonth == null || vStoveMonth == null
+              ? null
+              : vClimMonth + vStoveMonth;
           final vBudget = vRuns.monthlyBudget;
 
           return ListView(
@@ -97,9 +94,7 @@ class HeatingReportScreen extends StatelessWidget {
                   Card(
                     child: ListTile(
                       title: Text(pellet!.stove!.name),
-                      subtitle: Text(
-                        _stoveText(vTexts, vHours, vMoney, vNow),
-                      ),
+                      subtitle: Text(_stoveText(vTexts, vHours, vMoney, vNow)),
                     ),
                   ),
                 const SizedBox(height: 12),
@@ -110,13 +105,11 @@ class HeatingReportScreen extends StatelessWidget {
                 else ...[
                   Text(vTexts.heatingMonthTotal(vMoney.format(vTotal))),
                   if (vBudget != null)
-                    Text(
-                      switch (budgetState(vTotal, vBudget)) {
-                        BudgetState.ok => vTexts.heatingBudgetOk(vMoney.format(vBudget)),
-                        BudgetState.near => vTexts.heatingBudgetNear(vMoney.format(vBudget)),
-                        BudgetState.over => vTexts.heatingBudgetOver(vMoney.format(vBudget)),
-                      },
-                    ),
+                    Text(switch (budgetState(vTotal, vBudget)) {
+                      BudgetState.ok => vTexts.heatingBudgetOk(vMoney.format(vBudget)),
+                      BudgetState.near => vTexts.heatingBudgetNear(vMoney.format(vBudget)),
+                      BudgetState.over => vTexts.heatingBudgetOver(vMoney.format(vBudget)),
+                    }),
                   Text(
                     vTexts.heatingDegree(vMoney.format(degreeSaving(vTotal))),
                     style: Theme.of(pContext).textTheme.bodySmall,
@@ -125,10 +118,7 @@ class HeatingReportScreen extends StatelessWidget {
               ],
               Align(
                 alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () => _edit(pContext),
-                  child: Text(vTexts.heatingSet),
-                ),
+                child: TextButton(onPressed: () => _edit(pContext), child: Text(vTexts.heatingSet)),
               ),
             ],
           );
@@ -137,7 +127,12 @@ class HeatingReportScreen extends StatelessWidget {
     );
   }
 
-  String _stoveText(AppLocalizations pTexts, NumberFormat pHours, NumberFormat pMoney, DateTime pNow) {
+  String _stoveText(
+    AppLocalizations pTexts,
+    NumberFormat pHours,
+    NumberFormat pMoney,
+    DateTime pNow,
+  ) {
     final vRuns = pellet!.runs;
     final vWeek = vRuns.hoursOver(7, pNow);
     final vCost = _stoveCost(7, pNow);

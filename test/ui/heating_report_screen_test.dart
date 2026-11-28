@@ -126,12 +126,7 @@ void main() {
       ),
       FakePelletLink(),
       runsStore: MemoryPelletRunsStore(
-        const PelletRuns(
-          minutesByDay: {'2026-12-07': 120},
-          kgPerHour: 1.5,
-          bagKg: 15,
-          bagPrice: 6,
-        ),
+        const PelletRuns(minutesByDay: {'2026-12-07': 120}, kgPerHour: 1.5, bagKg: 15, bagPrice: 6),
       ),
     );
     await vPellet.load();

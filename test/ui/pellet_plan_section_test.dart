@@ -33,7 +33,11 @@ void main() {
     );
     await vController.load();
     await pTester.pumpWidget(
-      localized(Scaffold(body: PelletPlanSection(controller: vController, clock: () => _now, pickTime: pPick))),
+      localized(
+        Scaffold(
+          body: PelletPlanSection(controller: vController, clock: () => _now, pickTime: pPick),
+        ),
+      ),
     );
 
     return vController;
@@ -47,10 +51,7 @@ void main() {
   });
 
   testWidgets('un stock sans débit demande le débit', (pTester) async {
-    await open(
-      pTester,
-      pRuns: PelletRuns(stockBags: 5, stockAt: DateTime(2026, 12, 1)),
-    );
+    await open(pTester, pRuns: PelletRuns(stockBags: 5, stockAt: DateTime(2026, 12, 1)));
 
     expect(find.textContaining('Donne aussi le débit'), findsOneWidget);
   });

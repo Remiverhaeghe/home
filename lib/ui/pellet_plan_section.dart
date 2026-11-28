@@ -61,7 +61,9 @@ class PelletPlanSection extends StatelessWidget {
     final vStop = controller.runs.stopAtMinute;
     final vPicked = await pickTime(
       pContext,
-      vStop == null ? const TimeOfDay(hour: 23, minute: 0) : TimeOfDay(hour: vStop ~/ 60, minute: vStop % 60),
+      vStop == null
+          ? const TimeOfDay(hour: 23, minute: 0)
+          : TimeOfDay(hour: vStop ~/ 60, minute: vStop % 60),
     );
     if (vPicked != null) {
       await controller.setStopAt(vPicked.hour * 60 + vPicked.minute);
