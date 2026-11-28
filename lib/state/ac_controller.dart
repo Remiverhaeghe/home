@@ -131,11 +131,7 @@ class AcController extends ChangeNotifier {
       vStateProblem = _reason(pError);
     }
 
-    return ModuleProbe(
-      name: vName,
-      identityProblem: vIdentityProblem,
-      stateProblem: vStateProblem,
-    );
+    return ModuleProbe(name: vName, identityProblem: vIdentityProblem, stateProblem: vStateProblem);
   }
 
   static String _reason(Object pError) =>
