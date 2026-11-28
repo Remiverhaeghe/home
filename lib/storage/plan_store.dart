@@ -94,11 +94,9 @@ class FilePlanStore implements PlanStore {
   Future<void> save(PlanSettings pSettings) async {
     await _write('pieces.json', roomsJson(pSettings.rooms));
     await _write('automatismes.json', autoRulesJson(pSettings.rules));
-    await _write('reglages-plan.json', planOptionsJson(
-        pSettings.stoveColdBelow,
-        pSettings.boosts,
-        pSettings.humidityAlertAt,
-      ),
+    await _write(
+      'reglages-plan.json',
+      planOptionsJson(pSettings.stoveColdBelow, pSettings.boosts, pSettings.humidityAlertAt),
     );
     final vVacation = pSettings.vacation;
     if (vVacation == null) {
