@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:ui' show PlatformDispatcher;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
@@ -38,6 +39,18 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   FlutterForegroundTask.initCommunicationPort();
   final vFolder = await getApplicationDocumentsDirectory();
+  final vErrors = FileErrorLogStore(File('${vFolder.path}/journal-erreurs.txt'));
+  // Les erreurs vont dans un journal local, jamais sur Internet
+  final vPreviousHandler = FlutterError.onError;
+  FlutterError.onError = (pDetails) {
+    unawaited(vErrors.append(errorEntry(DateTime.now(), pDetails.exception, pDetails.stack)));
+    vPreviousHandler?.call(pDetails);
+  };
+  PlatformDispatcher.instance.onError = (pError, pStack) {
+    unawaited(vErrors.append(errorEntry(DateTime.now(), pError, pStack)));
+
+    return true;
+  };
   final vController = SensorsController(
     FileSensorStore(File('${vFolder.path}/capteurs.json')),
     FileLabelStore(File('${vFolder.path}/noms-capteurs.json')),
@@ -82,6 +95,7 @@ Future<void> main() async {
       planController: vPlan,
       relayController: vRelays,
       pelletController: vPellet,
+      errorLog: vErrors,
       houseController: vHouse,
       weatherController: vWeather,
       backupFiles: BackupFiles(vFolder),

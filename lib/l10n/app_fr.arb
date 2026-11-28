@@ -725,5 +725,15 @@
   "periodsSplitFailed": "Choisis un autre nom que celui du capteur.",
   "planStoveTitle": "Poêle et clim ensemble",
   "planStoveHint": "Quand le poêle marche, la clim ne chauffe pas en plus. Sous {temp} °C dans la pièce, les deux peuvent tourner ensemble.",
-  "@planStoveHint": {"placeholders": {"temp": {"type": "String"}}}
+  "@planStoveHint": {"placeholders": {"temp": {"type": "String"}}},
+  "aboutOpen": "À propos",
+  "aboutTitle": "À propos de Home",
+  "aboutVersion": "Home, version {version}",
+  "@aboutVersion": {"placeholders": {"version": {"type": "String"}}},
+  "aboutPrivacy": "Tout reste sur ce téléphone. Le journal ci-dessous ne contient ni adresse réseau ni donnée de la maison, et rien n'est envoyé.",
+  "aboutLogTitle": "Journal des erreurs",
+  "aboutLogEmpty": "Aucune erreur pour le moment.",
+  "aboutSave": "Enregistrer le journal",
+  "aboutClear": "Vider",
+  "aboutSaved": "Journal enregistré."
 }
