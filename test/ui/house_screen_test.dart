@@ -100,22 +100,17 @@ void main() {
     );
     await vHouse.load();
     await pTester.pumpWidget(localized(HouseScreen(controller: vHouse, weather: vWeather)));
-    await pTester.scrollUntilVisible(
-      find.byType(Switch),
-      200,
-      scrollable: find.byType(Scrollable).first,
-    );
+    await pTester.scrollUntilVisible(find.byType(Switch), 200, scrollable: find.byType(Scrollable).first);
+    await pTester.ensureVisible(find.byType(Switch));
+    await pTester.pump();
 
     expect(vLink.calls, 0);
     expect(find.text('Actualiser'), findsNothing);
 
     await pTester.tap(find.byType(Switch));
     await pTester.pumpAndSettle();
-    await pTester.scrollUntilVisible(
-      find.text('Actualiser'),
-      200,
-      scrollable: find.byType(Scrollable).first,
-    );
+    await pTester.ensureVisible(find.text('Actualiser'));
+    await pTester.pump();
     await pTester.tap(find.text('Actualiser'));
     await pTester.pumpAndSettle();
 
