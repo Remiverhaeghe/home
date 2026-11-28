@@ -31,7 +31,7 @@ String thermoproSensorName(String pFileName) {
 
 final _line = RegExp(r'^(\d{1,2})/(\d{1,2})/(\d{4}),(\d{1,2}):(\d{2}),([^,]*),([^,]*)$');
 
-/// Lit un export. Garde un relevé par tranche de [pStepMinutes] minutes (le premier), pour ne pas
+/// Lit un export. Garde un relevé par tranche de [pStepMinutes] minutes (le plus ancien), pour ne pas
 /// alourdir le téléphone avec huit mois à la minute. Renvoie null si le texte n'est pas un export
 /// ThermoPro.
 ThermoproCsv? parseThermoproCsv(String pText, String pFileName, {int pStepMinutes = 10}) {
@@ -62,9 +62,11 @@ ThermoproCsv? parseThermoproCsv(String pText, String pFileName, {int pStepMinute
       int.parse(vMatch.group(4)!),
       int.parse(vMatch.group(5)!),
     );
-    vByStep.putIfAbsent(
+    final vReading = Reading(at: vAt, temp: vTemp, humidity: vHumidity);
+    vByStep.update(
       vAt.millisecondsSinceEpoch ~/ vStepMs,
-      () => Reading(at: vAt, temp: vTemp, humidity: vHumidity),
+      (pOld) => vAt.isBefore(pOld.at) ? vReading : pOld,
+      ifAbsent: () => vReading,
     );
   }
   final vReadings = vByStep.values.toList()..sort((pA, pB) => pA.at.compareTo(pB.at));
