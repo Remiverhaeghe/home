@@ -119,10 +119,7 @@ class RoomsScreen extends StatelessWidget {
                       ].join(' · '),
                     ),
                     trailing: Text(
-                      vTexts.roomsReading(
-                        vUnits.temp(vRoom.temp),
-                        vNumber.format(vRoom.humidity),
-                      ),
+                      vTexts.roomsReading(vUnits.temp(vRoom.temp), vNumber.format(vRoom.humidity)),
                       style: TextStyle(
                         color: vRoom.state == HumidityState.fine
                             ? null

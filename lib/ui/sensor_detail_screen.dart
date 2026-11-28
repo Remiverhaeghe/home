@@ -133,12 +133,8 @@ class _SensorDetailScreenState extends State<SensorDetailScreen> {
             ),
             Text(
               vTexts.detailRange(
-                vTexts.temperatureValue(
-                  vUnits.temp(vTemps.reduce((pA, pB) => pA < pB ? pA : pB)),
-                ),
-                vTexts.temperatureValue(
-                  vUnits.temp(vTemps.reduce((pA, pB) => pA > pB ? pA : pB)),
-                ),
+                vTexts.temperatureValue(vUnits.temp(vTemps.reduce((pA, pB) => pA < pB ? pA : pB))),
+                vTexts.temperatureValue(vUnits.temp(vTemps.reduce((pA, pB) => pA > pB ? pA : pB))),
               ),
             ),
             const SizedBox(height: 8),
