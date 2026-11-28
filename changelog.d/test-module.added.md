@@ -1,0 +1,1 @@
+- Ajout d'une clim par adresse : un bouton « Tester le module » dit si le module répond (identité puis lecture de l'état) et pourquoi il échoue, sans l'ajouter. Utile pour un nouveau modèle de module Wi-Fi (BRP069B42, B43).

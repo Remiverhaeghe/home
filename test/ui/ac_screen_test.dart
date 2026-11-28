@@ -159,6 +159,33 @@ void main() {
     expect(find.text('Salon'), findsOneWidget);
   });
 
+  testWidgets('tester un module dit s\'il répond, sans l\'ajouter', (pTester) async {
+    await open(pTester);
+
+    await pTester.tap(find.text('Ajouter par adresse'));
+    await pTester.pumpAndSettle();
+    await pTester.enterText(find.byType(TextField).first, vHost);
+    await pTester.tap(find.byKey(const Key('probe-module')));
+    await pTester.pumpAndSettle();
+
+    expect(find.textContaining('le module répond'), findsOneWidget);
+    expect(find.textContaining('le module est compatible'), findsOneWidget);
+    expect(vController.units, isEmpty);
+  });
+
+  testWidgets('un module qui ne répond pas est signalé avec le motif', (pTester) async {
+    await open(pTester);
+
+    await pTester.tap(find.text('Ajouter par adresse'));
+    await pTester.pumpAndSettle();
+    await pTester.enterText(find.byType(TextField).first, '192.168.1.99');
+    await pTester.tap(find.byKey(const Key('probe-module')));
+    await pTester.pumpAndSettle();
+
+    expect(find.textContaining('pas de réponse utilisable (injoignable)'), findsOneWidget);
+    expect(find.textContaining('lecture impossible (injoignable)'), findsOneWidget);
+  });
+
   testWidgets('une adresse refusée est expliquée', (pTester) async {
     await open(pTester);
 

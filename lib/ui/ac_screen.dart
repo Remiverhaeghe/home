@@ -51,7 +51,7 @@ class _AcScreenState extends State<AcScreen> {
   Future<void> _askAddress() async {
     final vAnswer = await showDialog<({String host, String name})>(
       context: context,
-      builder: (_) => const _AddDialog(),
+      builder: (_) => _AddDialog(controller: widget.controller),
     );
     if (vAnswer != null) {
       await _add(vAnswer.host, pName: vAnswer.name);
@@ -153,7 +153,9 @@ class _AcScreenState extends State<AcScreen> {
 /// Saisie de l'adresse et du nom d'une climatisation. Les champs vivent dans cette boîte : ils ne
 /// sont détruits qu'avec elle, après sa fermeture.
 class _AddDialog extends StatefulWidget {
-  const _AddDialog();
+  const _AddDialog({required this.controller});
+
+  final AcController controller;
 
   @override
   State<_AddDialog> createState() => _AddDialogState();
@@ -162,6 +164,22 @@ class _AddDialog extends StatefulWidget {
 class _AddDialogState extends State<_AddDialog> {
   final _host = TextEditingController();
   final _name = TextEditingController();
+  ModuleProbe? _probe;
+  var _probing = false;
+
+  Future<void> _test() async {
+    setState(() {
+      _probing = true;
+      _probe = null;
+    });
+    final vResult = await widget.controller.probe(_host.text);
+    if (mounted) {
+      setState(() {
+        _probing = false;
+        _probe = vResult;
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -188,6 +206,27 @@ class _AddDialogState extends State<_AddDialog> {
             controller: _name,
             decoration: InputDecoration(labelText: vTexts.acNameLabel),
           ),
+          const SizedBox(height: 8),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton(
+              key: const Key('probe-module'),
+              onPressed: _probing ? null : _test,
+              child: Text(vTexts.acProbe),
+            ),
+          ),
+          if (_probe case final ModuleProbe vProbe) ...[
+            Text(
+              vProbe.identityOk
+                  ? vTexts.acProbeIdentityOk(vProbe.name ?? '')
+                  : vTexts.acProbeIdentityFail(vProbe.identityProblem!),
+            ),
+            Text(
+              vProbe.stateOk
+                  ? vTexts.acProbeStateOk
+                  : vTexts.acProbeStateFail(vProbe.stateProblem!),
+            ),
+          ],
         ],
       ),
       actions: [
