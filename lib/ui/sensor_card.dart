@@ -101,6 +101,21 @@ class SensorCard extends StatelessWidget {
                     ),
                   ],
                 ),
+                if (condensationRisk(vLast.temp, vLast.humidity)) ...[
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Icon(Icons.water_drop_outlined, size: 16, color: vColors.warning),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(
+                          vTexts.condensationAdvice,
+                          style: vTheme.bodySmall?.copyWith(color: vColors.warning),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
                 const SizedBox(height: 12),
                 Sparkline(values: recentTemps(sensor.readings), color: vColors.temperature),
                 const SizedBox(height: 4),

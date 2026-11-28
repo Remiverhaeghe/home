@@ -39,6 +39,18 @@ void main() {
     expect(find.byType(Sparkline), findsNothing);
   });
 
+  testWidgets('près du point de rosée, la carte conseille d\'aérer ou de chauffer', (pTester) async {
+    await pTester.pumpWidget(localized(SensorCard(sensor: sensor([at(0, 20, 90)]))));
+
+    expect(find.textContaining('Risque de buée'), findsOneWidget);
+  });
+
+  testWidgets('un air confortable ne donne pas de conseil de buée', (pTester) async {
+    await pTester.pumpWidget(localized(SensorCard(sensor: sensor([at(0, 21.5, 48)]))));
+
+    expect(find.textContaining('Risque de buée'), findsNothing);
+  });
+
   testWidgets('un air humide reçoit son étiquette', (pTester) async {
     await pTester.pumpWidget(localized(SensorCard(sensor: sensor([at(0, 20, 78)]))));
 

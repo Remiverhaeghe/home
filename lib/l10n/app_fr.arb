@@ -18,6 +18,7 @@
   "@humidityValue": {"placeholders": {"value": {"type": "String"}}},
   "dewPointValue": "Condensation sous {value}",
   "@dewPointValue": {"placeholders": {"value": {"type": "String"}}},
+  "condensationAdvice": "Risque de buée sur les vitres : aérez quelques minutes ou chauffez un peu.",
   "humidityDry": "Air sec",
   "humidityGood": "Air confortable",
   "humidityHumid": "Air humide",
