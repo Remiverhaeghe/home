@@ -248,14 +248,14 @@ class _AddDialogState extends State<_AddDialog> {
             ),
             if (widget.kinds.length > 1)
               DropdownButtonFormField<RelayKind>(
-              initialValue: _kind,
-              decoration: InputDecoration(labelText: vTexts.relayKind),
-              items: [
-                for (final vKind in widget.kinds)
-                  DropdownMenuItem(value: vKind, child: Text(_kindLabel(vTexts, vKind))),
-              ],
-              onChanged: (pKind) => setState(() => _kind = pKind ?? _kind),
-            ),
+                initialValue: _kind,
+                decoration: InputDecoration(labelText: vTexts.relayKind),
+                items: [
+                  for (final vKind in widget.kinds)
+                    DropdownMenuItem(value: vKind, child: Text(_kindLabel(vTexts, vKind))),
+                ],
+                onChanged: (pKind) => setState(() => _kind = pKind ?? _kind),
+              ),
             DropdownButtonFormField<RelayModel>(
               initialValue: _model,
               decoration: InputDecoration(labelText: vTexts.relayModel),
