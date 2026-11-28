@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../l10n/gen/app_localizations.dart';
 import '../logic/pellet.dart';
 import '../state/pellet_controller.dart';
+import 'pellet_usage_section.dart';
 
 /// Poêle à pellets : température de la pièce, état, marche ou arrêt, consigne par pas de 0,5 °C.
 class PelletScreen extends StatefulWidget {
@@ -194,6 +195,8 @@ class _PelletScreenState extends State<PelletScreen> {
                 if (vState.powerLevel != null)
                   ListTile(title: Text(vTexts.pelletLevel), subtitle: Text('${vState.powerLevel}')),
               ],
+              if (widget.controller.stove != null)
+                PelletUsageSection(controller: widget.controller),
             ],
           );
         },
