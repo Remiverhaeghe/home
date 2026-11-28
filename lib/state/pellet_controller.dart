@@ -156,7 +156,6 @@ class PelletController extends ChangeNotifier {
     return PelletResult.done;
   }
 
-  /// Range le débit de pellets (kg par heure de marche, null pour l'effacer) le poids et le prix d'un sac.
   /// Range le nombre de sacs en stock à cet instant ; null efface le stock.
   Future<void> setStock(double? pBags) async {
     _runs = _runs.withStock(pBags, _clock());
@@ -171,6 +170,7 @@ class PelletController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Range le débit de pellets (kg par heure de marche, null pour l'effacer), le poids et le prix d'un sac.
   Future<void> setFlow({
     required double? pKgPerHour,
     required double pBagKg,
