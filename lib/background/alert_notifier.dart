@@ -49,15 +49,7 @@ class LocalAlertNotifier implements AlertNotifier {
         id: notificationId(vAlert),
         title: alertTitle(vAlert),
         body: alertSummary([vAlert]),
-        notificationDetails: const NotificationDetails(
-          android: AndroidNotificationDetails(
-            'alertes_maison',
-            'Alertes de la maison',
-            channelDescription: 'Gel, humidité haute, capteur muet ou figé',
-            importance: Importance.high,
-            priority: Priority.high,
-          ),
-        ),
+        notificationDetails: NotificationDetails(android: alertChannel(alertLevel(vAlert.kind))),
       );
     }
   }
@@ -95,4 +87,34 @@ String alertTitle(SensorAlert pAlert) => switch (pAlert.kind) {
   AlertKind.silent => 'Capteur muet',
   AlertKind.stuck => 'Capteur figé',
   AlertKind.ventilate => 'Aération conseillée',
+  AlertKind.maintenance => 'Entretien à faire',
+  AlertKind.airing => 'Aération terminée',
+};
+
+/// Canal Android de chaque niveau : le critique passe en tête, l'information reste discrète.
+AndroidNotificationDetails alertChannel(AlertLevel pLevel) => switch (pLevel) {
+  AlertLevel.critical => const AndroidNotificationDetails(
+    'alertes_critiques',
+    'Alertes critiques',
+    channelDescription: 'Risque de gel',
+    importance: Importance.max,
+    priority: Priority.max,
+    onlyAlertOnce: true,
+  ),
+  AlertLevel.important => const AndroidNotificationDetails(
+    'alertes_maison',
+    'Alertes de la maison',
+    channelDescription: 'Humidité haute, capteur muet ou figé',
+    importance: Importance.high,
+    priority: Priority.high,
+    onlyAlertOnce: true,
+  ),
+  AlertLevel.info => const AndroidNotificationDetails(
+    'alertes_infos',
+    'Conseils et entretien',
+    channelDescription: 'Aération conseillée, entretien à faire',
+    importance: Importance.low,
+    priority: Priority.low,
+    onlyAlertOnce: true,
+  ),
 };

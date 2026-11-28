@@ -21,4 +21,22 @@ void main() {
     expect(notificationId(vFrost), isNot(notificationId(vHumidity)));
     expect(notificationId(vFrost), greaterThanOrEqualTo(0));
   });
+
+  test('chaque niveau a son canal, du plus bruyant au plus discret', () {
+    final vCritical = alertChannel(AlertLevel.critical);
+    final vImportant = alertChannel(AlertLevel.important);
+    final vInfo = alertChannel(AlertLevel.info);
+
+    expect({vCritical.channelId, vImportant.channelId, vInfo.channelId}, hasLength(3));
+    expect(vCritical.importance.value, greaterThan(vImportant.importance.value));
+    expect(vImportant.importance.value, greaterThan(vInfo.importance.value));
+  });
+
+  test('le gel est critique, le conseil d\'aération et l\'entretien informent', () {
+    expect(alertLevel(AlertKind.frost), AlertLevel.critical);
+    expect(alertLevel(AlertKind.silent), AlertLevel.important);
+    expect(alertLevel(AlertKind.humidity), AlertLevel.important);
+    expect(alertLevel(AlertKind.ventilate), AlertLevel.info);
+    expect(alertLevel(AlertKind.maintenance), AlertLevel.info);
+  });
 }

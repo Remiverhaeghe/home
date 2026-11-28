@@ -28,6 +28,26 @@ class _ReadingHealthScreenState extends State<ReadingHealthScreen> {
   late Future<ReadHealth> _health = widget.files.loadHealth();
   late Future<bool>? _battery = widget.background?.isIgnoringBatteryOptimizations();
 
+  int _interval = defaultReadInterval;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.files.readIntervalMinutes().then((pMinutes) {
+      if (mounted) {
+        setState(() => _interval = pMinutes);
+      }
+    });
+  }
+
+  Future<void> _setInterval(int? pMinutes) async {
+    if (pMinutes == null) {
+      return;
+    }
+    setState(() => _interval = pMinutes);
+    await widget.files.setReadIntervalMinutes(pMinutes);
+  }
+
   void _reload() {
     setState(() {
       _health = widget.files.loadHealth();
@@ -70,6 +90,24 @@ class _ReadingHealthScreenState extends State<ReadingHealthScreen> {
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
+              Card(
+                child: ListTile(
+                  title: Text(vTexts.readingIntervalTitle),
+                  subtitle: Text(vTexts.readingIntervalHint),
+                  trailing: DropdownButton<int>(
+                    key: const Key('read-interval'),
+                    value: readIntervalChoices.contains(_interval) ? _interval : null,
+                    items: [
+                      for (final vChoice in readIntervalChoices)
+                        DropdownMenuItem(
+                          value: vChoice,
+                          child: Text(vTexts.readingIntervalValue(vChoice)),
+                        ),
+                    ],
+                    onChanged: _setInterval,
+                  ),
+                ),
+              ),
               if (_battery != null)
                 FutureBuilder<bool>(
                   future: _battery,

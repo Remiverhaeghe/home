@@ -1,0 +1,1 @@
+- Fréquence du relevé en arrière-plan réglable (toutes les 5, 10, 15 ou 30 minutes) depuis l'écran « Santé du relevé ».

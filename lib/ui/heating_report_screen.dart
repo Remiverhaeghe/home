@@ -5,6 +5,7 @@ import '../l10n/gen/app_localizations.dart';
 import '../logic/heating_costs.dart';
 import '../state/ac_controller.dart';
 import '../state/pellet_controller.dart';
+import 'hour_choice.dart';
 
 /// Bilan du chauffage : heures de marche de chaque clim et du poêle, énergie et coût estimés avec
 /// ce que l'utilisateur a donné (puissance, prix du kWh, prix du sac), et suivi du budget mensuel.
@@ -222,13 +223,13 @@ class _HeatingDialogState extends State<_HeatingDialog> {
                 helperMaxLines: 3,
               ),
             ),
-            _HourChoice(
+            HourChoice(
               key: const Key('off-peak-from'),
               label: vTexts.heatingOffFrom,
               value: _offFrom,
               onChanged: (pHour) => setState(() => _offFrom = pHour),
             ),
-            _HourChoice(
+            HourChoice(
               key: const Key('off-peak-to'),
               label: vTexts.heatingOffTo,
               value: _offTo,
@@ -268,35 +269,6 @@ class _HeatingDialogState extends State<_HeatingDialog> {
             offPeakPrice: _parse(_offPrice.text),
           )),
           child: Text(vTexts.save),
-        ),
-      ],
-    );
-  }
-}
-
-/// Choix d'une heure de 0 à 23, ou aucune.
-class _HourChoice extends StatelessWidget {
-  const _HourChoice({super.key, required this.label, required this.value, required this.onChanged});
-
-  final String label;
-  final int? value;
-  final ValueChanged<int?> onChanged;
-
-  @override
-  Widget build(BuildContext pContext) {
-    final vTexts = AppLocalizations.of(pContext);
-
-    return Row(
-      children: [
-        Expanded(child: Text(label)),
-        DropdownButton<int?>(
-          value: value,
-          items: [
-            DropdownMenuItem<int?>(value: null, child: Text(vTexts.heatingOffNone)),
-            for (var vHour = 0; vHour < 24; vHour++)
-              DropdownMenuItem<int?>(value: vHour, child: Text(vTexts.heatingHourValue(vHour))),
-          ],
-          onChanged: onChanged,
         ),
       ],
     );

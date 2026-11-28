@@ -4,6 +4,9 @@ import '../l10n/gen/app_localizations.dart';
 import '../logic/scenarios.dart';
 import '../state/pellet_controller.dart';
 import '../state/plan_controller.dart';
+import '../state/relay_controller.dart';
+import '../storage/background_files.dart';
+import 'plan_airing_chip.dart';
 
 /// Choix du jour de retour, remplaçable dans les tests.
 typedef ReturnDayPicker = Future<DateTime?> Function(BuildContext pContext);
@@ -28,12 +31,18 @@ class ScenariosSection extends StatelessWidget {
     required this.clock,
     this.pellet,
     this.pickDay = pickReturnDay,
+    this.relays,
+    this.files,
   });
 
   final PlanController plan;
   final DateTime Function() clock;
   final PelletController? pellet;
   final ReturnDayPicker pickDay;
+
+  /// Velux et fichiers du service : sans eux, pas de scénario Aération.
+  final RelayController? relays;
+  final BackgroundFiles? files;
 
   Future<void> _leave(BuildContext pContext) async {
     final vDay = await pickDay(pContext);
@@ -53,6 +62,15 @@ class ScenariosSection extends StatelessWidget {
 
   Future<void> _back() async {
     await plan.setVacation(null);
+    await plan.tick(clock());
+  }
+
+  Future<void> _toggleNight() async {
+    if (isNightOn(plan.boosts, clock())) {
+      await plan.stopNight(clock());
+    } else {
+      await plan.startNight(clock());
+    }
     await plan.tick(clock());
   }
 
@@ -88,6 +106,14 @@ class ScenariosSection extends StatelessWidget {
                 onPressed: () => _leave(pContext),
                 child: Text(vTexts.planScenarioLeave),
               ),
+            if (relays != null && files != null)
+              AiringChip(relays: relays!, files: files!, clock: clock),
+            FilterChip(
+              key: const Key('scenario-night'),
+              label: Text(vTexts.planScenarioNight),
+              selected: isNightOn(plan.boosts, clock()),
+              onSelected: (_) => _toggleNight(),
+            ),
             FilterChip(
               key: const Key('scenario-remote'),
               label: Text(vTexts.planScenarioRemote),

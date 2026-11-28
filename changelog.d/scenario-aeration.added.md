@@ -1,0 +1,1 @@
+- Scénario « Aération » : envoie l'impulsion aux Velux, puis une notification discrète rappelle au bout de 15 minutes de refermer ou de renvoyer l'impulsion (Home ne lit pas l'état des Velux). Un second appui annule le rappel.

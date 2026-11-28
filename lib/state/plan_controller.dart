@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import '../logic/alerts.dart';
 import '../logic/automations.dart';
 import '../logic/boost.dart';
+import '../logic/scenarios.dart';
 import '../logic/house_calendar.dart';
 import '../logic/comfort.dart';
 import '../logic/daikin.dart';
@@ -213,6 +214,44 @@ class PlanController extends ChangeNotifier {
       boosts: [
         for (final vBoost in boosts)
           if (vBoost.host != pHost) vBoost,
+      ],
+    ),
+  );
+
+  /// Lance la nuit : chaque pièce prend sa température « nuit » jusqu'au prochain réveil.
+  Future<void> startNight(DateTime pNow) {
+    final vNight = nightBoosts(rooms, pNow);
+    final vHosts = {for (final vBoost in vNight) vBoost.host};
+    final vKept = activeBoosts(
+      boosts,
+      pNow,
+    ).values.where((pBoost) => !vHosts.contains(pBoost.host));
+
+    return _save(
+      PlanSettings(
+        rooms: rooms,
+        rules: rules,
+        vacation: vacation,
+        calendar: calendar,
+        stoveColdBelow: stoveColdBelow,
+        humidityAlertAt: humidityAlertAt,
+        boosts: [...vKept, ...vNight],
+      ),
+    );
+  }
+
+  /// Annule la nuit : les pièces reprennent leur planning.
+  Future<void> stopNight(DateTime pNow) => _save(
+    PlanSettings(
+      rooms: rooms,
+      rules: rules,
+      vacation: vacation,
+      calendar: calendar,
+      stoveColdBelow: stoveColdBelow,
+      humidityAlertAt: humidityAlertAt,
+      boosts: [
+        for (final vBoost in activeBoosts(boosts, pNow).values)
+          if (vBoost.kind != BoostKind.night) vBoost,
       ],
     ),
   );

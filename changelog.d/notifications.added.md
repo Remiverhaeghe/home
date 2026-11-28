@@ -1,0 +1,2 @@
+- Heures silencieuses : dans la plage choisie sur l'écran du plan, seul le gel fait sonner le téléphone. Les autres alertes restent visibles à l'écran et dans l'historique.
+- Historique des alertes : les 100 dernières, une alerte qui dure n'étant notée qu'une fois toutes les 6 heures.

@@ -1,0 +1,1 @@
+- Niveaux d'alerte : le gel est critique (canal prioritaire, passe aussi pendant les heures silencieuses), l'humidité haute et le capteur muet ou figé sont importants, le conseil d'aération et l'entretien restent discrets (sans son).

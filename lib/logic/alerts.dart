@@ -1,7 +1,18 @@
 import 'reading.dart';
 
 /// Ce qui mérite une notification.
-enum AlertKind { frost, humidity, silent, stuck, ventilate }
+enum AlertKind { frost, humidity, silent, stuck, ventilate, maintenance, airing }
+
+/// Gravité d'une alerte : elle décide du canal de notification et de ce qui passe la nuit.
+enum AlertLevel { info, important, critical }
+
+/// Le gel est critique (tuyaux, plantes), un capteur muet ou une humidité haute demandent une
+/// action, un conseil d'aération ou un entretien se contentent d'informer.
+AlertLevel alertLevel(AlertKind pKind) => switch (pKind) {
+  AlertKind.frost => AlertLevel.critical,
+  AlertKind.humidity || AlertKind.silent || AlertKind.stuck => AlertLevel.important,
+  AlertKind.ventilate || AlertKind.maintenance || AlertKind.airing => AlertLevel.info,
+};
 
 /// Seuils des alertes.
 const frostAlertTemp = 5.0;
@@ -144,6 +155,8 @@ String alertSummary(List<SensorAlert> pAlerts) => pAlerts
         AlertKind.silent => 'Capteur muet : ${pAlert.sensorName}',
         AlertKind.stuck => 'Capteur figé : ${pAlert.sensorName}',
         AlertKind.ventilate => 'Aérer : ${pAlert.sensorName}',
+        AlertKind.maintenance => 'Entretien : ${pAlert.sensorName}',
+        AlertKind.airing => 'Aération terminée',
       },
     )
     .join(' · ');

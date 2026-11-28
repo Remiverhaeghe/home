@@ -1,0 +1,1 @@
+- Rappels d'entretien : tu nommes un entretien (filtres de clim, piles, purge) et sa périodicité en jours ; l'écran dit ce qui est à faire, et une notification (silencieuse pendant les heures silencieuses) signale ce qui est échu, même appli fermée.

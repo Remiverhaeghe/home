@@ -1,0 +1,1 @@
+- Scénario « Nuit » : chaque pièce prend sa température de nuit jusqu'à 7 h, d'un geste ; le même bouton l'annule.

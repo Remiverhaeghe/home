@@ -8,12 +8,14 @@ import '../ble/tp357_link.dart';
 import '../logic/alerts.dart';
 import '../logic/error_log.dart';
 import '../logic/pending_readings.dart';
+import '../logic/read_health.dart';
 import '../logic/reading.dart';
 import '../net/daikin_link.dart';
 import '../net/pellet_link.dart';
 import '../storage/background_files.dart';
 import '../storage/detail_log.dart';
 import '../storage/error_log_store.dart';
+import 'alert_delivery.dart';
 import 'alert_notifier.dart';
 import 'day_summary_runner.dart';
 import 'plan_runner.dart';
@@ -33,6 +35,7 @@ class ReadingsTaskHandler extends TaskHandler {
 
   final _link = BleTp357Link();
   var _busy = false;
+  DateTime? _lastRound;
   final _misses = <String, int>{};
 
   @override
@@ -64,10 +67,18 @@ class ReadingsTaskHandler extends TaskHandler {
       final vAlerts = await vRunner.run(DateTime.now(), pDetail: pDetail);
       if (vAlerts.isNotEmpty) {
         await pDetail.note('plan', '${vAlerts.length} alerte(s) à signaler');
-        await _notifier.show(vAlerts);
+      }
+      // Même sans alerte de capteur : un entretien échu doit être signalé
+      final vAudible = await deliverAlerts(
+        pFiles: BackgroundFiles(pFolder),
+        pNotifier: _notifier,
+        pAlerts: vAlerts,
+        pNow: DateTime.now(),
+      );
+      if (vAudible.isNotEmpty) {
         await FlutterForegroundTask.updateService(
           notificationTitle: 'Alerte',
-          notificationText: alertSummary(vAlerts),
+          notificationText: alertSummary(vAudible),
         );
       }
     } on Object catch (pCaught) {
@@ -158,8 +169,12 @@ class ReadingsTaskHandler extends TaskHandler {
     try {
       final vFolder = await getApplicationDocumentsDirectory();
       final vFiles = BackgroundFiles(vFolder);
-      final vDetail = FileDetailLog(vFolder);
       final vStart = DateTime.now();
+      if (!readRoundDue(vStart, _lastRound, await vFiles.readIntervalMinutes())) {
+        return;
+      }
+      _lastRound = vStart;
+      final vDetail = FileDetailLog(vFolder);
       final vDevices = await vFiles.loadFollowed();
       await vDetail.note('tour', 'début, ${vDevices.length} capteur(s) suivi(s)');
       for (var vRank = 0; vRank < vDevices.length; vRank++) {

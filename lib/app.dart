@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'background/alert_delivery.dart';
 import 'background/alert_notifier.dart';
 import 'background/background_control.dart';
 import 'l10n/gen/app_localizations.dart';
@@ -125,7 +126,12 @@ class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
     }
     await widget.acController!.refresh();
     final vFresh = await widget.planController!.tick(vNow);
-    await widget.notifier?.show(vFresh);
+    final vNotifier = widget.notifier;
+    if (vFiles != null && vNotifier != null) {
+      await deliverAlerts(pFiles: vFiles, pNotifier: vNotifier, pAlerts: vFresh, pNow: vNow);
+    } else {
+      await vNotifier?.show(vFresh);
+    }
   }
 
   @override

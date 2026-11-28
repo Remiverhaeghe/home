@@ -71,4 +71,12 @@ void main() {
       isEmpty,
     );
   });
+
+  test('le tour n\'a lieu qu\'une fois l\'intervalle écoulé, à 30 secondes près', () {
+    expect(readRoundDue(vNow, null, 15), isTrue);
+    expect(readRoundDue(vNow.add(const Duration(minutes: 5)), vNow, 15), isFalse);
+    expect(readRoundDue(vNow.add(const Duration(minutes: 10)), vNow, 15), isFalse);
+    expect(readRoundDue(vNow.add(const Duration(minutes: 14, seconds: 40)), vNow, 15), isTrue);
+    expect(readRoundDue(vNow.add(const Duration(minutes: 5)), vNow, 5), isTrue);
+  });
 }
