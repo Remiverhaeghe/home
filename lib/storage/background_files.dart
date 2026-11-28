@@ -20,6 +20,7 @@ class BackgroundFiles {
       _summarySent = File('${pFolder.path}/resume_envoye.txt'),
       _summaryHour = File('${pFolder.path}/resume_heure.txt'),
       _health = File('${pFolder.path}/sante-releves.json'),
+      _interval = File('${pFolder.path}/releve_intervalle.txt'),
       _quiet = File('${pFolder.path}/heures-silencieuses.txt'),
       _alerts = File('${pFolder.path}/historique-alertes.jsonl');
 
@@ -31,6 +32,7 @@ class BackgroundFiles {
   final File _health;
   final File _summaryHour;
   final File _quiet;
+  final File _interval;
   final File _alerts;
 
   Future<List<FollowedDevice>> loadFollowed() async =>
@@ -86,6 +88,21 @@ class BackgroundFiles {
 
   Future<void> setSummaryStartHour(int pHour) =>
       _summaryHour.writeAsString('${pHour.clamp(0, 23)}', flush: true);
+
+  /// Minutes entre deux relevés en arrière-plan : celles choisies, sinon [defaultReadInterval].
+  Future<int> readIntervalMinutes() async {
+    if (!await _interval.exists()) {
+      return defaultReadInterval;
+    }
+    final vMinutes = int.tryParse((await _interval.readAsString()).trim());
+
+    return vMinutes != null && readIntervalChoices.contains(vMinutes)
+        ? vMinutes
+        : defaultReadInterval;
+  }
+
+  Future<void> setReadIntervalMinutes(int pMinutes) =>
+      _interval.writeAsString('$pMinutes', flush: true);
 
   /// Heures silencieuses (« 22-7 »), null quand il n'y en a pas : seul le gel sonne dans la plage.
   Future<OffPeak?> quietHours() async {

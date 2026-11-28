@@ -142,3 +142,13 @@ ReadHealth parseReadHealth(String pJson) {
 
   return ReadHealth(vSensors);
 }
+
+/// Intervalles proposés entre deux relevés en arrière-plan, en minutes. Le service se réveille
+/// toutes les 5 minutes : il saute les tours qui tombent avant l'intervalle choisi. Au-delà de
+/// 30 minutes, un seul tour manqué ferait annoncer un capteur muet (une heure sans relevé).
+const readIntervalChoices = [5, 10, 15, 30];
+const defaultReadInterval = 5;
+
+/// Le tour de relevé doit-il avoir lieu ? Une marge de 30 secondes absorbe le retard du réveil.
+bool readRoundDue(DateTime pNow, DateTime? pLastRound, int pMinutes) =>
+    pLastRound == null || pNow.difference(pLastRound) >= Duration(minutes: pMinutes) - const Duration(seconds: 30);

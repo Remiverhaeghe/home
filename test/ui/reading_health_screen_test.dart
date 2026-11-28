@@ -77,4 +77,22 @@ void main() {
     expect(find.textContaining('Home n\'est pas limitée'), findsOneWidget);
     expect(find.byKey(const Key('battery-allow')), findsNothing);
   });
+
+  testWidgets('la fréquence choisie est rangée dans le fichier du service', (pTester) async {
+    await open(pTester);
+    expect(await pTester.runAsync(vFiles.readIntervalMinutes), 5);
+
+    final vDropdown = pTester.widget<DropdownButton<int>>(find.byKey(const Key('read-interval')));
+    expect(vDropdown.value, 5);
+    await pTester.runAsync(() async => vDropdown.onChanged!(15));
+    await pTester.pump();
+
+    var vSaved = 5;
+    for (var vTry = 0; vTry < 20 && vSaved != 15; vTry++) {
+      await pTester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 20)));
+      vSaved = await pTester.runAsync(vFiles.readIntervalMinutes) ?? 5;
+    }
+
+    expect(vSaved, 15);
+  });
 }
