@@ -43,3 +43,6 @@ Home sur un écran dans la pièce principale, avec une vue 3D de la maison et la
 - [ ] Écran À propos avec journal d'erreurs partageable : demande un journal local et un partage de fichier à ajouter
 - [x] Import des exports CSV de l'appli ThermoPro (historique des capteurs, sans décoder les trames Bluetooth)
 - [x] Périodes de mesure d'un capteur (trous de deux jours), séparées en capteurs à part pour les ranger dans leur pièce
+- [x] Clim et poêle sans conflit (sauf grand froid), poêle éteint pendant l'absence
+- [ ] Estimation de consommation de pellets : demande un journal des heures de marche du poêle, puis un débit par heure à saisir
+- [ ] Relais (Velux, garage) mis en position sûre pendant l'absence : à décider commande par commande

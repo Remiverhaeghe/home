@@ -15,6 +15,7 @@ DaikinControl _control({bool pPower = false, String pMode = '4', String pSetpoin
     );
 
 void main() {
+  stoveTests();
   group('période', () {
     test('le début est compris, la fin est exclue', () {
       expect(_vacation.isActiveAt(DateTime(2026, 12, 17, 23, 59)), isFalse);
@@ -129,6 +130,21 @@ void main() {
         parseVacation('{"version": 1, $vDates, "frostTemp": 12, "frostSetpoint": 12}'),
         isNull,
       );
+    });
+  });
+}
+
+void stoveTests() {
+  group('poêle pendant l\'absence', () {
+    test('allumé pendant l\'absence, il doit s\'arrêter', () {
+      expect(stoveMustStop(_vacation, DateTime(2026, 12, 20), pStoveOn: true), isTrue);
+    });
+
+    test('éteint, hors absence ou pendant la remontée : rien à faire', () {
+      expect(stoveMustStop(_vacation, DateTime(2026, 12, 20), pStoveOn: false), isFalse);
+      expect(stoveMustStop(_vacation, DateTime(2026, 12, 10), pStoveOn: true), isFalse);
+      expect(stoveMustStop(_vacation, DateTime(2026, 12, 27, 12), pStoveOn: true), isFalse);
+      expect(stoveMustStop(null, DateTime(2026, 12, 20), pStoveOn: true), isFalse);
     });
   });
 }

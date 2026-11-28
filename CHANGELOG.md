@@ -9,6 +9,7 @@
 
 ### Ajouté
 
+- Mode vacances et poêle : pendant l'absence (hors remontée avant le retour), un poêle à pellets resté allumé est éteint par l'appli ouverte.
 - Poêle et clim sans conflit : quand le poêle à pellets marche, le plan n'allume plus la clim en chauffage et l'éteint si elle chauffait, sauf s'il fait moins de 16 °C dans la pièce, où les deux peuvent tourner ensemble.
 - Périodes de mesure (fiche d'un capteur) : un trou de deux jours ou plus entre deux relevés ouvre une période, que l'on sépare dans un capteur à part pour la ranger dans la bonne pièce, par exemple après un changement de place.
 - Actualiser les capteurs : un bouton et le geste de tirer la liste vers le bas lisent une mesure sur chaque thermo-hygromètre à portée.
