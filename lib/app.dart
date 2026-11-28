@@ -18,6 +18,7 @@ import 'state/weather_controller.dart';
 import 'state/relay_controller.dart';
 import 'state/sensors_controller.dart';
 import 'storage/background_files.dart';
+import 'storage/error_log_store.dart';
 import 'ui/sensors_screen.dart';
 import 'ui/theme.dart';
 
@@ -29,6 +30,7 @@ class HomeApp extends StatefulWidget {
     this.planController,
     this.relayController,
     this.pelletController,
+    this.errorLog,
     this.houseController,
     this.weatherController,
     this.backupFiles,
@@ -47,6 +49,7 @@ class HomeApp extends StatefulWidget {
   /// Garage et Velux à relais Wi-Fi.
   final RelayController? relayController;
   final PelletController? pelletController;
+  final ErrorLogStore? errorLog;
   final HouseController? houseController;
   final WeatherController? weatherController;
   final BackupFiles? backupFiles;
@@ -165,6 +168,7 @@ class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
       planController: widget.planController,
       relayController: widget.relayController,
       pelletController: widget.pelletController,
+      errorLog: widget.errorLog,
       houseController: widget.houseController,
       weatherController: widget.weatherController,
       backupFiles: widget.backupFiles,
