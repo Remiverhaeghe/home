@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'ac_units.dart';
+import 'boost.dart';
 import 'automations.dart';
 import 'comfort.dart';
 import 'daikin.dart';
@@ -97,6 +98,7 @@ PlanResult evaluatePlan({
   Map<String, DateTime> pWindowSince = const {},
   bool pStoveRunning = false,
   double pStoveColdBelow = defaultStoveColdBelow,
+  Map<String, Boost> pBoosts = const {},
 }) {
   final vCommands = <PlanCommand>[];
   final vWindowHosts = <String>{};
@@ -144,10 +146,17 @@ PlanResult evaluatePlan({
       vGap = frostGap;
     } else {
       final vRoom = pRooms.where((pRoom) => pRoom.acHost == vHost).firstOrNull;
-      if (vRoom != null) {
-        final vProfile = vPreheating ? ProfileKind.comfort : profileAt(vRoom.schedule, pNow);
+      final vBoost = pBoosts[vHost];
+      if (vRoom != null || (vBoost != null && vBoost.isActiveAt(pNow))) {
+        // Un coup de chaud en cours (douche, bain, lessive) remplace la température du planning
+        final vProfile = vPreheating || vRoom == null
+            ? ProfileKind.comfort
+            : profileAt(vRoom.schedule, pNow);
+        final vWanted = vBoost != null && vBoost.isActiveAt(pNow)
+            ? vBoost.temp
+            : (vRoom?.targets ?? const RoomTargets()).of(vProfile);
         vTarget = comfortControl(
-          pTarget: vRoom.targets.of(vProfile),
+          pTarget: vWanted,
           pTemp: vReading.temp,
           pControl: vControl,
           pOutdoor: pOutdoors[vHost],
