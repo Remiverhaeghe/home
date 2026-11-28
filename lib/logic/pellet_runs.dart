@@ -65,18 +65,15 @@ class PelletRuns {
     );
   }
 
-  PelletRuns withFlow({
-    required double? pKgPerHour,
-    required double pBagKg,
-    double? pBagPrice,
-  }) => PelletRuns(
-    minutesByDay: minutesByDay,
-    lastAt: lastAt,
-    lastOn: lastOn,
-    kgPerHour: pKgPerHour,
-    bagKg: pBagKg,
-    bagPrice: pBagPrice,
-  );
+  PelletRuns withFlow({required double? pKgPerHour, required double pBagKg, double? pBagPrice}) =>
+      PelletRuns(
+        minutesByDay: minutesByDay,
+        lastAt: lastAt,
+        lastOn: lastOn,
+        kgPerHour: pKgPerHour,
+        bagKg: pBagKg,
+        bagPrice: pBagPrice,
+      );
 
   /// Heures de marche sur les [pDays] derniers jours, aujourd'hui compris.
   double hoursOver(int pDays, DateTime pNow) {

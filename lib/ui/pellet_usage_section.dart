@@ -16,8 +16,7 @@ class PelletUsageSection extends StatelessWidget {
     final vRuns = controller.runs;
     final vChoice = await showDialog<({double? flow, double bag, double? price})>(
       context: pContext,
-      builder: (_) =>
-          _FlowDialog(flow: vRuns.kgPerHour, bag: vRuns.bagKg, price: vRuns.bagPrice),
+      builder: (_) => _FlowDialog(flow: vRuns.kgPerHour, bag: vRuns.bagKg, price: vRuns.bagPrice),
     );
     if (vChoice != null) {
       await controller.setFlow(
@@ -69,10 +68,14 @@ class PelletUsageSection extends StatelessWidget {
               if (vCostWeek != null && vCostMonth != null)
                 Text(
                   vTexts.pelletUsageCost(
-                    NumberFormat('0.00', Localizations.localeOf(pContext).toString())
-                        .format(vCostWeek),
-                    NumberFormat('0.00', Localizations.localeOf(pContext).toString())
-                        .format(vCostMonth),
+                    NumberFormat(
+                      '0.00',
+                      Localizations.localeOf(pContext).toString(),
+                    ).format(vCostWeek),
+                    NumberFormat(
+                      '0.00',
+                      Localizations.localeOf(pContext).toString(),
+                    ).format(vCostMonth),
                   ),
                 ),
               Text(vTexts.pelletUsageNote, style: Theme.of(pContext).textTheme.bodySmall),
