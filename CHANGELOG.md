@@ -14,6 +14,7 @@
 - La recherche des climatisations ne dépend plus de la diffusion UDP : elle diffuse aussi sur le réseau du téléphone, puis interroge chaque adresse du même réseau pour trouver les modules que la box ne laisse pas répondre.
 - `docs/architecture.md` : couches du code, données, tests et marche à suivre pour ajouter un appareil.
 - Audit des permissions et du réseau : `docs/securite.md` liste chaque permission Android, ce qui sort du téléphone et où vivent les identifiants.
+- Bilan des pièces en PDF (bouton de l'écran des pièces) : mesures du moment, extrêmes sur 14 jours et courbe de température par pièce, quatre pièces par page. PDF écrit sans dépendance ; l'enregistrement passe par le sélecteur de fichier.
 - Résumé du matin (interrupteur dans l'écran Pilotage) : à partir de 8 h, le service d'arrière-plan envoie une notification discrète avec la pièce la plus fraîche, la plus humide et le nombre de pièces hors plage d'humidité, une fois par jour.
 - Bilan du poêle : prix du sac à saisir, coût estimé sur 7 et 30 jours, et comparaison des heures de marche avec la semaine d'avant (« Marche et pellets »).
 - Seuil d'alerte d'humidité réglable dans l'écran Pilotage (de 55 à 85 %, 70 % au départ), gardé dans `reglages-plan.json` et pris en compte par le service d'arrière-plan.
