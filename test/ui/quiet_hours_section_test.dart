@@ -75,8 +75,9 @@ void main() {
     await pTester.tap(find.byIcon(Icons.history));
     // Le chargement tourne tant que le fichier se lit : pas de pumpAndSettle
     await pTester.pump(const Duration(milliseconds: 400));
-    await settle(pTester);
-    await settle(pTester);
+    for (var vTry = 0; vTry < 15 && find.textContaining('Salon').evaluate().isEmpty; vTry++) {
+      await settle(pTester);
+    }
 
     expect(find.textContaining('Salon'), findsOneWidget);
     expect(find.textContaining('Cave'), findsOneWidget);

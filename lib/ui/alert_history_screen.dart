@@ -7,10 +7,17 @@ import '../logic/alerts.dart';
 import '../storage/background_files.dart';
 
 /// Les dernières alertes, la plus récente en haut.
-class AlertHistoryScreen extends StatelessWidget {
+class AlertHistoryScreen extends StatefulWidget {
   const AlertHistoryScreen({super.key, required this.files});
 
   final BackgroundFiles files;
+
+  @override
+  State<AlertHistoryScreen> createState() => _AlertHistoryScreenState();
+}
+
+class _AlertHistoryScreenState extends State<AlertHistoryScreen> {
+  late final Future<List<AlertEntry>> _entries = widget.files.loadAlertHistory();
 
   @override
   Widget build(BuildContext pContext) {
@@ -21,7 +28,7 @@ class AlertHistoryScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(vTexts.alertHistoryTitle)),
       body: FutureBuilder<List<AlertEntry>>(
-        future: files.loadAlertHistory(),
+        future: _entries,
         builder: (pContext, pSnapshot) {
           final vEntries = (pSnapshot.data ?? const <AlertEntry>[]).reversed.toList();
           if (pSnapshot.connectionState != ConnectionState.done) {
