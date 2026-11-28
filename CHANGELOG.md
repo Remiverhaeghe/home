@@ -9,6 +9,7 @@
 
 ### Ajouté
 
+- Résumé du matin (interrupteur dans l'écran Pilotage) : à partir de 8 h, le service d'arrière-plan envoie une notification discrète avec la pièce la plus fraîche, la plus humide et le nombre de pièces hors plage d'humidité, une fois par jour.
 - Bilan du poêle : prix du sac à saisir, coût estimé sur 7 et 30 jours, et comparaison des heures de marche avec la semaine d'avant (« Marche et pellets »).
 - Seuil d'alerte d'humidité réglable dans l'écran Pilotage (de 55 à 85 %, 70 % au départ), gardé dans `reglages-plan.json` et pris en compte par le service d'arrière-plan.
 - Captures d'écran d'une maison fictive générées par la CI (workflow Captures, `test/captures`) : liste des capteurs, courbes d'un capteur, écran des pièces. Aucune donnée réelle.
