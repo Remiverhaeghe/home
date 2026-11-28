@@ -1,0 +1,1 @@
+- Menu : Les pièces, La maison, le Calendrier et la comparaison passent en tête, avant les appareils.
