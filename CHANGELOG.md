@@ -13,6 +13,7 @@
 - Poêle : stock de pellets (sacs comptés, diminués de la consommation estimée, autonomie et alerte de stock bas), arrêt programmé du soir appliqué dans la demi-heure qui suit son heure (appli ou service d'arrière-plan), et message quand le poêle s'éteint sans ordre de Home.
 - Le service d'arrière-plan tient aussi le journal des heures de marche du poêle et des clims appli fermée.
 - Bilan du poêle : prix du sac à saisir, coût estimé sur 7 et 30 jours, et comparaison des heures de marche avec la semaine d'avant (« Marche et pellets »).
+- Seuil d'alerte d'humidité réglable dans l'écran Pilotage (de 55 à 85 %, 70 % au départ), gardé dans `reglages-plan.json` et pris en compte par le service d'arrière-plan.
 - Captures d'écran d'une maison fictive générées par la CI (workflow Captures, `test/captures`) : liste des capteurs, courbes d'un capteur, écran des pièces. Aucune donnée réelle.
 - Poêle éteint en vacances même appli fermée : le service d'arrière-plan relit le poêle à chaque tour et l'éteint s'il marche pendant l'absence (hors remontée avant le retour).
 - Écran « À propos » (bouton i de la liste des capteurs) : version de l'appli et journal local des erreurs (`journal-erreurs.txt`, 300 lignes au plus, adresses réseau masquées), à enregistrer dans un fichier ou à vider. Rien n'est envoyé.
