@@ -11,6 +11,7 @@ import '../l10n/gen/app_localizations.dart';
 import '../logic/climate_exchange.dart';
 import '../logic/climate_stats.dart';
 import '../logic/reading.dart';
+import '../storage/error_log_store.dart';
 import '../state/ac_controller.dart';
 import '../state/plan_controller.dart';
 import '../logic/house.dart';
@@ -24,6 +25,7 @@ import '../state/weather_controller.dart';
 import '../state/relay_controller.dart';
 import '../state/sensors_controller.dart';
 import '../storage/background_files.dart';
+import 'about_screen.dart';
 import 'ac_screen.dart';
 import 'live_screen.dart';
 import 'plan_screen.dart';
@@ -92,6 +94,7 @@ class SensorsScreen extends StatelessWidget {
     this.appearance,
     this.notes,
     this.onRestored,
+    this.errorLog,
   });
 
   final SensorsController controller;
@@ -126,6 +129,9 @@ class SensorsScreen extends StatelessWidget {
   final AppearanceController? appearance;
   final NotesController? notes;
   final Future<void> Function()? onRestored;
+
+  /// Journal d'erreurs ; son bouton « À propos » n'apparaît que s'il est fourni.
+  final ErrorLogStore? errorLog;
 
   Future<void> _import(BuildContext pContext) async {
     final vText = await pickFile();
@@ -272,6 +278,17 @@ class SensorsScreen extends StatelessWidget {
               onPressed: () => Navigator.push<void>(
                 pContext,
                 MaterialPageRoute(builder: (_) => AppearanceScreen(controller: appearance!)),
+              ),
+            ),
+          if (errorLog != null)
+            IconButton(
+              tooltip: vTexts.aboutOpen,
+              icon: const Icon(Icons.info_outline),
+              onPressed: () => Navigator.push<void>(
+                pContext,
+                MaterialPageRoute(
+                  builder: (_) => AboutScreen(log: errorLog!, saveFile: saveFile),
+                ),
               ),
             ),
           if (backupFiles != null && onRestored != null)
