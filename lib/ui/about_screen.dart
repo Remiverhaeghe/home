@@ -152,7 +152,10 @@ class _NotesSection extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 4),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [const Text('• '), Expanded(child: Text(vLine))],
+                  children: [
+                    const Text('• '),
+                    Expanded(child: Text(vLine)),
+                  ],
                 ),
               ),
           ],
