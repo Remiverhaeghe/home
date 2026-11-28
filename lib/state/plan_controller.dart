@@ -69,7 +69,7 @@ class PlanController extends ChangeNotifier {
       rules: rules,
       vacation: vacation,
       stoveColdBelow: stoveColdBelow,
-          boosts: boosts,
+      boosts: boosts,
     ),
   );
 
@@ -82,28 +82,26 @@ class PlanController extends ChangeNotifier {
     );
   }
 
-  Future<void> setRules(List<AutoRule> pRules) =>
-      _save(
-        PlanSettings(
-          rooms: rooms,
-          rules: pRules,
-          vacation: vacation,
-          stoveColdBelow: stoveColdBelow,
-          boosts: boosts,
-        ),
-      );
+  Future<void> setRules(List<AutoRule> pRules) => _save(
+    PlanSettings(
+      rooms: rooms,
+      rules: pRules,
+      vacation: vacation,
+      stoveColdBelow: stoveColdBelow,
+      boosts: boosts,
+    ),
+  );
 
   /// Règle le mode vacances, ou le retire avec null.
-  Future<void> setVacation(VacationMode? pVacation) =>
-      _save(
-        PlanSettings(
-          rooms: rooms,
-          rules: rules,
-          vacation: pVacation,
-          stoveColdBelow: stoveColdBelow,
-          boosts: boosts,
-        ),
-      );
+  Future<void> setVacation(VacationMode? pVacation) => _save(
+    PlanSettings(
+      rooms: rooms,
+      rules: rules,
+      vacation: pVacation,
+      stoveColdBelow: stoveColdBelow,
+      boosts: boosts,
+    ),
+  );
 
   /// Règle le seuil de froid sous lequel la clim chauffe en plus du poêle : borné et arrondi au
   /// demi-degré.

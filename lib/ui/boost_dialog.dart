@@ -15,11 +15,14 @@ String boostKindName(AppLocalizations pTexts, BoostKind pKind) => switch (pKind)
 
 /// Coup de chaud d'une pièce : usage, température et durée. Renvoie le choix, ou null si on
 /// annule. [active] est le coup de chaud déjà en cours, que l'on peut arrêter.
-Future<BoostChoice?> showBoostDialog(BuildContext pContext, {required String room, Boost? active}) =>
-    showDialog<BoostChoice>(
-      context: pContext,
-      builder: (_) => _BoostDialog(room: room, active: active),
-    );
+Future<BoostChoice?> showBoostDialog(
+  BuildContext pContext, {
+  required String room,
+  Boost? active,
+}) => showDialog<BoostChoice>(
+  context: pContext,
+  builder: (_) => _BoostDialog(room: room, active: active),
+);
 
 class _BoostDialog extends StatefulWidget {
   const _BoostDialog({required this.room, required this.active});
