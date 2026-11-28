@@ -12,6 +12,7 @@ import '../storage/ac_runs_store.dart';
 import '../storage/ac_store.dart';
 import '../storage/background_files.dart';
 import '../storage/file_sensor_store.dart';
+import '../storage/pellet_runs_store.dart';
 import '../storage/pellet_store.dart';
 import '../storage/plan_store.dart';
 import '../storage/sensor_store.dart';
@@ -36,7 +37,11 @@ class PlanRunner {
     );
     _plan = PlanController(FilePlanStore(pFolder), _ac, _sensors);
     if (pPelletLink != null) {
-      _pellet = PelletController(FilePelletStore(File('${pFolder.path}/poele.json')), pPelletLink);
+      _pellet = PelletController(
+        FilePelletStore(File('${pFolder.path}/poele.json')),
+        pPelletLink,
+        runsStore: FilePelletRunsStore(File('${pFolder.path}/marche-poele.json')),
+      );
     }
   }
 

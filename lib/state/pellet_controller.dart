@@ -32,6 +32,8 @@ class PelletController extends ChangeNotifier {
   PelletStove? _stove;
   PelletState? _state;
   var _failed = false;
+  var _commandedOff = false;
+  DateTime? _unexpectedStopAt;
 
   PelletStove? get stove => _stove;
 
@@ -41,6 +43,10 @@ class PelletController extends ChangeNotifier {
 
   /// Le dernier relevé n'a pas abouti.
   bool get failed => _failed;
+
+  /// Heure à laquelle le poêle s'est arrêté sans ordre de Home (plus de pellets, fin de programme,
+  /// défaut), tant qu'il n'a pas été rallumé ; null sinon.
+  DateTime? get unexpectedStopAt => _unexpectedStopAt;
 
   Future<void> load() async {
     _stove = await _store.load();
@@ -87,10 +93,18 @@ class PelletController extends ChangeNotifier {
     if (vStove == null) {
       return;
     }
+    final vWasOn = _state?.isOn ?? false;
     try {
       _state = await _link.read(vStove);
       _failed = false;
-      _runs = _runs.record(_clock(), pOn: _state!.isOn);
+      final vNow = _clock();
+      if (_state!.isOn) {
+        _commandedOff = false;
+        _unexpectedStopAt = null;
+      } else if (vWasOn && !_commandedOff) {
+        _unexpectedStopAt = vNow;
+      }
+      _runs = _runs.record(vNow, pOn: _state!.isOn);
       await _runsStore.save(_runs);
     } on PelletException {
       _failed = true;
@@ -103,16 +117,26 @@ class PelletController extends ChangeNotifier {
   Future<bool> refreshAndStopIfAway(VacationMode? pVacation, DateTime pNow) async {
     await refresh();
     final vOn = !failed && (state?.isOn ?? false);
-    if (stoveMustStop(pVacation, pNow, pStoveOn: vOn) &&
-        await setPower(pOn: false) == PelletResult.done) {
+    final vMustStop = stoveMustStop(pVacation, pNow, pStoveOn: vOn) || (vOn && _runs.shouldStopNow(pNow));
+    if (vMustStop && await setPower(pOn: false) == PelletResult.done) {
       return false;
     }
 
     return vOn;
   }
 
-  Future<PelletResult> setPower({required bool pOn}) =>
-      _command((pStove) => _link.setPower(pStove, pOn: pOn));
+  Future<PelletResult> setPower({required bool pOn}) async {
+    // Un arrêt demandé par Home n'est pas un arrêt inattendu
+    if (!pOn) {
+      _commandedOff = true;
+    }
+    final vResult = await _command((pStove) => _link.setPower(pStove, pOn: pOn));
+    if (!pOn && vResult != PelletResult.done) {
+      _commandedOff = false;
+    }
+
+    return vResult;
+  }
 
   Future<PelletResult> setTarget(double pCelsius) =>
       _command((pStove) => _link.setTarget(pStove, pelletClampTarget(pCelsius)));
@@ -133,6 +157,20 @@ class PelletController extends ChangeNotifier {
   }
 
   /// Range le débit de pellets (kg par heure de marche, null pour l'effacer) le poids et le prix d'un sac.
+  /// Range le nombre de sacs en stock à cet instant ; null efface le stock.
+  Future<void> setStock(double? pBags) async {
+    _runs = _runs.withStock(pBags, _clock());
+    await _runsStore.save(_runs);
+    notifyListeners();
+  }
+
+  /// Règle l'heure d'arrêt programmé, en minutes depuis minuit ; null la retire.
+  Future<void> setStopAt(int? pMinute) async {
+    _runs = _runs.withStopAt(pMinute);
+    await _runsStore.save(_runs);
+    notifyListeners();
+  }
+
   Future<void> setFlow({
     required double? pKgPerHour,
     required double pBagKg,

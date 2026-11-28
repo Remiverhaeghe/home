@@ -9,6 +9,9 @@
 
 ### Ajouté
 
+- Bilan du chauffage (bouton de l'écran Pilotage) : heures de marche de chaque clim, avec la semaine d'avant, énergie et coût estimés avec la puissance et le prix du kWh que tu donnes, total sur 30 jours avec le poêle, budget mensuel (dans les clous, proche, dépassé) et repère courant d'un degré de consigne en moins (environ 7 %). Heures des clims dans `marche-clims.json`, ajouté à la sauvegarde.
+- Poêle : stock de pellets (sacs comptés, diminués de la consommation estimée, autonomie et alerte de stock bas), arrêt programmé du soir appliqué dans la demi-heure qui suit son heure (appli ou service d'arrière-plan), et message quand le poêle s'éteint sans ordre de Home.
+- Le service d'arrière-plan tient aussi le journal des heures de marche du poêle et des clims appli fermée.
 - Bilan du poêle : prix du sac à saisir, coût estimé sur 7 et 30 jours, et comparaison des heures de marche avec la semaine d'avant (« Marche et pellets »).
 - Poêle éteint en vacances même appli fermée : le service d'arrière-plan relit le poêle à chaque tour et l'éteint s'il marche pendant l'absence (hors remontée avant le retour).
 - Poêle à pellets : heures de marche relevées à chaque lecture de l'état (appli ouverte), sur 7 et 30 jours, et pellets estimés avec le débit (kg par heure) et le sac (kg) que l'on donne. Sans débit donné, aucun chiffre n'est avancé. Le journal est dans la sauvegarde.
