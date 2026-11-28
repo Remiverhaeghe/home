@@ -7,7 +7,10 @@ const _header =
 
 void main() {
   test('le nom vient du fichier, sans la date ni les tirets bas', () {
-    expect(thermoproSensorName('TempProSensor_Export_chambre_parent_28112026.csv'), 'Chambre parent');
+    expect(
+      thermoproSensorName('TempProSensor_Export_chambre_parent_28112026.csv'),
+      'Chambre parent',
+    );
     expect(thermoproSensorName('/tmp/TempProSensor_Export_bureau_28112026.CSV'), 'Bureau');
     expect(thermoproSensorName('mesures_cave.csv'), 'Mesures cave');
     expect(thermoproSensorName('.csv'), 'ThermoPro');
@@ -20,11 +23,11 @@ void main() {
   test('les lignes vides ou illisibles sont comptées et ignorées', () {
     final vCsv = parseThermoproCsv(
       '$_header'
-      '﻿19/01/2025,10:31,17.7,35\r\n'
-      '﻿19/01/2025,10:45,-,-\r\n'
-      '﻿pas une ligne\r\n'
-      '\r\n'
-      '﻿19/01/2025,11:00,16.3,36\r\n',
+          '﻿19/01/2025,10:31,17.7,35\r\n'
+          '﻿19/01/2025,10:45,-,-\r\n'
+          '﻿pas une ligne\r\n'
+          '\r\n'
+          '﻿19/01/2025,11:00,16.3,36\r\n',
       'TempProSensor_Export_bureau_28112026.csv',
     )!;
 
@@ -38,9 +41,9 @@ void main() {
   test('un relevé par tranche de dix minutes, trié par date', () {
     final vCsv = parseThermoproCsv(
       '${_header}19/01/2025,10:35,2,50\n'
-      '19/01/2025,10:31,1,50\n'
-      '19/01/2025,10:32,9,50\n'
-      '19/01/2025,10:41,3,50\n',
+          '19/01/2025,10:31,1,50\n'
+          '19/01/2025,10:32,9,50\n'
+          '19/01/2025,10:41,3,50\n',
       'x.csv',
     )!;
 

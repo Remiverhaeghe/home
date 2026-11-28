@@ -58,7 +58,9 @@ void main() {
 
     await pTester.tap(find.byTooltip('Importer un export ThermoPro'));
     await pTester.pumpAndSettle();
-    await pTester.tap(find.descendant(of: find.byType(SimpleDialog), matching: find.text('TP357 (A1B2)')));
+    await pTester.tap(
+      find.descendant(of: find.byType(SimpleDialog), matching: find.text('TP357 (A1B2)')),
+    );
     await pTester.pumpAndSettle();
 
     expect(vController.sensors, hasLength(1));
@@ -76,8 +78,7 @@ void main() {
   });
 
   testWidgets('un export sans mesure valide le dit, renoncer ne change rien', (pTester) async {
-    const vEmpty =
-        'Date,Heure,Température_Celsius,Humidité_Relative(%)\n19/01/2025,10:45,-,-\n';
+    const vEmpty = 'Date,Heure,Température_Celsius,Humidité_Relative(%)\n19/01/2025,10:45,-,-\n';
     final vController = await _open(pTester, () async => (name: _name, text: vEmpty));
 
     await pTester.tap(find.byTooltip('Importer un export ThermoPro'));
