@@ -29,10 +29,16 @@ void main() {
     await settle(pTester);
 
     final vFrom = pTester.widget<DropdownButton<int?>>(
-      find.descendant(of: find.byKey(const Key('quiet-from')), matching: find.byType(DropdownButton<int?>)),
+      find.descendant(
+        of: find.byKey(const Key('quiet-from')),
+        matching: find.byType(DropdownButton<int?>),
+      ),
     );
     final vTo = pTester.widget<DropdownButton<int?>>(
-      find.descendant(of: find.byKey(const Key('quiet-to')), matching: find.byType(DropdownButton<int?>)),
+      find.descendant(
+        of: find.byKey(const Key('quiet-to')),
+        matching: find.byType(DropdownButton<int?>),
+      ),
     );
     await pTester.runAsync(() async => vFrom.onChanged!(22));
     await pTester.pump();
@@ -54,7 +60,9 @@ void main() {
     await pTester.runAsync(() async {
       await vFiles.saveAlertHistory(
         appendAlerts(
-          appendAlerts([], [const SensorAlert(sensorName: 'Cave', kind: AlertKind.frost)], DateTime(2026, 11, 27, 6)),
+          appendAlerts([], [
+            const SensorAlert(sensorName: 'Cave', kind: AlertKind.frost),
+          ], DateTime(2026, 11, 27, 6)),
           [const SensorAlert(sensorName: 'Salon', kind: AlertKind.silent)],
           DateTime(2026, 11, 28, 6),
         ),

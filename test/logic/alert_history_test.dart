@@ -27,10 +27,7 @@ void main() {
       final vNow = DateTime(2026, 11, 28, 23);
 
       expect(audibleAlerts([vHumid], vNow, null), [vHumid]);
-      expect(
-        audibleAlerts([vHumid], vNow, const OffPeak(startHour: 8, endHour: 8)),
-        [vHumid],
-      );
+      expect(audibleAlerts([vHumid], vNow, const OffPeak(startHour: 8, endHour: 8)), [vHumid]);
     });
   });
 
@@ -64,7 +61,8 @@ void main() {
 
     test('s\'écrit et se relit, une ligne abîmée est ignorée', () {
       final vHistory = appendAlerts([], [vFrost], DateTime(2026, 11, 28, 8));
-      final vText = '${alertHistoryText(vHistory)}\nnon json\n{"at":"x","sensor":"A","kind":"frost"}';
+      final vText =
+          '${alertHistoryText(vHistory)}\nnon json\n{"at":"x","sensor":"A","kind":"frost"}';
 
       final vBack = parseAlertHistory(vText);
 

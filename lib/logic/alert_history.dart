@@ -30,7 +30,11 @@ class AlertEntry {
   final String sensorName;
   final AlertKind kind;
 
-  Map<String, Object> toJson() => {'at': at.toIso8601String(), 'sensor': sensorName, 'kind': kind.name};
+  Map<String, Object> toJson() => {
+    'at': at.toIso8601String(),
+    'sensor': sensorName,
+    'kind': kind.name,
+  };
 }
 
 /// Relit l'historique ; une ligne illisible est ignorée, le reste est gardé.

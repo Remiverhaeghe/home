@@ -74,9 +74,9 @@ class _QuietHoursSectionState extends State<QuietHoursSection> {
           contentPadding: EdgeInsets.zero,
           leading: const Icon(Icons.history),
           title: Text(vTexts.alertHistoryOpen),
-          onTap: () => Navigator.of(pContext).push(
-            MaterialPageRoute<void>(builder: (_) => AlertHistoryScreen(files: widget.files)),
-          ),
+          onTap: () => Navigator.of(
+            pContext,
+          ).push(MaterialPageRoute<void>(builder: (_) => AlertHistoryScreen(files: widget.files))),
         ),
       ],
     );
