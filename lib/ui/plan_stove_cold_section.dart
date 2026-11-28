@@ -7,7 +7,7 @@ import '../storage/plan_store.dart';
 
 /// Seuil de froid : sous cette température, la clim peut chauffer en plus du poêle.
 class StoveColdSection extends StatefulWidget {
-  const StoveColdSection({required this.plan});
+  const StoveColdSection({super.key, required this.plan});
 
   final PlanController plan;
 

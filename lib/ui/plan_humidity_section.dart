@@ -6,7 +6,7 @@ import '../state/plan_controller.dart';
 
 /// Seuil d'humidité des alertes.
 class HumiditySection extends StatefulWidget {
-  const HumiditySection({required this.plan});
+  const HumiditySection({super.key, required this.plan});
 
   final PlanController plan;
 

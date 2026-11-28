@@ -5,7 +5,7 @@ import '../storage/background_files.dart';
 
 /// Interrupteur du résumé du matin, envoyé par le service d'arrière-plan.
 class SummarySection extends StatefulWidget {
-  const SummarySection({required this.files});
+  const SummarySection({super.key, required this.files});
 
   final BackgroundFiles files;
 

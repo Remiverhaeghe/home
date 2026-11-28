@@ -11,6 +11,7 @@ const _step = 0.5;
 /// Carte d'une pièce : ses températures souhaitées par profil, le coup de chaud et le planning.
 class RoomCard extends StatelessWidget {
   const RoomCard({
+    super.key,
     required this.unit,
     required this.targets,
     required this.texts,
