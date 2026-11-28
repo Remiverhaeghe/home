@@ -1,4 +1,5 @@
 import 'daikin.dart';
+import 'house_calendar.dart';
 
 /// Profil d'une pièce : chacun a sa température souhaitée.
 enum ProfileKind { comfort, night, eco, away }
@@ -37,21 +38,24 @@ const defaultSchedule = [
 ];
 
 /// Profil en vigueur à l'instant [pNow] : celui de la plage la plus récente, en remontant jusqu'à
-/// une semaine en arrière. [pFallback] quand aucune plage ne s'applique.
+/// une semaine en arrière. [pFallback] quand aucune plage ne s'applique. Avec un [pCalendar], les
+/// jours fériés suivent le planning du samedi ou du dimanche et les jours de télétravail celui des
+/// plages numérotées [remoteDayKey], si la pièce en a.
 ProfileKind profileAt(
   List<ScheduleSlot> pSlots,
   DateTime pNow, {
   ProfileKind pFallback = ProfileKind.eco,
+  HouseCalendar? pCalendar,
 }) {
   final vNowMinute = pNow.hour * 60 + pNow.minute;
+  final vHasRemote = pSlots.any((pSlot) => pSlot.weekdays.contains(remoteDayKey));
   for (var vBack = 0; vBack <= 7; vBack++) {
     final vDay = DateTime(pNow.year, pNow.month, pNow.day - vBack);
+    final vKey = pCalendar?.keyOf(vDay, pHasRemoteSlots: vHasRemote) ?? vDay.weekday;
     final vStarted =
         pSlots
             .where(
-              (pSlot) =>
-                  pSlot.weekdays.contains(vDay.weekday) &&
-                  (vBack > 0 || pSlot.minute <= vNowMinute),
+              (pSlot) => pSlot.weekdays.contains(vKey) && (vBack > 0 || pSlot.minute <= vNowMinute),
             )
             .toList()
           ..sort((pA, pB) => pB.minute.compareTo(pA.minute));

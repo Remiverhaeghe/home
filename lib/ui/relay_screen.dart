@@ -4,11 +4,29 @@ import '../l10n/gen/app_localizations.dart';
 import '../logic/relay.dart';
 import '../state/relay_controller.dart';
 
-/// Porte de garage et Velux : un gros bouton par commande. La porte demande toujours confirmation.
+/// Un gros bouton par commande. La porte de garage demande toujours confirmation. Garage et Velux
+/// ont chacun leur écran ; sans filtre, l'écran montre tous les boutons.
 class RelayScreen extends StatelessWidget {
-  const RelayScreen({super.key, required this.controller});
+  const RelayScreen({super.key, required this.controller, this.kinds = _all});
+
+  static const _all = [RelayKind.garage, RelayKind.velux, RelayKind.other];
+
+  /// Écran de la porte de garage.
+  const RelayScreen.garage({Key? key, required RelayController controller})
+    : this(key: key, controller: controller, kinds: const [RelayKind.garage]);
+
+  /// Écran des Velux, avec les commandes d'un autre genre.
+  const RelayScreen.velux({Key? key, required RelayController controller})
+    : this(key: key, controller: controller, kinds: const [RelayKind.velux, RelayKind.other]);
 
   final RelayController controller;
+
+  /// Genres de boutons montrés et proposés à l'ajout.
+  final List<RelayKind> kinds;
+
+  bool get _garageOnly => kinds.length == 1 && kinds.first == RelayKind.garage;
+
+  bool get _veluxOnly => !kinds.contains(RelayKind.garage) && kinds.contains(RelayKind.velux);
 
   static IconData iconOf(RelayKind pKind) => switch (pKind) {
     RelayKind.garage => Icons.garage_outlined,
@@ -77,7 +95,7 @@ class RelayScreen extends StatelessWidget {
     final vMessenger = ScaffoldMessenger.of(pContext);
     final vButton = await showDialog<RelayButton>(
       context: pContext,
-      builder: (_) => const _AddDialog(),
+      builder: (_) => _AddDialog(kinds: kinds),
     );
     if (vButton == null) {
       return;
@@ -98,9 +116,19 @@ class RelayScreen extends StatelessWidget {
   @override
   Widget build(BuildContext pContext) {
     final vTexts = AppLocalizations.of(pContext);
+    final vTitle = _garageOnly
+        ? vTexts.garageTitle
+        : _veluxOnly
+        ? vTexts.veluxTitle
+        : vTexts.relayTitle;
+    final vEmpty = _garageOnly
+        ? vTexts.garageEmpty
+        : _veluxOnly
+        ? vTexts.veluxEmpty
+        : vTexts.relayEmpty;
 
     return Scaffold(
-      appBar: AppBar(title: Text(vTexts.relayTitle)),
+      appBar: AppBar(title: Text(vTitle)),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _add(pContext),
         icon: const Icon(Icons.add),
@@ -109,12 +137,15 @@ class RelayScreen extends StatelessWidget {
       body: ListenableBuilder(
         listenable: controller,
         builder: (pContext, _) {
-          final vButtons = controller.buttons;
+          final vButtons = [
+            for (final vButton in controller.buttons)
+              if (kinds.contains(vButton.kind)) vButton,
+          ];
           if (vButtons.isEmpty) {
             return Center(
               child: Padding(
                 padding: const EdgeInsets.all(32),
-                child: Text(vTexts.relayEmpty, textAlign: TextAlign.center),
+                child: Text(vEmpty, textAlign: TextAlign.center),
               ),
             );
           }
@@ -160,7 +191,9 @@ class RelayScreen extends StatelessWidget {
 
 /// Saisie d'un bouton. Les champs vivent dans cette boîte : ils ne sont détruits qu'avec elle.
 class _AddDialog extends StatefulWidget {
-  const _AddDialog();
+  const _AddDialog({required this.kinds});
+
+  final List<RelayKind> kinds;
 
   @override
   State<_AddDialog> createState() => _AddDialogState();
@@ -171,7 +204,7 @@ class _AddDialogState extends State<_AddDialog> {
   final _host = TextEditingController();
   final _channel = TextEditingController(text: '0');
   final _pulse = TextEditingController(text: '1');
-  var _kind = RelayKind.garage;
+  late var _kind = widget.kinds.first;
   var _model = RelayModel.shellyGen2;
 
   @override
@@ -213,15 +246,16 @@ class _AddDialogState extends State<_AddDialog> {
               keyboardType: TextInputType.number,
               decoration: InputDecoration(labelText: vTexts.relayHost),
             ),
-            DropdownButtonFormField<RelayKind>(
-              initialValue: _kind,
-              decoration: InputDecoration(labelText: vTexts.relayKind),
-              items: [
-                for (final vKind in RelayKind.values)
-                  DropdownMenuItem(value: vKind, child: Text(_kindLabel(vTexts, vKind))),
-              ],
-              onChanged: (pKind) => setState(() => _kind = pKind ?? _kind),
-            ),
+            if (widget.kinds.length > 1)
+              DropdownButtonFormField<RelayKind>(
+                initialValue: _kind,
+                decoration: InputDecoration(labelText: vTexts.relayKind),
+                items: [
+                  for (final vKind in widget.kinds)
+                    DropdownMenuItem(value: vKind, child: Text(_kindLabel(vTexts, vKind))),
+                ],
+                onChanged: (pKind) => setState(() => _kind = pKind ?? _kind),
+              ),
             DropdownButtonFormField<RelayModel>(
               initialValue: _model,
               decoration: InputDecoration(labelText: vTexts.relayModel),

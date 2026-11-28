@@ -11,6 +11,7 @@ import '../l10n/gen/app_localizations.dart';
 import '../logic/climate_exchange.dart';
 import '../logic/climate_stats.dart';
 import '../logic/reading.dart';
+import '../storage/detail_log.dart';
 import '../storage/error_log_store.dart';
 import '../state/ac_controller.dart';
 import '../state/plan_controller.dart';
@@ -26,6 +27,7 @@ import '../state/relay_controller.dart';
 import '../state/sensors_controller.dart';
 import '../storage/background_files.dart';
 import 'about_screen.dart';
+import 'calendar_screen.dart';
 import 'ac_screen.dart';
 import 'live_screen.dart';
 import 'plan_screen.dart';
@@ -96,6 +98,7 @@ class SensorsScreen extends StatelessWidget {
     this.notes,
     this.onRestored,
     this.errorLog,
+    this.detailLog,
   });
 
   final SensorsController controller;
@@ -134,6 +137,9 @@ class SensorsScreen extends StatelessWidget {
   /// Journal d'erreurs ; son bouton « À propos » n'apparaît que s'il est fourni.
   final ErrorLogStore? errorLog;
 
+  /// Journal détaillé, activable dans « À propos ».
+  final DetailLog? detailLog;
+
   Future<void> _import(BuildContext pContext) async {
     final vText = await pickFile();
     if (vText == null || !pContext.mounted) {
@@ -158,7 +164,10 @@ class SensorsScreen extends StatelessWidget {
   Future<void> _refresh(BuildContext pContext) async {
     final vTexts = AppLocalizations.of(pContext);
     final vMessenger = ScaffoldMessenger.of(pContext);
-    final vCount = await controller.refreshFromBluetooth(link ?? BleTp357Link());
+    final vCount = await controller.refreshFromBluetooth(
+      link ?? BleTp357Link(),
+      pDetail: detailLog,
+    );
     vMessenger.hideCurrentSnackBar();
     vMessenger.showSnackBar(SnackBar(content: Text(vTexts.refreshDone(vCount))));
   }
@@ -220,6 +229,43 @@ class SensorsScreen extends StatelessWidget {
   Widget _moreMenu(BuildContext pContext, AppLocalizations pTexts) {
     final vGroups = <List<_MenuEntry>>[
       [
+        if (houseController != null)
+          _MenuEntry(
+            Icons.meeting_room_outlined,
+            pTexts.roomsOpen,
+            () => _open(
+              pContext,
+              (_) => RoomsScreen(
+                sensors: controller,
+                house: houseController!,
+                weather: weatherController,
+                saveFile: saveFile,
+              ),
+            ),
+          ),
+        if (houseController != null)
+          _MenuEntry(
+            Icons.home_work_outlined,
+            pTexts.houseOpen,
+            () => _open(
+              pContext,
+              (_) => HouseScreen(controller: houseController!, weather: weatherController),
+            ),
+          ),
+        if (planController != null)
+          _MenuEntry(
+            Icons.calendar_month_outlined,
+            pTexts.calendarOpen,
+            () => _open(pContext, (_) => CalendarScreen(plan: planController!)),
+          ),
+        if (controller.sensors.length > 1)
+          _MenuEntry(
+            Icons.compare_arrows,
+            pTexts.compareOpen,
+            () => _open(pContext, (_) => CompareScreen(controller: controller)),
+          ),
+      ],
+      [
         if (acController != null)
           _MenuEntry(
             Icons.ac_unit,
@@ -235,8 +281,14 @@ class SensorsScreen extends StatelessWidget {
         if (relayController != null)
           _MenuEntry(
             Icons.garage_outlined,
-            pTexts.relayOpen,
-            () => _open(pContext, (_) => RelayScreen(controller: relayController!)),
+            pTexts.garageOpen,
+            () => _open(pContext, (_) => RelayScreen.garage(controller: relayController!)),
+          ),
+        if (relayController != null)
+          _MenuEntry(
+            Icons.roofing,
+            pTexts.veluxOpen,
+            () => _open(pContext, (_) => RelayScreen.velux(controller: relayController!)),
           ),
         if (acController != null && planController != null)
           _MenuEntry(
@@ -265,37 +317,6 @@ class SensorsScreen extends StatelessWidget {
                 display: wallDisplay ?? PlatformWallDisplay(),
               ),
             ),
-          ),
-      ],
-      [
-        if (houseController != null)
-          _MenuEntry(
-            Icons.meeting_room_outlined,
-            pTexts.roomsOpen,
-            () => _open(
-              pContext,
-              (_) => RoomsScreen(
-                sensors: controller,
-                house: houseController!,
-                weather: weatherController,
-                saveFile: saveFile,
-              ),
-            ),
-          ),
-        if (houseController != null)
-          _MenuEntry(
-            Icons.home_work_outlined,
-            pTexts.houseOpen,
-            () => _open(
-              pContext,
-              (_) => HouseScreen(controller: houseController!, weather: weatherController),
-            ),
-          ),
-        if (controller.sensors.length > 1)
-          _MenuEntry(
-            Icons.compare_arrows,
-            pTexts.compareOpen,
-            () => _open(pContext, (_) => CompareScreen(controller: controller)),
           ),
       ],
       [
@@ -332,7 +353,10 @@ class SensorsScreen extends StatelessWidget {
           _MenuEntry(
             Icons.info_outline,
             pTexts.aboutOpen,
-            () => _open(pContext, (_) => AboutScreen(log: errorLog!, saveFile: saveFile)),
+            () => _open(
+              pContext,
+              (_) => AboutScreen(log: errorLog!, saveFile: saveFile, detail: detailLog),
+            ),
           ),
       ],
     ].where((pGroup) => pGroup.isNotEmpty).toList();

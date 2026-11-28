@@ -127,4 +127,44 @@ void main() {
 
     expect(vController.buttons.map((pButton) => pButton.name), ['Velux salon']);
   });
+
+  testWidgets('l\'écran du garage ne montre que la porte', (pTester) async {
+    await vController.load();
+    await pTester.pumpWidget(localized(RelayScreen.garage(controller: vController)));
+    await pTester.pumpAndSettle();
+
+    expect(find.text('Porte de garage'), findsOneWidget);
+    expect(find.text('Porte du garage'), findsOneWidget);
+    expect(find.text('Velux salon'), findsNothing);
+  });
+
+  testWidgets('l\'écran des Velux ne montre pas la porte et ajoute un Velux', (pTester) async {
+    await vController.load();
+    await pTester.pumpWidget(localized(RelayScreen.velux(controller: vController)));
+    await pTester.pumpAndSettle();
+
+    expect(find.text('Velux salon'), findsOneWidget);
+    expect(find.text('Porte du garage'), findsNothing);
+
+    await pTester.tap(find.text('Ajouter un bouton'));
+    await pTester.pumpAndSettle();
+    await pTester.enterText(find.widgetWithText(TextField, 'Nom du bouton'), 'Velux chambre');
+    await pTester.enterText(find.widgetWithText(TextField, 'Adresse du boîtier'), '192.168.1.42');
+    await pTester.tap(find.text('Enregistrer'));
+    await pTester.pumpAndSettle();
+
+    expect(vController.buttons.last.name, 'Velux chambre');
+    expect(vController.buttons.last.kind, RelayKind.velux);
+  });
+
+  testWidgets('l\'écran du garage propose le genre garage sans choix', (pTester) async {
+    await vController.load();
+    await pTester.pumpWidget(localized(RelayScreen.garage(controller: vController)));
+    await pTester.pumpAndSettle();
+
+    await pTester.tap(find.text('Ajouter un bouton'));
+    await pTester.pumpAndSettle();
+
+    expect(find.text('Ce qu\'il commande'), findsNothing);
+  });
 }
