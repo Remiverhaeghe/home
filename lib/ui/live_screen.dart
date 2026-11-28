@@ -13,6 +13,7 @@ import '../state/sensors_controller.dart';
 import '../storage/background_files.dart';
 import 'diagnostic_screen.dart';
 import 'theme.dart';
+import 'units_scope.dart';
 
 /// Capteurs TP357 à portée : on en choisit un, et ses mesures en direct s'ajoutent à ses relevés
 /// tant que l'écran reste ouvert.
@@ -130,6 +131,7 @@ class _LiveScreenState extends State<LiveScreen> {
     final vColors = HomeColors.of(pContext);
     final vTheme = Theme.of(pContext).textTheme;
     final vNumber = NumberFormat('0.0', Localizations.localeOf(pContext).toString());
+    final vUnits = UnitsScope.of(pContext);
     final vFollowed = _followed;
     final vCurrent = _current;
 
@@ -160,7 +162,7 @@ class _LiveScreenState extends State<LiveScreen> {
                       Row(
                         children: [
                           Text(
-                            vTexts.temperatureValue(vNumber.format(vCurrent.temp)),
+                            vTexts.temperatureValue(vUnits.temp(vCurrent.temp)),
                             style: vTheme.headlineMedium?.copyWith(color: vColors.temperature),
                           ),
                           const SizedBox(width: 20),

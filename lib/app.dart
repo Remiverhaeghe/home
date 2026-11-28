@@ -10,6 +10,7 @@ import 'state/ac_controller.dart';
 import 'state/plan_controller.dart';
 import 'state/house_controller.dart';
 import 'logic/appearance.dart';
+import 'logic/units.dart';
 import 'state/appearance_controller.dart';
 import 'state/notes_controller.dart';
 import 'state/pellet_controller.dart';
@@ -21,6 +22,7 @@ import 'storage/background_files.dart';
 import 'storage/error_log_store.dart';
 import 'ui/sensors_screen.dart';
 import 'ui/theme.dart';
+import 'ui/units_scope.dart';
 
 class HomeApp extends StatefulWidget {
   const HomeApp({
@@ -152,7 +154,7 @@ class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
       data: MediaQuery.of(pContext).copyWith(
         textScaler: TextScaler.linear(MediaQuery.textScalerOf(pContext).scale(1) * pLook.textScale),
       ),
-      child: pChild!,
+      child: UnitsScope(units: Units(temperature: pLook.temperatureUnit), child: pChild!),
     ),
     locale: const Locale('fr'),
     localizationsDelegates: const [
