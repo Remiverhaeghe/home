@@ -1,0 +1,1 @@
+- Garage et Velux ont chacun leur écran dans le menu : la porte de garage d'un côté, les Velux de l'autre, avec leur propre liste et leur propre ajout.
