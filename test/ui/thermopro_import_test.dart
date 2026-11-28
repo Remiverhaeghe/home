@@ -19,7 +19,7 @@ const _name = 'TempProSensor_Export_bureau_28112026.csv';
 
 Future<SensorsController> _open(
   WidgetTester pTester,
-  Future<({String name, String text})?> Function() pPick, {
+  Future<List<({String name, String text})>> Function() pPick, {
   List<Sensor> pSensors = const [],
 }) async {
   final vController = SensorsController(MemorySensorStore([...pSensors]));
@@ -33,7 +33,7 @@ void main() {
   testWidgets('un export ThermoPro devient un nouveau capteur nommé d\'après le fichier', (
     pTester,
   ) async {
-    final vController = await _open(pTester, () async => (name: _name, text: _csv));
+    final vController = await _open(pTester, () async => [(name: _name, text: _csv)]);
 
     await openMenuEntry(pTester, 'Importer un export ThermoPro');
     await pTester.pumpAndSettle();
@@ -48,7 +48,7 @@ void main() {
   testWidgets('l\'export peut aller dans un capteur existant', (pTester) async {
     final vController = await _open(
       pTester,
-      () async => (name: _name, text: _csv),
+      () async => [(name: _name, text: _csv)],
       pSensors: [
         Sensor(
           name: 'TP357 (A1B2)',
@@ -69,7 +69,7 @@ void main() {
   });
 
   testWidgets('un fichier qui n\'est pas un export est refusé', (pTester) async {
-    final vController = await _open(pTester, () async => (name: 'x.csv', text: 'a,b'));
+    final vController = await _open(pTester, () async => [(name: 'x.csv', text: 'a,b')]);
 
     await openMenuEntry(pTester, 'Importer un export ThermoPro');
     await pTester.pumpAndSettle();
@@ -80,7 +80,7 @@ void main() {
 
   testWidgets('un export sans mesure valide le dit, renoncer ne change rien', (pTester) async {
     const vEmpty = 'Date,Heure,Température_Celsius,Humidité_Relative(%)\n19/01/2025,10:45,-,-\n';
-    final vController = await _open(pTester, () async => (name: _name, text: vEmpty));
+    final vController = await _open(pTester, () async => [(name: _name, text: vEmpty)]);
 
     await openMenuEntry(pTester, 'Importer un export ThermoPro');
     await pTester.pumpAndSettle();
@@ -89,7 +89,7 @@ void main() {
   });
 
   testWidgets('fermer le choix du capteur n\'importe rien', (pTester) async {
-    final vController = await _open(pTester, () async => (name: _name, text: _csv));
+    final vController = await _open(pTester, () async => [(name: _name, text: _csv)]);
 
     await openMenuEntry(pTester, 'Importer un export ThermoPro');
     await pTester.pumpAndSettle();
@@ -97,5 +97,39 @@ void main() {
     await pTester.pumpAndSettle();
 
     expect(vController.sensors, isEmpty);
+  });
+
+  testWidgets('plusieurs exports d\'un coup vont chacun dans le capteur de leur nom', (
+    pTester,
+  ) async {
+    final vController = await _open(
+      pTester,
+      () async => [
+        (name: _name, text: _csv),
+        (name: 'TempProSensor_Export_cave_28112026.csv', text: _csv),
+        (name: 'x.csv', text: 'a,b'),
+      ],
+    );
+
+    await openMenuEntry(pTester, 'Importer un export ThermoPro');
+    await pTester.pumpAndSettle();
+
+    expect(vController.sensors.map((pSensor) => pSensor.name).toSet(), {'Bureau', 'Cave'});
+    expect(vController.sensors.every((pSensor) => pSensor.readings.length == 2), isTrue);
+    expect(
+      find.textContaining('2 fichiers importés, 4 relevés ; 1 fichier ignoré'),
+      findsOneWidget,
+    );
+    expect(find.byType(SimpleDialog), findsNothing);
+  });
+
+  testWidgets('renoncer au choix des fichiers ne change rien', (pTester) async {
+    final vController = await _open(pTester, () async => []);
+
+    await openMenuEntry(pTester, 'Importer un export ThermoPro');
+    await pTester.pumpAndSettle();
+
+    expect(vController.sensors, isEmpty);
+    expect(find.byType(SnackBar), findsNothing);
   });
 }
