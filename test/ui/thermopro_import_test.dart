@@ -99,7 +99,9 @@ void main() {
     expect(vController.sensors, isEmpty);
   });
 
-  testWidgets('plusieurs exports d\'un coup vont chacun dans le capteur de leur nom', (pTester) async {
+  testWidgets('plusieurs exports d\'un coup vont chacun dans le capteur de leur nom', (
+    pTester,
+  ) async {
     final vController = await _open(
       pTester,
       () async => [
@@ -114,7 +116,10 @@ void main() {
 
     expect(vController.sensors.map((pSensor) => pSensor.name).toSet(), {'Bureau', 'Cave'});
     expect(vController.sensors.every((pSensor) => pSensor.readings.length == 2), isTrue);
-    expect(find.textContaining('2 fichiers importés, 4 relevés ; 1 fichier ignoré'), findsOneWidget);
+    expect(
+      find.textContaining('2 fichiers importés, 4 relevés ; 1 fichier ignoré'),
+      findsOneWidget,
+    );
     expect(find.byType(SimpleDialog), findsNothing);
   });
 
