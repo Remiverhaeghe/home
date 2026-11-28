@@ -25,6 +25,9 @@ void main() {
     );
     await vSensors.load();
 
+    pTester.view.physicalSize = const Size(800, 3000);
+    pTester.view.devicePixelRatio = 1;
+    addTearDown(pTester.view.reset);
     await pTester.pumpWidget(localized(CompareScreen(controller: vSensors)));
 
     final vShown = pTester.widgetList<Text>(find.byType(Text)).map((pText) => pText.data ?? '');
