@@ -26,9 +26,9 @@ void main() {
         readings: [Reading(at: vNow.subtract(const Duration(minutes: 10)), temp: 20, humidity: 50)],
       ),
     ]);
-    await FileHouseStore(File('${vFolder.path}/maison.json')).save(
-      const House(places: {'Salon': SensorPlace(room: 'Salon', floor: 0)}),
-    );
+    await FileHouseStore(
+      File('${vFolder.path}/maison.json'),
+    ).save(const House(places: {'Salon': SensorPlace(room: 'Salon', floor: 0)}));
   });
   tearDown(() => vFolder.deleteSync(recursive: true));
 

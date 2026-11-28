@@ -43,7 +43,9 @@ bool summaryDue(DateTime pNow, {required DateTime? pLastSent, int pHour = summar
   }
 
   return pLastSent == null ||
-      DateTime(pLastSent.year, pLastSent.month, pLastSent.day).isBefore(
-        DateTime(pNow.year, pNow.month, pNow.day),
-      );
+      DateTime(
+        pLastSent.year,
+        pLastSent.month,
+        pLastSent.day,
+      ).isBefore(DateTime(pNow.year, pNow.month, pNow.day));
 }
