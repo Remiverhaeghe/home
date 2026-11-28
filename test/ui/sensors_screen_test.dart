@@ -130,19 +130,6 @@ void main() {
     expect(await menuHas(pTester, 'Importer un export ThermoPro'), isTrue);
   });
 
-  testWidgets('sans capteur, l\'export est grisé dans le menu', (pTester) async {
-    final vController = SensorsController(MemorySensorStore());
-    await pTester.pumpWidget(localized(SensorsScreen(controller: vController)));
-
-    await pTester.tap(find.byTooltip('Plus d\'options'));
-    await pTester.pumpAndSettle();
-
-    final vItem = pTester.widget<PopupMenuItem<int>>(
-      find.widgetWithText(PopupMenuItem<int>, 'Exporter pour Atelier'),
-    );
-    expect(vItem.enabled, isFalse);
-  });
-
   testWidgets('le bouton À propos n\'apparaît qu\'avec un journal et ouvre l\'écran', (
     pTester,
   ) async {
@@ -164,11 +151,13 @@ void main() {
       final vController = SensorsController(MemorySensorStore());
 
       await pTester.pumpWidget(localized(SensorsScreen(controller: vController)));
+      await pTester.tap(find.byTooltip('Plus d\'options'));
+      await pTester.pumpAndSettle();
 
-      expect(
-        pTester.widget<IconButton>(find.widgetWithIcon(IconButton, Icons.ios_share)).onPressed,
-        isNull,
+      final vItem = pTester.widget<PopupMenuItem<int>>(
+        find.widgetWithText(PopupMenuItem<int>, 'Exporter pour Atelier'),
       );
+      expect(vItem.enabled, isFalse);
     });
 
     testWidgets('le fichier d\'échange de tous les capteurs est proposé à l\'enregistrement', (
