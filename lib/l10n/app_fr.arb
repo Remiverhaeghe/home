@@ -16,7 +16,7 @@
   "@temperatureValue": {"placeholders": {"value": {"type": "String"}}},
   "humidityValue": "{value} %",
   "@humidityValue": {"placeholders": {"value": {"type": "String"}}},
-  "dewPointValue": "Point de rosée {value}",
+  "dewPointValue": "Condensation sous {value}",
   "@dewPointValue": {"placeholders": {"value": {"type": "String"}}},
   "humidityDry": "Air sec",
   "humidityGood": "Air confortable",

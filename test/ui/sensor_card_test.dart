@@ -27,7 +27,7 @@ void main() {
     expect(find.text('21,5 °C'), findsOneWidget);
     expect(find.text('48,0 %'), findsOneWidget);
     expect(find.text('Air confortable'), findsOneWidget);
-    expect(find.textContaining('Point de rosée'), findsOneWidget);
+    expect(find.textContaining('Condensation sous'), findsOneWidget);
     expect(find.byType(Sparkline), findsOneWidget);
     expect(find.byType(HumidityBar), findsOneWidget);
   });
