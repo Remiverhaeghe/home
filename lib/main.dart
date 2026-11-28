@@ -21,6 +21,7 @@ import 'state/pellet_controller.dart';
 import 'state/weather_controller.dart';
 import 'state/relay_controller.dart';
 import 'state/sensors_controller.dart';
+import 'storage/ac_runs_store.dart';
 import 'storage/ac_store.dart';
 import 'storage/appearance_store.dart';
 import 'storage/backup_files.dart';
@@ -47,6 +48,7 @@ Future<void> main() async {
   final vAc = AcController(
     FileAcStore(File('${vFolder.path}/climatisations.json')),
     HttpDaikinLink(),
+    runsStore: FileAcRunsStore(File('${vFolder.path}/marche-clims.json')),
   );
   await vAc.load();
   final vPlan = PlanController(FilePlanStore(vFolder), vAc, vController);

@@ -8,10 +8,12 @@ import '../logic/comfort.dart';
 import '../logic/plan.dart';
 import '../logic/vacation.dart';
 import '../state/ac_controller.dart';
+import '../state/pellet_controller.dart';
 import '../state/plan_controller.dart';
 import '../state/sensors_controller.dart';
 import '../storage/plan_store.dart';
 import 'boost_dialog.dart';
+import 'heating_report_screen.dart';
 import 'rules_screen.dart';
 import 'schedule_screen.dart';
 
@@ -41,8 +43,11 @@ class PlanScreen extends StatelessWidget {
     required this.sensors,
     this.pickRange = pickAbsence,
     this.clock = DateTime.now,
+    this.pellet,
   });
 
+  /// Poêle, pour le bilan du chauffage.
+  final PelletController? pellet;
   final PlanController plan;
   final AcController ac;
   final SensorsController sensors;
@@ -175,6 +180,17 @@ class PlanScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
+              OutlinedButton.icon(
+                icon: const Icon(Icons.bar_chart),
+                label: Text(vTexts.heatingOpen),
+                onPressed: () => Navigator.push<void>(
+                  pContext,
+                  MaterialPageRoute(
+                    builder: (_) => HeatingReportScreen(ac: ac, pellet: pellet, clock: clock),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
               _StoveColdSection(plan: plan),
               const SizedBox(height: 24),
               Text(vTexts.planVacationTitle, style: Theme.of(pContext).textTheme.titleMedium),

@@ -2,7 +2,9 @@ import 'package:flutter/foundation.dart';
 
 import '../logic/ac_units.dart';
 import '../logic/daikin.dart';
+import '../logic/heating_costs.dart';
 import '../net/daikin_link.dart';
+import '../storage/ac_runs_store.dart';
 import '../storage/ac_store.dart';
 
 /// Ce qui empêche d'ajouter une climatisation.
@@ -20,14 +22,22 @@ class AcStatus {
 
 /// Climatisations de la maison, leur état et leurs commandes.
 class AcController extends ChangeNotifier {
-  AcController(this._store, this._link);
+  AcController(this._store, this._link, {AcRunsStore? runsStore, DateTime Function() clock = DateTime.now})
+    : _runsStore = runsStore ?? MemoryAcRunsStore(),
+      _clock = clock;
 
   final AcStore _store;
   final DaikinLink _link;
+  final AcRunsStore _runsStore;
+  final DateTime Function() _clock;
+  var _runs = const AcRuns();
   List<AcUnit> _units = [];
   final _status = <String, AcStatus>{};
 
   List<AcUnit> get units => List.unmodifiable(_units);
+
+  /// Heures de marche relevées de chaque clim et réglages de coût.
+  AcRuns get runs => _runs;
 
   AcStatus? statusOf(String pHost) => _status[pHost];
 
@@ -40,6 +50,7 @@ class AcController extends ChangeNotifier {
   Stream<String> discover() => _link.discover();
 
   Future<void> load() async {
+    _runs = await _runsStore.load();
     _units = await _store.load();
     notifyListeners();
   }
@@ -50,6 +61,38 @@ class AcController extends ChangeNotifier {
     for (final vUnit in _units) {
       await _read(vUnit.host);
     }
+    await _recordRuns();
+    notifyListeners();
+  }
+
+  /// Note l'état de marche de chaque clim qui a répondu.
+  Future<void> _recordRuns() async {
+    final vNow = _clock();
+    var vNext = _runs;
+    for (final vUnit in _units) {
+      final vControl = _status[vUnit.host]?.state?.control;
+      if (vControl != null) {
+        vNext = vNext.record(vUnit.host, vNow, pOn: vControl.power);
+      }
+    }
+    if (!identical(vNext, _runs)) {
+      _runs = vNext;
+      await _runsStore.save(_runs);
+    }
+  }
+
+  /// Range la puissance de chaque clim (kW), le prix du kWh et le budget mensuel, tous facultatifs.
+  Future<void> setHeating({
+    required Map<String, double> pKwByHost,
+    required double? pPricePerKwh,
+    required double? pMonthlyBudget,
+  }) async {
+    _runs = _runs.withSettings(
+      pKwByHost: pKwByHost,
+      pPricePerKwh: pPricePerKwh,
+      pMonthlyBudget: pMonthlyBudget,
+    );
+    await _runsStore.save(_runs);
     notifyListeners();
   }
 
