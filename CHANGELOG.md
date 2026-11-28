@@ -8,6 +8,7 @@
 
 ### Ajouté
 
+- Analyses dans le détail d'un capteur, sur les trente derniers jours : heures de confort (18 à 24 °C, 40 à 60 %), eau dans l'air en g/m³, risque de moisissure d'après la plus longue période à 70 % d'humidité, capteur figé ou saut de valeur
 - La maison (bouton « La maison » de la liste des capteurs) : lieu saisi à la main (nom, latitude, longitude, sans GPS) pour les analyses avec la météo extérieure, rangé dans `maison.json`
 - Emplacement des capteurs : pièce, niveau (sous-sol à combles) ou extérieur, choisi depuis le détail du capteur ; la liste est groupée par niveau, l'extérieur à part
 - Capteurs nommables : un crayon dans le détail d'un capteur donne le nom de l'endroit (« Chambre des enfants »). Le nom s'affiche dans la liste, l'affichage mural et le choix du capteur d'une clim ; l'identifiant d'origine reste celui des pièces et des règles. Noms rangés dans `noms-capteurs.json`, hors du fichier d'échange
