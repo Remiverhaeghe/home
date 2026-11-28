@@ -63,8 +63,14 @@ void main() {
     });
 
     test('quatre pièces par page, une page de plus au-delà', () {
-      expect(_text(buildReportPdf([for (var i = 0; i < 4; i++) _report('P$i')], _now)), contains('/Count 1'));
-      expect(_text(buildReportPdf([for (var i = 0; i < 5; i++) _report('P$i')], _now)), contains('/Count 2'));
+      expect(
+        _text(buildReportPdf([for (var i = 0; i < 4; i++) _report('P$i')], _now)),
+        contains('/Count 1'),
+      );
+      expect(
+        _text(buildReportPdf([for (var i = 0; i < 5; i++) _report('P$i')], _now)),
+        contains('/Count 2'),
+      );
     });
 
     test('sans pièce, le PDF garde une page avec le titre', () {
@@ -80,11 +86,21 @@ void main() {
       expect(vText, contains('Pas de relev\xE9 sur les 14 derniers jours.'));
     });
 
-    test('parenthèses et antislash du nom sont protégés, les caractères hors Latin-1 remplacés', () {
-      final vText = _text(buildReportPdf([_report(r'Salle (est) \ coin’s ☃')], _now));
+    test(
+      'parenthèses et antislash du nom sont protégés, les caractères hors Latin-1 remplacés',
+      () {
+        final vText = _text(buildReportPdf([_report(r'Salle (est) \ coin’s ☃')], _now));
 
-      expect(vText, contains(r'(Salle \(est\) \\ coin' "'" r's ?)'));
-    });
+        expect(
+          vText,
+          contains(
+            r'(Salle \(est\) \\ coin'
+            "'"
+            r's ?)',
+          ),
+        );
+      },
+    );
 
     test('une seule journée de relevés ne fait pas de courbe mais ne plante pas', () {
       final vDays = [DayAverage(day: DateTime(2026, 12, 14), temp: 20, humidity: 50)];
@@ -96,38 +112,43 @@ void main() {
   group('bilans des pièces', () {
     Sensor sensor(String pName, List<(DateTime, double, double)> pValues) => Sensor(
       name: pName,
-      readings: [for (final (vAt, vTemp, vHum) in pValues) Reading(at: vAt, temp: vTemp, humidity: vHum)],
+      readings: [
+        for (final (vAt, vTemp, vHum) in pValues) Reading(at: vAt, temp: vTemp, humidity: vHum),
+      ],
     );
 
-    test('les extrêmes regroupent les capteurs de la pièce et ignorent ce qui date de plus de 14 jours', () {
-      final vSensors = [
-        sensor('A', [
-          (DateTime(2026, 11, 1), 5, 90),
-          (DateTime(2026, 12, 10), 18, 45),
-          (DateTime(2026, 12, 14, 8), 21, 50),
-        ]),
-        sensor('B', [(DateTime(2026, 12, 12), 23, 61)]),
-        sensor('Dehors', [(DateTime(2026, 12, 14), -3, 80)]),
-      ];
-      const vHouse = House(
-        places: {
-          'A': SensorPlace(room: 'Salon', floor: 0),
-          'B': SensorPlace(room: 'Salon', floor: 0),
-          'Dehors': SensorPlace(outdoor: true),
-        },
-      );
+    test(
+      'les extrêmes regroupent les capteurs de la pièce et ignorent ce qui date de plus de 14 jours',
+      () {
+        final vSensors = [
+          sensor('A', [
+            (DateTime(2026, 11, 1), 5, 90),
+            (DateTime(2026, 12, 10), 18, 45),
+            (DateTime(2026, 12, 14, 8), 21, 50),
+          ]),
+          sensor('B', [(DateTime(2026, 12, 12), 23, 61)]),
+          sensor('Dehors', [(DateTime(2026, 12, 14), -3, 80)]),
+        ];
+        const vHouse = House(
+          places: {
+            'A': SensorPlace(room: 'Salon', floor: 0),
+            'B': SensorPlace(room: 'Salon', floor: 0),
+            'Dehors': SensorPlace(outdoor: true),
+          },
+        );
 
-      final vReports = buildRoomReports(vSensors, vHouse, _now);
+        final vReports = buildRoomReports(vSensors, vHouse, _now);
 
-      expect(vReports, hasLength(1));
-      final vSalon = vReports.single;
-      expect(vSalon.room, 'Salon');
-      expect(vSalon.minTemp, 18);
-      expect(vSalon.maxTemp, 23);
-      expect(vSalon.minHumidity, 45);
-      expect(vSalon.maxHumidity, 61);
-      expect(vSalon.days, hasLength(3));
-    });
+        expect(vReports, hasLength(1));
+        final vSalon = vReports.single;
+        expect(vSalon.room, 'Salon');
+        expect(vSalon.minTemp, 18);
+        expect(vSalon.maxTemp, 23);
+        expect(vSalon.minHumidity, 45);
+        expect(vSalon.maxHumidity, 61);
+        expect(vSalon.days, hasLength(3));
+      },
+    );
 
     test('une pièce dont les relevés sont trop anciens garde ses mesures sans extrêmes', () {
       final vSensors = [

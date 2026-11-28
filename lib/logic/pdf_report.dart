@@ -222,9 +222,7 @@ Uint8List buildReportPdf(List<RoomReport> pRooms, DateTime pNow) {
   for (final vOffset in vOffsets) {
     vWrite('${vOffset.toString().padLeft(10, '0')} 00000 n \n');
   }
-  vWrite(
-    'trailer\n<< /Size ${vObjects.length + 1} /Root 1 0 R >>\nstartxref\n$vXref\n%%EOF\n',
-  );
+  vWrite('trailer\n<< /Size ${vObjects.length + 1} /Root 1 0 R >>\nstartxref\n$vXref\n%%EOF\n');
 
   return vOut.toBytes();
 }

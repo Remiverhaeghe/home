@@ -109,9 +109,7 @@ void main() {
       final (vSensors, vHouse) = await controllers();
 
       await pTester.pumpWidget(
-        localized(
-          RoomsScreen(sensors: vSensors, house: vHouse, saveFile: (_, _) async => false),
-        ),
+        localized(RoomsScreen(sensors: vSensors, house: vHouse, saveFile: (_, _) async => false)),
       );
       await pTester.tap(find.byTooltip('Exporter le bilan en PDF'));
       await pTester.pump();
@@ -130,7 +128,9 @@ void main() {
       );
 
       expect(
-        pTester.widget<IconButton>(find.widgetWithIcon(IconButton, Icons.picture_as_pdf_outlined)).onPressed,
+        pTester
+            .widget<IconButton>(find.widgetWithIcon(IconButton, Icons.picture_as_pdf_outlined))
+            .onPressed,
         isNull,
       );
     });
