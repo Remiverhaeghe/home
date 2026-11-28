@@ -1,0 +1,1 @@
+Écran du plan découpé : la carte d'une pièce et les sections du seuil de froid, de l'humidité et du résumé du matin ont chacune leur fichier (`lib/ui/plan_*.dart`), sans changement de comportement. `plan_screen.dart` passe de 462 à 260 lignes.

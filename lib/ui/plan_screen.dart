@@ -12,9 +12,12 @@ import '../state/pellet_controller.dart';
 import '../state/plan_controller.dart';
 import '../state/sensors_controller.dart';
 import '../storage/background_files.dart';
-import '../storage/plan_store.dart';
 import 'boost_dialog.dart';
 import 'heating_report_screen.dart';
+import 'plan_humidity_section.dart';
+import 'plan_room_card.dart';
+import 'plan_stove_cold_section.dart';
+import 'plan_summary_section.dart';
 import 'rules_screen.dart';
 import 'schedule_screen.dart';
 
@@ -31,7 +34,6 @@ Future<DateTimeRange?> pickAbsence(BuildContext pContext) {
   );
 }
 
-const _step = 0.5;
 const _minTarget = 10.0;
 const _maxTarget = 30.0;
 
@@ -157,7 +159,7 @@ class PlanScreen extends StatelessWidget {
                 Text(vTexts.planNoUnits)
               else ...[
                 for (final vUnit in ac.units)
-                  _RoomCard(
+                  RoomCard(
                     unit: vUnit,
                     targets: plan.roomOf(vUnit.host)?.targets ?? const RoomTargets(),
                     texts: vTexts,
@@ -201,9 +203,9 @@ class PlanScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              _StoveColdSection(plan: plan),
+              StoveColdSection(plan: plan),
               const SizedBox(height: 16),
-              _HumiditySection(plan: plan),
+              HumiditySection(plan: plan),
               const SizedBox(height: 24),
               Text(vTexts.planVacationTitle, style: Theme.of(pContext).textTheme.titleMedium),
               const SizedBox(height: 8),
@@ -248,215 +250,11 @@ class PlanScreen extends StatelessWidget {
                     ),
                     title: Text(_alertText(vTexts, vAlert, vNumber)),
                   ),
-              if (files != null) ...[const SizedBox(height: 24), _SummarySection(files: files!)],
+              if (files != null) ...[const SizedBox(height: 24), SummarySection(files: files!)],
             ],
           );
         },
       ),
-    );
-  }
-}
-
-class _RoomCard extends StatelessWidget {
-  const _RoomCard({
-    required this.unit,
-    required this.targets,
-    required this.texts,
-    required this.number,
-    required this.profileName,
-    required this.onChange,
-    required this.onSchedule,
-    required this.onBoost,
-    required this.boostUntil,
-  });
-
-  final AcUnit unit;
-  final RoomTargets targets;
-  final AppLocalizations texts;
-  final NumberFormat number;
-  final String Function(ProfileKind) profileName;
-  final void Function(ProfileKind, double) onChange;
-  final VoidCallback onSchedule;
-  final VoidCallback onBoost;
-
-  /// Fin du coup de chaud en cours, null s'il n'y en a pas.
-  final DateTime? boostUntil;
-
-  @override
-  Widget build(BuildContext pContext) => Card(
-    margin: const EdgeInsets.only(bottom: 12),
-    child: Padding(
-      padding: const EdgeInsets.all(12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(unit.name, style: Theme.of(pContext).textTheme.titleMedium),
-          for (final vProfile in ProfileKind.values)
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    texts.planTarget(profileName(vProfile), number.format(targets.of(vProfile))),
-                  ),
-                ),
-                IconButton(
-                  tooltip: texts.planLower(profileName(vProfile)),
-                  icon: const Icon(Icons.remove),
-                  onPressed: () => onChange(vProfile, -_step),
-                ),
-                IconButton(
-                  tooltip: texts.planRaise(profileName(vProfile)),
-                  icon: const Icon(Icons.add),
-                  onPressed: () => onChange(vProfile, _step),
-                ),
-              ],
-            ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton.icon(
-              onPressed: onBoost,
-              icon: const Icon(Icons.hot_tub_outlined),
-              label: Text(
-                boostUntil == null
-                    ? texts.boostOpen
-                    : texts.boostActive(DateFormat.Hm().format(boostUntil!)),
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton.icon(
-              onPressed: onSchedule,
-              icon: const Icon(Icons.calendar_month),
-              label: Text(texts.scheduleOpen),
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
-/// Seuil de froid : sous cette température, la clim peut chauffer en plus du poêle.
-class _StoveColdSection extends StatefulWidget {
-  const _StoveColdSection({required this.plan});
-
-  final PlanController plan;
-
-  @override
-  State<_StoveColdSection> createState() => _StoveColdSectionState();
-}
-
-class _StoveColdSectionState extends State<_StoveColdSection> {
-  double? _dragging;
-
-  @override
-  Widget build(BuildContext pContext) {
-    final vTexts = AppLocalizations.of(pContext);
-    final vNumber = NumberFormat('0.0', Localizations.localeOf(pContext).toString());
-    final vValue = _dragging ?? widget.plan.stoveColdBelow;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(vTexts.planStoveTitle, style: Theme.of(pContext).textTheme.titleMedium),
-        const SizedBox(height: 4),
-        Text(vTexts.planStoveHint(vNumber.format(vValue))),
-        Slider(
-          value: vValue,
-          min: stoveColdMin,
-          max: stoveColdMax,
-          divisions: ((stoveColdMax - stoveColdMin) * 2).round(),
-          label: '${vNumber.format(vValue)} °C',
-          onChanged: (pNew) => setState(() => _dragging = pNew),
-          onChangeEnd: (pNew) async {
-            await widget.plan.setStoveColdBelow(pNew);
-            if (mounted) {
-              setState(() => _dragging = null);
-            }
-          },
-        ),
-      ],
-    );
-  }
-}
-
-/// Interrupteur du résumé du matin, envoyé par le service d'arrière-plan.
-class _SummarySection extends StatefulWidget {
-  const _SummarySection({required this.files});
-
-  final BackgroundFiles files;
-
-  @override
-  State<_SummarySection> createState() => _SummarySectionState();
-}
-
-class _SummarySectionState extends State<_SummarySection> {
-  late Future<bool> _enabled = widget.files.summaryEnabled();
-
-  @override
-  Widget build(BuildContext pContext) {
-    final vTexts = AppLocalizations.of(pContext);
-
-    return FutureBuilder<bool>(
-      future: _enabled,
-      builder: (pContext, pSnapshot) => SwitchListTile(
-        contentPadding: EdgeInsets.zero,
-        title: Text(vTexts.planSummaryTitle),
-        subtitle: Text(vTexts.planSummaryHint),
-        value: pSnapshot.data ?? false,
-        onChanged: (pOn) async {
-          await widget.files.setSummaryEnabled(pOn: pOn);
-          if (mounted) {
-            setState(() {
-              _enabled = widget.files.summaryEnabled();
-            });
-          }
-        },
-      ),
-    );
-  }
-}
-
-/// Seuil d'humidité des alertes.
-class _HumiditySection extends StatefulWidget {
-  const _HumiditySection({required this.plan});
-
-  final PlanController plan;
-
-  @override
-  State<_HumiditySection> createState() => _HumiditySectionState();
-}
-
-class _HumiditySectionState extends State<_HumiditySection> {
-  double? _dragging;
-
-  @override
-  Widget build(BuildContext pContext) {
-    final vTexts = AppLocalizations.of(pContext);
-    final vValue = _dragging ?? widget.plan.humidityAlertAt;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(vTexts.planHumidityTitle, style: Theme.of(pContext).textTheme.titleMedium),
-        const SizedBox(height: 4),
-        Text(vTexts.planHumidityHint(vValue.round().toString())),
-        Slider(
-          value: vValue,
-          min: humidityAlertMin,
-          max: humidityAlertMax,
-          divisions: (humidityAlertMax - humidityAlertMin).round(),
-          label: '${vValue.round()} %',
-          onChanged: (pNew) => setState(() => _dragging = pNew),
-          onChangeEnd: (pNew) async {
-            await widget.plan.setHumidityAlertAt(pNew);
-            if (mounted) {
-              setState(() => _dragging = null);
-            }
-          },
-        ),
-      ],
     );
   }
 }
