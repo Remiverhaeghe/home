@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../l10n/gen/app_localizations.dart';
 import '../logic/ac_units.dart';
 import '../logic/comfort.dart';
+import '../logic/units.dart';
 
 /// Pas de réglage d'une température souhaitée, en °C.
 const _step = 0.5;
@@ -15,7 +16,7 @@ class RoomCard extends StatelessWidget {
     required this.unit,
     required this.targets,
     required this.texts,
-    required this.number,
+    required this.units,
     required this.profileName,
     required this.onChange,
     required this.onSchedule,
@@ -26,7 +27,7 @@ class RoomCard extends StatelessWidget {
   final AcUnit unit;
   final RoomTargets targets;
   final AppLocalizations texts;
-  final NumberFormat number;
+  final Units units;
   final String Function(ProfileKind) profileName;
   final void Function(ProfileKind, double) onChange;
   final VoidCallback onSchedule;
@@ -49,7 +50,7 @@ class RoomCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    texts.planTarget(profileName(vProfile), number.format(targets.of(vProfile))),
+                    texts.planTarget(profileName(vProfile), units.temp(targets.of(vProfile))),
                   ),
                 ),
                 IconButton(
