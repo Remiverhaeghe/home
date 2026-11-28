@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -53,5 +55,28 @@ void main() {
 
     expect(trimLog(vLog, pMax: 3), 'l7\nl8\nl9');
     expect(trimLog('a\nb', pMax: 3), 'a\nb');
+  });
+
+  group('tours manqués en arrière-plan', () {
+    test('l\'entrée désigne le capteur par son rang, sans son nom', () {
+      final vEntry = backgroundMissEntry(
+        DateTime(2026, 12, 7, 9, 5),
+        2,
+        3,
+        TimeoutException('pas de mesure'),
+      );
+
+      expect(
+        vEntry,
+        '2026-12-07 09:05 Relevé en arrière-plan : capteur 2 sans mesure depuis 3 tours '
+        '(TimeoutException)',
+      );
+    });
+
+    test('on écrit au troisième tour manqué, puis une fois par heure', () {
+      final vLogged = [for (var vMisses = 1; vMisses <= 40; vMisses++) if (shouldLogMiss(vMisses)) vMisses];
+
+      expect(vLogged, [3, 12, 24, 36]);
+    });
   });
 }

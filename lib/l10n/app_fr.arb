@@ -118,7 +118,7 @@
   "planAlertsNone": "Aucune alerte.",
   "planAlertFrost": "{sensor} : risque de gel, {value} °C",
   "planAlertHumidity": "{sensor} : humidité haute, {value} %",
-  "planAlertSilent": "{sensor} : aucun relevé depuis plus de 30 minutes",
+  "planAlertSilent": "{sensor} : aucun relevé depuis plus d'une heure",
   "@planTarget": {"placeholders": {"profile": {"type": "String"}, "value": {"type": "String"}}},
   "@planLower": {"placeholders": {"profile": {"type": "String"}}},
   "@planRaise": {"placeholders": {"profile": {"type": "String"}}},

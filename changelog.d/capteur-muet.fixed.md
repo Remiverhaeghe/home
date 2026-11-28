@@ -1,0 +1,1 @@
+Capteur muet : l'alerte ne part plus qu'après une heure sans relevé (30 minutes avant, soit six tours de relevé manqués) ; le service retente une fois un capteur qui ne répond pas, attend 30 s sa mesure, et note au journal « À propos » (sans nom de capteur) quand un capteur suivi manque trois tours d'affilée, puis une fois par heure.

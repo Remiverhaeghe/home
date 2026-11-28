@@ -41,6 +41,21 @@ String errorEntry(DateTime pAt, Object pError, StackTrace? pStack) {
   return vLines.join('\n');
 }
 
+/// Entrée du journal pour un capteur suivi qui ne donne plus de mesure en arrière-plan. Le capteur
+/// n'est désigné que par son rang : son nom reste dans la maison, pas dans un fichier partageable.
+String backgroundMissEntry(DateTime pAt, int pRank, int pMisses, Object pError) {
+  final vDate =
+      '${pAt.year}-${pAt.month.toString().padLeft(2, '0')}-${pAt.day.toString().padLeft(2, '0')} '
+      '${pAt.hour.toString().padLeft(2, '0')}:${pAt.minute.toString().padLeft(2, '0')}';
+
+  return '$vDate Relevé en arrière-plan : capteur $pRank sans mesure depuis $pMisses tours '
+      '(${pError.runtimeType})';
+}
+
+/// Faut-il écrire au journal à ce nombre de tours manqués d'affilée ? Au troisième, puis une fois
+/// par heure (12 tours de 5 minutes) : assez pour comprendre, sans noyer les vraies erreurs.
+bool shouldLogMiss(int pMisses) => pMisses == 3 || (pMisses > 3 && pMisses % 12 == 0);
+
 /// Ne garde que les [maxLogLines] dernières lignes.
 String trimLog(String pLog, {int pMax = maxLogLines}) {
   final vLines = pLog.split('\n');
