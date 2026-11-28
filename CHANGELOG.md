@@ -9,6 +9,7 @@
 
 ### Ajouté
 
+- Captures d'écran d'une maison fictive générées par la CI (workflow Captures, `test/captures`) : liste des capteurs, courbes d'un capteur, écran des pièces. Aucune donnée réelle.
 - Seuil de froid réglable (écran du plan, de 10 à 22 °C par demi-degré) : sous ce seuil la clim peut chauffer en plus du poêle ; le réglage est dans la sauvegarde.
 - Mode vacances et poêle : pendant l'absence (hors remontée avant le retour), un poêle à pellets resté allumé est éteint par l'appli ouverte.
 - Poêle et clim sans conflit : quand le poêle à pellets marche, le plan n'allume plus la clim en chauffage et l'éteint si elle chauffait, sauf s'il fait moins de 16 °C dans la pièce, où les deux peuvent tourner ensemble.
