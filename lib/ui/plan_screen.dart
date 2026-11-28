@@ -224,6 +224,10 @@ class PlanScreen extends StatelessWidget {
                     ),
                     title: Text(_alertText(vTexts, vAlert, vNumber)),
                   ),
+              if (files != null) ...[
+                const SizedBox(height: 24),
+                _SummarySection(files: files!),
+              ],
             ],
           );
         },
