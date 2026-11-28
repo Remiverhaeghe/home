@@ -18,10 +18,7 @@ class PeriodsSection extends StatelessWidget {
   Future<void> _split(BuildContext pContext, ReadingPeriod pPeriod) async {
     final vTexts = AppLocalizations.of(pContext);
     final vMessenger = ScaffoldMessenger.of(pContext);
-    final vName = await showDialog<String>(
-      context: pContext,
-      builder: (_) => const _SplitDialog(),
-    );
+    final vName = await showDialog<String>(context: pContext, builder: (_) => const _SplitDialog());
     if (vName == null) {
       return;
     }
@@ -56,9 +53,7 @@ class PeriodsSection extends StatelessWidget {
           ListTile(
             contentPadding: EdgeInsets.zero,
             title: Text(vTexts.periodsDates(vDate.format(vPeriod.from), vDate.format(vPeriod.to))),
-            subtitle: Text(
-              vTexts.periodsStats(vPeriod.count, vNumber.format(vPeriod.avgTemp)),
-            ),
+            subtitle: Text(vTexts.periodsStats(vPeriod.count, vNumber.format(vPeriod.avgTemp))),
             trailing: TextButton(
               onPressed: () => _split(pContext, vPeriod),
               child: Text(vTexts.periodsSplit),

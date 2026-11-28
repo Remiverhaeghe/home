@@ -63,8 +63,16 @@ void main() {
   test('la période peut rejoindre un capteur déjà existant', () async {
     await vController.importReadings('Bureau', [_at(DateTime(2025, 3, 1), 8)]);
 
-    await vController.splitPeriod('Chambre', DateTime(2025, 1, 19), DateTime(2025, 1, 20), 'bureau');
+    await vController.splitPeriod(
+      'Chambre',
+      DateTime(2025, 1, 19),
+      DateTime(2025, 1, 20),
+      'bureau',
+    );
 
-    expect(vController.sensors.firstWhere((pSensor) => pSensor.name == 'Bureau').readings, hasLength(3));
+    expect(
+      vController.sensors.firstWhere((pSensor) => pSensor.name == 'Bureau').readings,
+      hasLength(3),
+    );
   });
 }
