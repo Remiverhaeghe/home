@@ -32,6 +32,7 @@ import 'compare_screen.dart';
 import 'house_screen.dart';
 import 'pellet_screen.dart';
 import 'relay_screen.dart';
+import 'rooms_screen.dart';
 import 'sensor_detail_screen.dart';
 import 'theme.dart';
 import 'wall_display.dart';
@@ -211,6 +212,21 @@ class SensorsScreen extends StatelessWidget {
                     pickFile: pickFile,
                     saveFile: saveFile,
                     onRestored: onRestored!,
+                  ),
+                ),
+              ),
+            ),
+          if (houseController != null)
+            IconButton(
+              tooltip: vTexts.roomsOpen,
+              icon: const Icon(Icons.meeting_room_outlined),
+              onPressed: () => Navigator.push<void>(
+                pContext,
+                MaterialPageRoute(
+                  builder: (_) => RoomsScreen(
+                    sensors: controller,
+                    house: houseController!,
+                    weather: weatherController,
                   ),
                 ),
               ),

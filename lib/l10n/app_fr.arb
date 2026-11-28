@@ -683,5 +683,21 @@
         "type": "String"
       }
     }
-  }
+  },
+  "roomsOpen": "Les pièces",
+  "roomsTitle": "Les pièces",
+  "roomsEmpty": "Range les capteurs dans des pièces (écran de la liste, bouton d'emplacement) pour les voir ici.",
+  "roomsColdest": "La plus fraîche",
+  "roomsHumidest": "La plus humide",
+  "roomsRange": "Humidité visée : {min} à {max} %",
+  "@roomsRange": {"placeholders": {"min": {"type": "int"}, "max": {"type": "int"}}},
+  "roomsReading": "{temp} °C · {humidity} %",
+  "@roomsReading": {"placeholders": {"temp": {"type": "String"}, "humidity": {"type": "String"}}},
+  "adviceTitle": "Conseils",
+  "adviceVentilate": "Aère {room} : l'air du dehors contient moins d'eau.",
+  "@adviceVentilate": {"placeholders": {"room": {"type": "String"}}},
+  "adviceKeepClosed": "Garde {room} fermée : l'air du dehors ne l'assécherait pas.",
+  "@adviceKeepClosed": {"placeholders": {"room": {"type": "String"}}},
+  "adviceDryAir": "L'air de {room} est sec.",
+  "@adviceDryAir": {"placeholders": {"room": {"type": "String"}}}
 }

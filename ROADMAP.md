@@ -39,3 +39,5 @@ Home sur un écran dans la pièce principale, avec une vue 3D de la maison et la
 - [ ] Unités (°F, 12 h) : les textes écrivent « °C » en dur dans une centaine d'endroits ; à faire d'un bloc avec un formateur unique
 - [x] Deux capteurs sur les mêmes courbes, notes datées avec effet avant et après
 - [ ] Bilan mensuel en PDF : demande une bibliothèque PDF à ajouter et à vérifier en CI
+- [x] Écran des pièces : mesure du moment, pièce la plus fraîche et la plus humide, humidité visée par pièce, conseils d'aération
+- [ ] Écran À propos avec journal d'erreurs partageable : demande un journal local et un partage de fichier à ajouter

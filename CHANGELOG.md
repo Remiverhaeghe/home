@@ -8,6 +8,7 @@
 
 ### Ajouté
 
+- Les pièces (bouton « Les pièces » de la liste des capteurs) : température et humidité du moment par pièce, pièce la plus fraîche et la plus humide, humidité visée (40 à 60 %, 45 à 70 % pour une cave ou un garage) et conseils : aérer quand l'air du dehors contient moins d'eau, garder fermé sinon, air sec signalé. Les conseils d'aération demandent la météo extérieure.
 - Comparer deux capteurs (bouton de la liste des capteurs, dès qu'il y en a deux) : température et humidité moyennes par jour sur les mêmes courbes, une seule échelle, et l'écart moyen sur les jours communs
 - Notes datées (détail d'un capteur) : « isolation posée », « fenêtre changée », pour un capteur ou toute la maison, avec l'évolution de la température et de l'humidité sur les deux semaines d'après par rapport aux deux semaines d'avant. Rangées dans `notes.json`, reprises par la sauvegarde
 - Affichage (bouton palette de la liste des capteurs) : thème clair, sombre ou celui du téléphone, et quatre tailles de texte, de normale à maximale, appliqués à toute l'appli. Réglages rangés dans `apparence.json`, repris par la sauvegarde. Le thème sombre reste celui de départ
