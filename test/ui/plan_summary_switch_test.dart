@@ -49,7 +49,9 @@ void main() {
     await pTester.ensureVisible(vSwitch);
     expect(pTester.widget<Switch>(vSwitch).value, isFalse);
 
-    await pTester.tap(vSwitch);
+    // L'écriture du fichier est réelle : elle se lance hors du temps simulé du test
+    final vTile = pTester.widget<SwitchListTile>(find.byType(SwitchListTile));
+    await pTester.runAsync(() async => vTile.onChanged!(true));
     var vOn = false;
     for (var vTry = 0; vTry < 20 && !vOn; vTry++) {
       await pTester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 20)));
