@@ -96,7 +96,11 @@ void main() {
     await pTester.runAsync(() async => pTester.widget<DropdownButton<int>>(vChoice).onChanged!(10));
     expect(await pTester.runAsync(vFiles.summaryStartHour), 10);
     // L'écran relit les fichiers : attendre que le nouveau choix s'affiche
-    for (var vTry = 0; vTry < 40 && pTester.widget<DropdownButton<int>>(vChoice).value != 10; vTry++) {
+    for (
+      var vTry = 0;
+      vTry < 40 && pTester.widget<DropdownButton<int>>(vChoice).value != 10;
+      vTry++
+    ) {
       await pTester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 25)));
       await pTester.pump();
     }
