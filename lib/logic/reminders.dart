@@ -22,8 +22,7 @@ class Reminder {
   bool isDue(DateTime pNow) => !pNow.isBefore(dueOn);
 
   /// Jours restants avant l'échéance, négatif quand elle est dépassée.
-  int daysLeft(DateTime pNow) =>
-      dueOn.difference(DateTime(pNow.year, pNow.month, pNow.day)).inDays;
+  int daysLeft(DateTime pNow) => dueOn.difference(DateTime(pNow.year, pNow.month, pNow.day)).inDays;
 
   Reminder done(DateTime pNow) => Reminder(name: name, everyDays: everyDays, lastDone: pNow);
 
