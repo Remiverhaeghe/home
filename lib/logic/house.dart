@@ -32,9 +32,27 @@ double? parseCeiling(String pText) {
   return vValue != null && vValue >= ceilingMin && vValue <= ceilingMax ? vValue : null;
 }
 
+/// Surface acceptée pour une pièce, en m².
+const areaMin = 1.0;
+const areaMax = 500.0;
+
+/// Surface lue dans un champ de saisie, null si vide ou hors des bornes.
+double? parseArea(String pText) {
+  final vValue = double.tryParse(pText.trim().replaceAll(',', '.'));
+
+  return vValue != null && vValue >= areaMin && vValue <= areaMax ? vValue : null;
+}
+
+/// Énergie pour chauffer 1 m³ d'air de 1 °C : masse volumique (1,2 kg/m³) fois chaleur massique
+/// (1005 J/kg/K), en Wh. Une constante physique ; elle ne compte ni les murs ni le mobilier.
+const airHeatWhPerM3K = 0.335;
+
+/// Énergie en kWh pour monter l'air d'une pièce de [pVolume] m³ de [pDegrees] °C.
+double airEnergyKwh(double pVolume, double pDegrees) => pVolume * pDegrees * airHeatWhPerM3K / 1000;
+
 /// Où se trouve un capteur : la pièce, le niveau, ou dehors.
 class SensorPlace {
-  const SensorPlace({this.room = '', this.floor, this.outdoor = false, this.ceiling});
+  const SensorPlace({this.room = '', this.floor, this.outdoor = false, this.ceiling, this.area});
 
   final String room;
 
@@ -46,7 +64,15 @@ class SensorPlace {
   /// lit moins que le haut d'une pièce de 5 ou 6 m), null quand elle n'est pas dite.
   final double? ceiling;
 
-  bool get isEmpty => room.trim().isEmpty && floor == null && !outdoor && ceiling == null;
+  /// Surface au sol en m², null quand elle n'est pas dite.
+  final double? area;
+
+  /// Volume d'air en m³ : surface fois hauteur moyenne ; null s'il manque l'une des deux. Sous un
+  /// plafond en pente, la hauteur donnée est la moyenne.
+  double? get volume => area == null || ceiling == null ? null : area! * ceiling!;
+
+  bool get isEmpty =>
+      room.trim().isEmpty && floor == null && !outdoor && ceiling == null && area == null;
 }
 
 class House {
@@ -72,6 +98,7 @@ class House {
         floor: pPlace.outdoor ? null : pPlace.floor,
         outdoor: pPlace.outdoor,
         ceiling: pPlace.ceiling,
+        area: pPlace.area,
       );
     }
 
@@ -129,6 +156,7 @@ String houseJson(House pHouse) => jsonEncode({
         'floor': vEntry.value.floor,
         'outdoor': vEntry.value.outdoor,
         if (vEntry.value.ceiling != null) 'ceiling': vEntry.value.ceiling,
+        if (vEntry.value.area != null) 'area': vEntry.value.area,
       },
   },
 });
@@ -172,11 +200,13 @@ House parseHouse(String pText) {
       final vRoom = vValue['room'];
       final vFloor = vValue['floor'];
       final vCeiling = vValue['ceiling'];
+      final vArea = vValue['area'];
       final vPlace = SensorPlace(
         room: vRoom is String ? vRoom : '',
         floor: vFloor is int && floorLevels.contains(vFloor) ? vFloor : null,
         outdoor: vValue['outdoor'] == true,
         ceiling: vCeiling is num ? parseCeiling('${vCeiling.toDouble()}') : null,
+        area: vArea is num ? parseArea('${vArea.toDouble()}') : null,
       );
       if (!vPlace.isEmpty) {
         vPlaces[vEntry.key] = vPlace;

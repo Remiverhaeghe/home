@@ -88,6 +88,37 @@ void main() {
     expect(vStore.saved.placeOf('Haut').room, 'Salon');
   });
 
+  testWidgets('hauteur et surface donnent le volume et l\'énergie de l\'air', (pTester) async {
+    final vSensors = SensorsController(MemorySensorStore([const Sensor(name: 'Haut')]));
+    await vSensors.load();
+    final vStore = MemoryHouseStore();
+    final vHouse = HouseController(vStore);
+
+    await pTester.pumpWidget(
+      localized(SensorsScreen(controller: vSensors, houseController: vHouse)),
+    );
+    await pTester.pumpAndSettle();
+    await pTester.tap(find.text('Haut'));
+    await pTester.pumpAndSettle();
+    await pTester.tap(find.byTooltip('Emplacement'));
+    await pTester.pumpAndSettle();
+
+    expect(find.byKey(const Key('place-volume')), findsNothing);
+
+    await pTester.enterText(find.byKey(const Key('place-ceiling')), '5,5');
+    await pTester.enterText(find.byKey(const Key('place-area')), '20');
+    await pTester.pump();
+
+    expect(find.textContaining('Volume d\'air : environ 110 m³'), findsOneWidget);
+    expect(find.textContaining('environ 37 Wh'), findsOneWidget);
+
+    await pTester.tap(find.widgetWithText(FilledButton, 'Enregistrer'));
+    await pTester.pumpAndSettle();
+
+    expect(vStore.saved.placeOf('Haut').ceiling, 5.5);
+    expect(vStore.saved.placeOf('Haut').area, 20);
+  });
+
   testWidgets('la météo est désactivée au départ, puis récupérée une fois autorisée', (
     pTester,
   ) async {
