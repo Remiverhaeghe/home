@@ -12,9 +12,7 @@ List<Sensor> demoSensors() {
       for (var vStep = 0; vStep < 36; vStep++)
         Reading(
           at: vStart.add(Duration(hours: vStep * 2)),
-          temp: double.parse(
-            (pBase + pSwing * sin(vStep * pi / 6 - pi / 2)).toStringAsFixed(1),
-          ),
+          temp: double.parse((pBase + pSwing * sin(vStep * pi / 6 - pi / 2)).toStringAsFixed(1)),
           humidity: (pHumidity + 6 * cos(vStep * pi / 6)).roundToDouble(),
         ),
     ],
