@@ -1,0 +1,1 @@
+- Calendrier de la maison : jours fériés (calculés, sans réseau) traités comme un samedi ou un dimanche au choix, jours de télétravail avec leurs propres plages dans le planning de chaque pièce, et décision jour par jour (pont, congé) depuis une vue mois. Le calendrier est dans la sauvegarde.

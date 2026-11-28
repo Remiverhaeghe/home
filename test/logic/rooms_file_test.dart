@@ -66,7 +66,7 @@ void main() {
   {"weekdays": [1], "minute": 1440, "profile": "eco"},
   {"weekdays": [1], "minute": -1, "profile": "eco"},
   {"weekdays": "lundi", "minute": 600, "profile": "eco"},
-  {"weekdays": [0, 8], "minute": 600, "profile": "eco"},
+  {"weekdays": [0, 9], "minute": 600, "profile": "eco"},
   {"weekdays": [1, 9], "minute": 600, "profile": "away"}
 ]}]}''';
 

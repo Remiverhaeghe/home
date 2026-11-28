@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import '../logic/alerts.dart';
 import '../logic/automations.dart';
 import '../logic/boost.dart';
+import '../logic/house_calendar.dart';
 import '../logic/comfort.dart';
 import '../logic/daikin.dart';
 import '../logic/plan.dart';
@@ -45,6 +46,9 @@ class PlanController extends ChangeNotifier {
   List<Boost> get boosts => _settings.boosts;
   VacationMode? get vacation => _settings.vacation;
 
+  /// Jours de repos, fériés et télétravail.
+  HouseCalendar get calendar => _settings.calendar;
+
   /// Commandes envoyées lors du dernier passage.
   List<PlanCommand> get applied => List.unmodifiable(_applied);
 
@@ -71,6 +75,7 @@ class PlanController extends ChangeNotifier {
       ],
       rules: rules,
       vacation: vacation,
+      calendar: calendar,
       stoveColdBelow: stoveColdBelow,
       humidityAlertAt: humidityAlertAt,
       boosts: boosts,
@@ -91,6 +96,7 @@ class PlanController extends ChangeNotifier {
       rooms: rooms,
       rules: pRules,
       vacation: vacation,
+      calendar: calendar,
       stoveColdBelow: stoveColdBelow,
       humidityAlertAt: humidityAlertAt,
       boosts: boosts,
@@ -103,6 +109,20 @@ class PlanController extends ChangeNotifier {
       rooms: rooms,
       rules: rules,
       vacation: pVacation,
+      calendar: calendar,
+      stoveColdBelow: stoveColdBelow,
+      humidityAlertAt: humidityAlertAt,
+      boosts: boosts,
+    ),
+  );
+
+  /// Remplace le calendrier de la maison.
+  Future<void> setCalendar(HouseCalendar pCalendar) => _save(
+    PlanSettings(
+      rooms: rooms,
+      rules: rules,
+      vacation: vacation,
+      calendar: pCalendar,
       stoveColdBelow: stoveColdBelow,
       humidityAlertAt: humidityAlertAt,
       boosts: boosts,
@@ -119,6 +139,7 @@ class PlanController extends ChangeNotifier {
         rooms: rooms,
         rules: rules,
         vacation: vacation,
+        calendar: calendar,
         stoveColdBelow: vValue,
         humidityAlertAt: humidityAlertAt,
         boosts: boosts,
@@ -135,6 +156,7 @@ class PlanController extends ChangeNotifier {
         rooms: rooms,
         rules: rules,
         vacation: vacation,
+        calendar: calendar,
         stoveColdBelow: stoveColdBelow,
         boosts: boosts,
         humidityAlertAt: vValue,
@@ -160,6 +182,7 @@ class PlanController extends ChangeNotifier {
         rooms: rooms,
         rules: rules,
         vacation: vacation,
+        calendar: calendar,
         stoveColdBelow: stoveColdBelow,
         humidityAlertAt: humidityAlertAt,
         boosts: [
@@ -181,6 +204,7 @@ class PlanController extends ChangeNotifier {
       rooms: rooms,
       rules: rules,
       vacation: vacation,
+      calendar: calendar,
       stoveColdBelow: stoveColdBelow,
       humidityAlertAt: humidityAlertAt,
       boosts: [
@@ -213,6 +237,7 @@ class PlanController extends ChangeNotifier {
       pRooms: rooms,
       pRules: rules,
       pVacation: vacation,
+      pCalendar: calendar,
       pUnits: vUnits,
       pSensors: _sensors.sensors,
       pControls: vControls,

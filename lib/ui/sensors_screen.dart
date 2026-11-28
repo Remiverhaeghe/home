@@ -27,6 +27,7 @@ import '../state/relay_controller.dart';
 import '../state/sensors_controller.dart';
 import '../storage/background_files.dart';
 import 'about_screen.dart';
+import 'calendar_screen.dart';
 import 'ac_screen.dart';
 import 'live_screen.dart';
 import 'plan_screen.dart';
@@ -228,6 +229,43 @@ class SensorsScreen extends StatelessWidget {
   Widget _moreMenu(BuildContext pContext, AppLocalizations pTexts) {
     final vGroups = <List<_MenuEntry>>[
       [
+        if (houseController != null)
+          _MenuEntry(
+            Icons.meeting_room_outlined,
+            pTexts.roomsOpen,
+            () => _open(
+              pContext,
+              (_) => RoomsScreen(
+                sensors: controller,
+                house: houseController!,
+                weather: weatherController,
+                saveFile: saveFile,
+              ),
+            ),
+          ),
+        if (houseController != null)
+          _MenuEntry(
+            Icons.home_work_outlined,
+            pTexts.houseOpen,
+            () => _open(
+              pContext,
+              (_) => HouseScreen(controller: houseController!, weather: weatherController),
+            ),
+          ),
+        if (planController != null)
+          _MenuEntry(
+            Icons.calendar_month_outlined,
+            pTexts.calendarOpen,
+            () => _open(pContext, (_) => CalendarScreen(plan: planController!)),
+          ),
+        if (controller.sensors.length > 1)
+          _MenuEntry(
+            Icons.compare_arrows,
+            pTexts.compareOpen,
+            () => _open(pContext, (_) => CompareScreen(controller: controller)),
+          ),
+      ],
+      [
         if (acController != null)
           _MenuEntry(
             Icons.ac_unit,
@@ -279,37 +317,6 @@ class SensorsScreen extends StatelessWidget {
                 display: wallDisplay ?? PlatformWallDisplay(),
               ),
             ),
-          ),
-      ],
-      [
-        if (houseController != null)
-          _MenuEntry(
-            Icons.meeting_room_outlined,
-            pTexts.roomsOpen,
-            () => _open(
-              pContext,
-              (_) => RoomsScreen(
-                sensors: controller,
-                house: houseController!,
-                weather: weatherController,
-                saveFile: saveFile,
-              ),
-            ),
-          ),
-        if (houseController != null)
-          _MenuEntry(
-            Icons.home_work_outlined,
-            pTexts.houseOpen,
-            () => _open(
-              pContext,
-              (_) => HouseScreen(controller: houseController!, weather: weatherController),
-            ),
-          ),
-        if (controller.sensors.length > 1)
-          _MenuEntry(
-            Icons.compare_arrows,
-            pTexts.compareOpen,
-            () => _open(pContext, (_) => CompareScreen(controller: controller)),
           ),
       ],
       [

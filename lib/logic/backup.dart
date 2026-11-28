@@ -13,6 +13,7 @@ const backupFileNames = [
   'automatismes.json',
   'reglages-plan.json',
   'vacances.json',
+  'calendrier.json',
   'relais.json',
   'poele.json',
   'marche-poele.json',
