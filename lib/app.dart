@@ -6,7 +6,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'background/alert_notifier.dart';
 import 'background/background_control.dart';
 import 'l10n/gen/app_localizations.dart';
-import 'logic/vacation.dart';
 import 'state/ac_controller.dart';
 import 'state/plan_controller.dart';
 import 'state/house_controller.dart';
