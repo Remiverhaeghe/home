@@ -38,7 +38,9 @@ class _AboutScreenState extends State<AboutScreen> {
 
   Future<void> _clear() async {
     await widget.log.clear();
-    setState(() => _text = widget.log.read());
+    setState(() {
+      _text = widget.log.read();
+    });
   }
 
   @override
