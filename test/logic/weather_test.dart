@@ -84,7 +84,7 @@ void main() {
   });
 
   test('le CSV a des virgules décimales et un point-virgule', () {
-    final vCsv = weatherCsv([Reading(at: DateTime(2026, 11, 1, 10), temp: 5.55, humidity: 80)]);
+    final vCsv = weatherCsv([Reading(at: DateTime(2026, 11, 1, 10), temp: 5.56, humidity: 80)]);
 
     expect(vCsv, 'date;temperature_c;humidite_pct\n2026-11-01T10:00:00.000;5,6;80,0\n');
   });
