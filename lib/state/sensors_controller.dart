@@ -95,7 +95,10 @@ class SensorsController extends ChangeNotifier {
     Duration pScan = const Duration(seconds: 6),
     Duration pWait = const Duration(seconds: 20),
   }) async {
-    final vDevices = await pLink.scan().timeout(pScan, onTimeout: (pSink) => pSink.close()).toList();
+    final vDevices = await pLink
+        .scan()
+        .timeout(pScan, onTimeout: (pSink) => pSink.close())
+        .toList();
     final vResults = await Future.wait([
       for (final vDevice in vDevices) _readOnce(pLink, vDevice, pWait),
     ]);
