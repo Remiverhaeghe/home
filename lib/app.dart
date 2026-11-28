@@ -111,6 +111,13 @@ class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
         for (final vDevice in await vFiles.loadFollowed()) vDevice.name,
       };
     }
+    final vHouse = widget.houseController?.house;
+    if (vHouse != null) {
+      widget.planController!.outdoor = {
+        for (final vEntry in vHouse.places.entries)
+          if (vEntry.value.outdoor) vEntry.key,
+      };
+    }
     final vPellet = widget.pelletController;
     if (vPellet != null) {
       final vOn = await vPellet.refreshAndStopIfAway(widget.planController!.vacation, vNow);

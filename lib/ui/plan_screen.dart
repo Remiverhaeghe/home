@@ -117,6 +117,7 @@ class PlanScreen extends StatelessWidget {
       AlertKind.humidity => pTexts.planAlertHumidity(pAlert.sensorName, pNumber.format(vValue)),
       AlertKind.silent => pTexts.planAlertSilent(pAlert.sensorName),
       AlertKind.stuck => pTexts.planAlertStuck(pAlert.sensorName),
+      AlertKind.ventilate => pTexts.planAlertVentilate(pAlert.sensorName),
     };
   }
 
@@ -158,6 +159,7 @@ class PlanScreen extends StatelessWidget {
             clock(),
             pWatched: plan.watched,
             pHumidityLevel: plan.humidityAlertAt,
+            pOutdoor: plan.outdoor,
           );
           final vDate = DateFormat.yMMMd(vLocale);
 

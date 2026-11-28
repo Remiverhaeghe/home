@@ -13,6 +13,7 @@ import '../storage/ac_store.dart';
 import '../storage/background_files.dart';
 import '../storage/detail_log.dart';
 import '../storage/file_sensor_store.dart';
+import '../storage/house_store.dart';
 import '../storage/pellet_runs_store.dart';
 import '../storage/pellet_store.dart';
 import '../storage/plan_store.dart';
@@ -27,7 +28,8 @@ const appOpenWindow = Duration(minutes: 7);
 /// signalées se retiennent.
 class PlanRunner {
   PlanRunner({required Directory pFolder, required DaikinLink pLink, PelletLink? pPelletLink})
-    : _files = BackgroundFiles(pFolder),
+    : _folder = pFolder,
+      _files = BackgroundFiles(pFolder),
       _sensorFile = FileSensorStore(File('${pFolder.path}/capteurs.json')),
       _sensorStore = MemorySensorStore() {
     _sensors = SensorsController(_sensorStore);
@@ -46,6 +48,7 @@ class PlanRunner {
     }
   }
 
+  final Directory _folder;
   final BackgroundFiles _files;
   final FileSensorStore _sensorFile;
   final MemorySensorStore _sensorStore;
@@ -67,6 +70,11 @@ class PlanRunner {
     await _ac.load();
     await _plan.load();
     _plan.watched = {for (final vDevice in await _files.loadFollowed()) vDevice.name};
+    final vHouse = await FileHouseStore(File('${_folder.path}/maison.json')).load();
+    _plan.outdoor = {
+      for (final vEntry in vHouse.places.entries)
+        if (vEntry.value.outdoor) vEntry.key,
+    };
     final vPellet = _pellet;
     if (vPellet != null) {
       await vPellet.load();
