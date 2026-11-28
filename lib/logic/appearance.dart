@@ -59,7 +59,8 @@ AppearanceSettings parseAppearance(String pText) {
   final vThemeName = vRoot['theme'];
   final vTheme = ThemeChoice.values.where((pChoice) => pChoice.name == vThemeName);
   final vScale = vRoot['textScale'];
-  final vUnit = TemperatureUnit.values.where((pUnit) => pUnit.name == vRoot['temperatureUnit']);
+  final vUnitName = vRoot['temperatureUnit'];
+  final vUnit = TemperatureUnit.values.where((pUnit) => pUnit.name == vUnitName);
 
   return AppearanceSettings(
     theme: vTheme.isEmpty ? ThemeChoice.dark : vTheme.first,
