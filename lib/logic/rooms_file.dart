@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'comfort.dart';
+import 'house_calendar.dart';
 import 'plan.dart';
 
 /// Version du fichier `pieces.json`.
@@ -77,7 +78,10 @@ ScheduleSlot? _parseSlot(Map<String, dynamic> pEntry) {
   if (vDays is! List || vMinute is! int || vMinute < 0 || vMinute > 1439 || vProfile.isEmpty) {
     return null;
   }
-  final vWeekdays = vDays.whereType<int>().where((pDay) => pDay >= 1 && pDay <= 7).toSet();
+  final vWeekdays = vDays
+      .whereType<int>()
+      .where((pDay) => pDay >= 1 && pDay <= remoteDayKey)
+      .toSet();
   if (vWeekdays.isEmpty) {
     return null;
   }

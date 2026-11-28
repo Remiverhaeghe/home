@@ -24,6 +24,7 @@ import 'state/weather_controller.dart';
 import 'state/relay_controller.dart';
 import 'state/sensors_controller.dart';
 import 'storage/ac_runs_store.dart';
+import 'storage/detail_log.dart';
 import 'storage/error_log_store.dart';
 import 'storage/ac_store.dart';
 import 'storage/appearance_store.dart';
@@ -102,6 +103,7 @@ Future<void> main() async {
       relayController: vRelays,
       pelletController: vPellet,
       errorLog: vErrors,
+      detailLog: FileDetailLog(vFolder),
       houseController: vHouse,
       weatherController: vWeather,
       backupFiles: BackupFiles(vFolder),

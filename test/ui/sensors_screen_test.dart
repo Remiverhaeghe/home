@@ -35,7 +35,7 @@ void main() {
     expect(find.text('19,0 °C'), findsOneWidget);
     expect(find.text('55,0 %'), findsOneWidget);
     expect(find.text('Air confortable'), findsOneWidget);
-    expect(find.textContaining('Point de rosée'), findsOneWidget);
+    expect(find.textContaining('Condensation sous'), findsOneWidget);
   });
 
   testWidgets('un air humide ou sec est signalé', (pTester) async {

@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../l10n/gen/app_localizations.dart';
 import '../logic/ac_units.dart';
 import '../logic/comfort.dart';
+import '../logic/house_calendar.dart';
 import '../state/plan_controller.dart';
 
 /// Choix de l'heure de début d'une plage, null si l'utilisateur renonce.
@@ -40,12 +41,19 @@ class ScheduleScreen extends StatelessWidget {
   }
 
   String _days(Set<int> pDays, String pLocale, AppLocalizations pTexts) {
-    if (pDays.length == 7) {
-      return pTexts.scheduleEveryDay;
-    }
     final vFormat = DateFormat.E(pLocale);
-    // Le 1er janvier 2024 est un lundi : le jour n du planning est le n-ième de ce mois
-    return ([...pDays]..sort()).map((pDay) => vFormat.format(DateTime(2024, 1, pDay))).join(' ');
+    final vRemote = pDays.contains(remoteDayKey);
+    final vWeek = pDays.where((pDay) => pDay <= 7).toList()..sort();
+    final vParts = [
+      if (vWeek.length == 7)
+        pTexts.scheduleEveryDay
+      else
+        // Le 1er janvier 2024 est un lundi : le jour n du planning est le n-ième de ce mois
+        ...vWeek.map((pDay) => vFormat.format(DateTime(2024, 1, pDay))),
+      if (vRemote) pTexts.scheduleRemoteDay,
+    ];
+
+    return vParts.join(' ');
   }
 
   Future<void> _add(BuildContext pContext) async {
@@ -169,6 +177,12 @@ class _SlotDialogState extends State<_SlotDialog> {
                     selected: _days.contains(vDay),
                     onSelected: (pOn) => setState(() => pOn ? _days.add(vDay) : _days.remove(vDay)),
                   ),
+                FilterChip(
+                  label: Text(vTexts.scheduleRemoteDay),
+                  selected: _days.contains(remoteDayKey),
+                  onSelected: (pOn) =>
+                      setState(() => pOn ? _days.add(remoteDayKey) : _days.remove(remoteDayKey)),
+                ),
               ],
             ),
           ],

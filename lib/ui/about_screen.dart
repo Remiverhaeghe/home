@@ -7,7 +7,9 @@ import 'package:flutter/services.dart' show rootBundle;
 import '../l10n/gen/app_localizations.dart';
 import '../logic/error_log.dart';
 import '../logic/release_notes.dart';
+import '../storage/detail_log.dart';
 import '../storage/error_log_store.dart';
+import 'about_detail_section.dart';
 
 /// À propos : version de l'appli et journal des erreurs, que l'on peut enregistrer dans un fichier
 /// pour le joindre à un signalement. Rien n'est envoyé nulle part.
@@ -16,10 +18,14 @@ class AboutScreen extends StatefulWidget {
     super.key,
     required this.log,
     required this.saveFile,
+    this.detail,
     this.loadChangelog = _bundledChangelog,
   });
 
   final ErrorLogStore log;
+
+  /// Journal détaillé ; sans lui, la section n'apparaît pas.
+  final DetailLog? detail;
 
   /// Lit le CHANGELOG livré avec l'appli ; remplacé dans les tests.
   final Future<String> Function() loadChangelog;
@@ -108,6 +114,10 @@ class _AboutScreenState extends State<AboutScreen> {
                     OutlinedButton(onPressed: _clear, child: Text(vTexts.aboutClear)),
                   ],
                 ),
+              ],
+              if (widget.detail case final DetailLog vDetail) ...[
+                const SizedBox(height: 24),
+                AboutDetailSection(detail: vDetail, saveFile: widget.saveFile),
               ],
             ],
           );

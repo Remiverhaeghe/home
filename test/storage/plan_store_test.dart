@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:home/logic/automations.dart';
+import 'package:home/logic/house_calendar.dart';
 import 'package:home/logic/plan.dart';
 import 'package:home/logic/vacation.dart';
 import 'package:home/storage/plan_store.dart';
@@ -67,5 +68,20 @@ void main() {
     await vStore.save(PlanSettings(rooms: vSettings.rooms, rules: vSettings.rules));
     expect(File('${vFolder.path}/vacances.json').existsSync(), isFalse);
     expect((await vStore.load()).vacation, isNull);
+  });
+
+  test('le calendrier a son fichier, supprimé quand il revient à son état de départ', () async {
+    final vStore = FilePlanStore(vFolder);
+    final vFile = File('${vFolder.path}/calendrier.json');
+    await vStore.save(const PlanSettings());
+    expect(vFile.existsSync(), isFalse);
+
+    await vStore.save(const PlanSettings(calendar: HouseCalendar(remoteWeekdays: {2, 4})));
+    expect(vFile.existsSync(), isTrue);
+    expect((await vStore.load()).calendar.remoteWeekdays, {2, 4});
+
+    await vStore.save(const PlanSettings());
+    expect(vFile.existsSync(), isFalse);
+    expect((await vStore.load()).calendar.isDefault, isTrue);
   });
 }

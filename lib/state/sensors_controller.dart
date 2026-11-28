@@ -7,6 +7,7 @@ import '../logic/periods.dart';
 import '../logic/reading.dart';
 import '../logic/sensor_log.dart';
 import '../logic/sensor_merge.dart';
+import '../storage/detail_log.dart';
 import '../storage/label_store.dart';
 import '../storage/sensor_store.dart';
 
@@ -125,6 +126,7 @@ class SensorsController extends ChangeNotifier {
     Tp357Link pLink, {
     Duration pScan = const Duration(seconds: 6),
     Duration pWait = const Duration(seconds: 20),
+    DetailLog? pDetail,
   }) async {
     final vDevices = await pLink
         .scan()
@@ -133,6 +135,10 @@ class SensorsController extends ChangeNotifier {
     final vResults = await Future.wait([
       for (final vDevice in vDevices) _readOnce(pLink, vDevice, pWait),
     ]);
+    await pDetail?.note(
+      'actualisation',
+      '${vDevices.length} capteur(s) à portée, ${vResults.where((pRead) => pRead).length} mesure(s) lue(s)',
+    );
 
     return vResults.where((pRead) => pRead).length;
   }

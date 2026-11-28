@@ -5,7 +5,10 @@ import 'package:flutter_test/flutter_test.dart';
 Future<void> openMenuEntry(WidgetTester pTester, String pLabel) async {
   await pTester.tap(find.byTooltip('Plus d\'options'));
   await pTester.pumpAndSettle();
-  await pTester.tap(find.widgetWithText(PopupMenuItem<int>, pLabel));
+  final vEntry = find.widgetWithText(PopupMenuItem<int>, pLabel);
+  await pTester.ensureVisible(vEntry);
+  await pTester.pumpAndSettle();
+  await pTester.tap(vEntry);
   await pTester.pumpAndSettle();
 }
 

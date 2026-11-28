@@ -5,6 +5,7 @@ import 'boost.dart';
 import 'automations.dart';
 import 'comfort.dart';
 import 'daikin.dart';
+import 'house_calendar.dart';
 import 'reading.dart';
 import 'vacation.dart';
 
@@ -89,6 +90,7 @@ PlanResult evaluatePlan({
   required List<Room> pRooms,
   required List<AutoRule> pRules,
   required VacationMode? pVacation,
+  HouseCalendar? pCalendar,
   required List<AcUnit> pUnits,
   required List<Sensor> pSensors,
   required Map<String, DaikinControl> pControls,
@@ -151,7 +153,7 @@ PlanResult evaluatePlan({
         // Un coup de chaud en cours (douche, bain, lessive) remplace la température du planning
         final vProfile = vPreheating || vRoom == null
             ? ProfileKind.comfort
-            : profileAt(vRoom.schedule, pNow);
+            : profileAt(vRoom.schedule, pNow, pCalendar: pCalendar);
         final vWanted = vBoost != null && vBoost.isActiveAt(pNow)
             ? vBoost.temp
             : (vRoom?.targets ?? const RoomTargets()).of(vProfile);
