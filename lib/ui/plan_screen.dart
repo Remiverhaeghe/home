@@ -11,6 +11,7 @@ import '../state/ac_controller.dart';
 import '../state/plan_controller.dart';
 import '../state/sensors_controller.dart';
 import '../storage/plan_store.dart';
+import 'boost_dialog.dart';
 import 'rules_screen.dart';
 import 'schedule_screen.dart';
 
@@ -99,6 +100,26 @@ class PlanScreen extends StatelessWidget {
     };
   }
 
+  /// Ouvre le choix du coup de chaud, l'enregistre puis applique le plan tout de suite.
+  Future<void> _boost(BuildContext pContext, AcUnit pUnit) async {
+    final vChoice = await showBoostDialog(
+      pContext,
+      room: pUnit.name,
+      active: plan.boostOf(pUnit.host, clock()),
+    );
+    if (vChoice == null) {
+      return;
+    }
+    final vKind = vChoice.kind;
+    if (vKind == null) {
+      await plan.stopBoost(pUnit.host);
+    } else {
+      await plan.startBoost(pUnit.host, vKind, vChoice.temp, vChoice.minutes, clock());
+    }
+    await ac.refresh();
+    await plan.tick(clock());
+  }
+
   @override
   Widget build(BuildContext pContext) {
     final vTexts = AppLocalizations.of(pContext);
@@ -128,6 +149,8 @@ class PlanScreen extends StatelessWidget {
                     number: vNumber,
                     profileName: (pProfile) => _profileName(vTexts, pProfile),
                     onChange: (pProfile, pDelta) => _change(vUnit, pProfile, pDelta),
+                    boostUntil: plan.boostOf(vUnit.host, clock())?.until,
+                    onBoost: () => _boost(pContext, vUnit),
                     onSchedule: () => Navigator.push<void>(
                       pContext,
                       MaterialPageRoute(
@@ -214,6 +237,8 @@ class _RoomCard extends StatelessWidget {
     required this.profileName,
     required this.onChange,
     required this.onSchedule,
+    required this.onBoost,
+    required this.boostUntil,
   });
 
   final AcUnit unit;
@@ -223,6 +248,10 @@ class _RoomCard extends StatelessWidget {
   final String Function(ProfileKind) profileName;
   final void Function(ProfileKind, double) onChange;
   final VoidCallback onSchedule;
+  final VoidCallback onBoost;
+
+  /// Fin du coup de chaud en cours, null s'il n'y en a pas.
+  final DateTime? boostUntil;
 
   @override
   Widget build(BuildContext pContext) => Card(
@@ -253,6 +282,18 @@ class _RoomCard extends StatelessWidget {
                 ),
               ],
             ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton.icon(
+              onPressed: onBoost,
+              icon: const Icon(Icons.hot_tub_outlined),
+              label: Text(
+                boostUntil == null
+                    ? texts.boostOpen
+                    : texts.boostActive(DateFormat.Hm().format(boostUntil!)),
+              ),
+            ),
+          ),
           Align(
             alignment: Alignment.centerRight,
             child: TextButton.icon(
