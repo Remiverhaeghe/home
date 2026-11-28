@@ -410,6 +410,8 @@ class SensorsScreen extends StatelessWidget {
                       builder: (_) => SensorDetailScreen(
                         sensor: vSensor,
                         onRename: (pLabel) => controller.rename(vSensor.name, pLabel),
+                        onSplit: (pFrom, pTo, pName) =>
+                            controller.splitPeriod(vSensor.name, pFrom, pTo, pName),
                         outdoor: weatherController?.readings ?? const [],
                         notes: notes,
                         onEditPlace: houseController == null

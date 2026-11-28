@@ -9,6 +9,7 @@
 
 ### Ajouté
 
+- Périodes de mesure (fiche d'un capteur) : un trou de deux jours ou plus entre deux relevés ouvre une période, que l'on sépare dans un capteur à part pour la ranger dans la bonne pièce, par exemple après un changement de place.
 - Actualiser les capteurs : un bouton et le geste de tirer la liste vers le bas lisent une mesure sur chaque thermo-hygromètre à portée.
 - Import d'un export CSV de l'appli ThermoPro (bouton d'historique de la liste des capteurs) : le nom du fichier donne le nom du capteur, les lignes sans mesure sont ignorées et un relevé par tranche de dix minutes est gardé. L'export va dans un capteur existant ou dans un nouveau.
 - Les pièces (bouton « Les pièces » de la liste des capteurs) : température et humidité du moment par pièce, pièce la plus fraîche et la plus humide, humidité visée (40 à 60 %, 45 à 70 % pour une cave ou un garage) et conseils : aérer quand l'air du dehors contient moins d'eau, garder fermé sinon, air sec signalé. Les conseils d'aération demandent la météo extérieure.
