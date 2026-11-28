@@ -139,4 +139,39 @@ void main() {
 
     expect(find.text('Aucune alerte.'), findsOneWidget);
   });
+
+  testWidgets('un coup de chaud se lance depuis la pièce, puis s\'arrête', (pTester) async {
+    await open(pTester);
+
+    await pTester.tap(find.text('Douche, bain, lessive'));
+    await pTester.pumpAndSettle();
+    expect(find.text('Coup de chaud : Salon'), findsOneWidget);
+    await pTester.tap(find.text('Bain'));
+    await pTester.pumpAndSettle();
+    expect(find.text('Température : 25,0 °C'), findsOneWidget);
+    expect(find.text('Pendant 90 min'), findsOneWidget);
+    await pTester.tap(find.widgetWithText(FilledButton, 'Démarrer'));
+    await pTester.pumpAndSettle();
+
+    expect(vPlan.boostOf(vHost, vNow)!.temp, 25);
+    expect(find.textContaining('Coup de chaud jusqu\''), findsOneWidget);
+
+    await pTester.tap(find.textContaining('Coup de chaud jusqu\''));
+    await pTester.pumpAndSettle();
+    await pTester.tap(find.widgetWithText(TextButton, 'Arrêter'));
+    await pTester.pumpAndSettle();
+
+    expect(vPlan.boostOf(vHost, vNow), isNull);
+  });
+
+  testWidgets('annuler le coup de chaud ne change rien', (pTester) async {
+    await open(pTester);
+
+    await pTester.tap(find.text('Douche, bain, lessive'));
+    await pTester.pumpAndSettle();
+    await pTester.tap(find.text('Annuler'));
+    await pTester.pumpAndSettle();
+
+    expect(vPlan.boosts, isEmpty);
+  });
 }

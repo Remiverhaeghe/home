@@ -725,5 +725,20 @@
   "periodsSplitFailed": "Choisis un autre nom que celui du capteur.",
   "planStoveTitle": "Poêle et clim ensemble",
   "planStoveHint": "Quand le poêle marche, la clim ne chauffe pas en plus. Sous {temp} °C dans la pièce, les deux peuvent tourner ensemble.",
-  "@planStoveHint": {"placeholders": {"temp": {"type": "String"}}}
+  "@planStoveHint": {"placeholders": {"temp": {"type": "String"}}},
+  "boostOpen": "Douche, bain, lessive",
+  "boostActive": "Coup de chaud jusqu'à {time}",
+  "@boostActive": {"placeholders": {"time": {"type": "String"}}},
+  "boostTitle": "Coup de chaud : {room}",
+  "@boostTitle": {"placeholders": {"room": {"type": "String"}}},
+  "boostHint": "La clim chauffe à cette température pendant ce temps, puis le planning reprend.",
+  "boostShower": "Douche",
+  "boostBath": "Bain",
+  "boostLaundry": "Lessive",
+  "boostTemp": "Température : {temp} °C",
+  "@boostTemp": {"placeholders": {"temp": {"type": "String"}}},
+  "boostDuration": "Pendant {minutes} min",
+  "@boostDuration": {"placeholders": {"minutes": {"type": "int"}}},
+  "boostStart": "Démarrer",
+  "boostStop": "Arrêter"
 }
