@@ -104,7 +104,4 @@ DaikinControl? frostControl(VacationMode pVacation, double pTemp, DaikinControl 
 /// Vrai quand le poêle doit être éteint : il marche pendant l'absence, hors remontée avant le
 /// retour. Personne n'est là pour le surveiller.
 bool stoveMustStop(VacationMode? pVacation, DateTime pNow, {required bool pStoveOn}) =>
-    pStoveOn &&
-    pVacation != null &&
-    pVacation.isActiveAt(pNow) &&
-    !pVacation.isPreheatingAt(pNow);
+    pStoveOn && pVacation != null && pVacation.isActiveAt(pNow) && !pVacation.isPreheatingAt(pNow);
