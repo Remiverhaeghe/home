@@ -27,7 +27,7 @@ void main() {
 
     await pTester.pumpWidget(localized(CompareScreen(controller: vSensors)));
 
-    expect(find.textContaining('+6 °C'), findsOneWidget);
+    expect(find.textContaining('+6,0 °C'), findsOneWidget);
     expect(find.textContaining('sur 5 jours'), findsOneWidget);
   });
 
