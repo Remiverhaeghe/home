@@ -134,6 +134,19 @@ void main() {
     expect(find.text('Aucune alerte.'), findsNothing);
   });
 
+  testWidgets('le seuil d\'humidité se règle et s\'enregistre', (pTester) async {
+    await open(pTester);
+    final vSlider = find.widgetWithText(Column, 'Alerte d\'humidité');
+    await pTester.ensureVisible(vSlider);
+    expect(find.textContaining('dépasse 70 %'), findsOneWidget);
+
+    await vPlan.setHumidityAlertAt(66);
+    await pTester.pump();
+
+    expect(find.textContaining('dépasse 66 %'), findsOneWidget);
+    expect(vStore.saved.humidityAlertAt, 66);
+  });
+
   testWidgets('sans alerte, l\'écran le dit', (pTester) async {
     await open(pTester);
 

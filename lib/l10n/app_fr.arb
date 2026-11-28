@@ -740,5 +740,8 @@
   "boostDuration": "Pendant {minutes} min",
   "@boostDuration": {"placeholders": {"minutes": {"type": "int"}}},
   "boostStart": "Démarrer",
-  "boostStop": "Arrêter"
+  "boostStop": "Arrêter",
+  "planHumidityTitle": "Alerte d'humidité",
+  "planHumidityHint": "Une alerte est donnée quand l'humidité d'un capteur dépasse {level} %.",
+  "@planHumidityHint": {"placeholders": {"level": {"type": "String"}}}
 }
