@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:home/logic/ac_units.dart';
 import 'package:home/state/ac_controller.dart';
 import 'package:home/state/plan_controller.dart';
 import 'package:home/state/sensors_controller.dart';
@@ -25,7 +26,11 @@ void main() {
     pTester.view.devicePixelRatio = 1;
     addTearDown(pTester.view.reset);
     final vFiles = BackgroundFiles(vFolder);
-    final vAc = AcController(MemoryAcStore(), FakeDaikinLink());
+    final vAc = AcController(
+      MemoryAcStore([const AcUnit(name: 'Salon', host: '192.168.1.20')]),
+      FakeDaikinLink(),
+    );
+    await vAc.load();
     final vSensors = SensorsController(MemorySensorStore());
     await pTester.pumpWidget(
       localized(
