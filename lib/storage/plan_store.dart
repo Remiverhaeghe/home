@@ -4,6 +4,7 @@ import 'dart:io';
 import '../logic/alerts.dart';
 import '../logic/automations.dart';
 import '../logic/boost.dart';
+import '../logic/house_calendar.dart';
 import '../logic/plan.dart';
 import '../logic/rooms_file.dart';
 import '../logic/vacation.dart';
@@ -17,6 +18,7 @@ class PlanSettings {
     this.stoveColdBelow = defaultStoveColdBelow,
     this.boosts = const [],
     this.humidityAlertAt = humidityAlertLevel,
+    this.calendar = const HouseCalendar(),
   });
 
   final List<Room> rooms;
@@ -31,6 +33,9 @@ class PlanSettings {
 
   /// Au-dessus de ce taux d'humidité, une alerte est donnée.
   final double humidityAlertAt;
+
+  /// Jours de repos, fériés et télétravail.
+  final HouseCalendar calendar;
 }
 
 /// Où vivent ces réglages : trois fichiers sur le téléphone, ou la mémoire dans les tests.
@@ -52,7 +57,7 @@ class MemoryPlanStore implements PlanStore {
   Future<void> save(PlanSettings pSettings) async => saved = pSettings;
 }
 
-/// `pieces.json`, `automatismes.json`, `vacances.json` et `reglages-plan.json` dans [directory], chacun écrit sans
+/// `pieces.json`, `automatismes.json`, `vacances.json`, `calendrier.json` et `reglages-plan.json` dans [directory], chacun écrit sans
 /// risque de fichier à moitié écrit. Sans vacances, le fichier est supprimé.
 class FilePlanStore implements PlanStore {
   FilePlanStore(this.directory);
@@ -79,6 +84,7 @@ class FilePlanStore implements PlanStore {
     final vRules = await _read('automatismes.json');
     final vVacation = await _read('vacances.json');
     final vOptions = await _read('reglages-plan.json');
+    final vCalendar = await _read('calendrier.json');
 
     return PlanSettings(
       rooms: vRooms == null ? [] : parseRooms(vRooms),
@@ -87,6 +93,7 @@ class FilePlanStore implements PlanStore {
       stoveColdBelow: vOptions == null ? defaultStoveColdBelow : parseStoveColdBelow(vOptions),
       boosts: vOptions == null ? [] : parseBoostsFile(vOptions),
       humidityAlertAt: vOptions == null ? humidityAlertLevel : parseHumidityAlertAt(vOptions),
+      calendar: vCalendar == null ? const HouseCalendar() : parseCalendar(vCalendar),
     );
   }
 
@@ -98,6 +105,14 @@ class FilePlanStore implements PlanStore {
       'reglages-plan.json',
       planOptionsJson(pSettings.stoveColdBelow, pSettings.boosts, pSettings.humidityAlertAt),
     );
+    if (pSettings.calendar.isDefault) {
+      final vFile = _file('calendrier.json');
+      if (await vFile.exists()) {
+        await vFile.delete();
+      }
+    } else {
+      await _write('calendrier.json', calendarJson(pSettings.calendar));
+    }
     final vVacation = pSettings.vacation;
     if (vVacation == null) {
       final vFile = _file('vacances.json');
