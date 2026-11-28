@@ -120,6 +120,9 @@ void main() {
     await pTester.scrollUntilVisible(find.text('Actualiser'), 200);
     await pTester.tap(find.text('Actualiser'));
     await pTester.pumpAndSettle();
-    expect(find.textContaining('[tour] début'), findsOneWidget);
+    expect(
+      pTester.widget<SelectableText>(find.byType(SelectableText).last).data,
+      contains('[tour] début'),
+    );
   });
 }
