@@ -132,7 +132,12 @@ class PlanScreen extends StatelessWidget {
         listenable: Listenable.merge([plan, ac, sensors]),
         builder: (pContext, _) {
           final vVacation = plan.vacation;
-          final vAlerts = evaluateAlerts(sensors.sensors, clock(), pWatched: plan.watched);
+          final vAlerts = evaluateAlerts(
+            sensors.sensors,
+            clock(),
+            pWatched: plan.watched,
+            pHumidityLevel: plan.humidityAlertAt,
+          );
           final vDate = DateFormat.yMMMd(vLocale);
 
           return ListView(
@@ -176,6 +181,8 @@ class PlanScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               _StoveColdSection(plan: plan),
+              const SizedBox(height: 16),
+              _HumiditySection(plan: plan),
               const SizedBox(height: 24),
               Text(vTexts.planVacationTitle, style: Theme.of(pContext).textTheme.titleMedium),
               const SizedBox(height: 8),
@@ -342,6 +349,49 @@ class _StoveColdSectionState extends State<_StoveColdSection> {
           onChanged: (pNew) => setState(() => _dragging = pNew),
           onChangeEnd: (pNew) async {
             await widget.plan.setStoveColdBelow(pNew);
+            if (mounted) {
+              setState(() => _dragging = null);
+            }
+          },
+        ),
+      ],
+    );
+  }
+}
+
+/// Seuil d'humidité des alertes.
+class _HumiditySection extends StatefulWidget {
+  const _HumiditySection({required this.plan});
+
+  final PlanController plan;
+
+  @override
+  State<_HumiditySection> createState() => _HumiditySectionState();
+}
+
+class _HumiditySectionState extends State<_HumiditySection> {
+  double? _dragging;
+
+  @override
+  Widget build(BuildContext pContext) {
+    final vTexts = AppLocalizations.of(pContext);
+    final vValue = _dragging ?? widget.plan.humidityAlertAt;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(vTexts.planHumidityTitle, style: Theme.of(pContext).textTheme.titleMedium),
+        const SizedBox(height: 4),
+        Text(vTexts.planHumidityHint(vValue.round().toString())),
+        Slider(
+          value: vValue,
+          min: humidityAlertMin,
+          max: humidityAlertMax,
+          divisions: (humidityAlertMax - humidityAlertMin).round(),
+          label: '${vValue.round()} %',
+          onChanged: (pNew) => setState(() => _dragging = pNew),
+          onChangeEnd: (pNew) async {
+            await widget.plan.setHumidityAlertAt(pNew);
             if (mounted) {
               setState(() => _dragging = null);
             }

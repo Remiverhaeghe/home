@@ -12,6 +12,7 @@
 - La recherche des climatisations ne dépend plus de la diffusion UDP : elle diffuse aussi sur le réseau du téléphone, puis interroge chaque adresse du même réseau pour trouver les modules que la box ne laisse pas répondre.
 - `docs/architecture.md` : couches du code, données, tests et marche à suivre pour ajouter un appareil.
 - Audit des permissions et du réseau : `docs/securite.md` liste chaque permission Android, ce qui sort du téléphone et où vivent les identifiants.
+- Seuil d'alerte d'humidité réglable dans l'écran Pilotage (de 55 à 85 %, 70 % au départ), gardé dans `reglages-plan.json` et pris en compte par le service d'arrière-plan.
 - Captures d'écran d'une maison fictive générées par la CI (workflow Captures, `test/captures`) : liste des capteurs, courbes d'un capteur, écran des pièces. Aucune donnée réelle.
 - Poêle éteint en vacances même appli fermée : le service d'arrière-plan relit le poêle à chaque tour et l'éteint s'il marche pendant l'absence (hors remontée avant le retour).
 - Écran « À propos » (bouton i de la liste des capteurs) : version de l'appli et journal local des erreurs (`journal-erreurs.txt`, 300 lignes au plus, adresses réseau masquées), à enregistrer dans un fichier ou à vider. Rien n'est envoyé.
