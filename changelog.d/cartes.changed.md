@@ -1,0 +1,1 @@
+- Liste des capteurs plus lisible : température en grand, humidité avec sa jauge (zone de confort de 40 à 60 %), niveau de l'air en pastille de couleur et petite courbe du dernier jour.

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../l10n/gen/app_localizations.dart';
 import '../logic/alerts.dart';
 import '../state/plan_controller.dart';
+import 'value_slider.dart';
 
 /// Seuil d'humidité des alertes.
 class HumiditySection extends StatefulWidget {
@@ -28,12 +29,14 @@ class HumiditySectionState extends State<HumiditySection> {
         Text(vTexts.planHumidityTitle, style: Theme.of(pContext).textTheme.titleMedium),
         const SizedBox(height: 4),
         Text(vTexts.planHumidityHint(vValue.round().toString())),
-        Slider(
+        ValueSlider(
+          valueText: '${vValue.round()} %',
           value: vValue,
           min: humidityAlertMin,
           max: humidityAlertMax,
+          minText: '${humidityAlertMin.round()} %',
+          maxText: '${humidityAlertMax.round()} %',
           divisions: (humidityAlertMax - humidityAlertMin).round(),
-          label: '${vValue.round()} %',
           onChanged: (pNew) => setState(() => _dragging = pNew),
           onChangeEnd: (pNew) async {
             await widget.plan.setHumidityAlertAt(pNew);

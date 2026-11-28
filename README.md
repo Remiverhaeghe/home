@@ -19,7 +19,7 @@ Home sert de tableau de bord. Atelier, de son côté, s'en sert pour savoir quan
 - Garage et Velux : un gros bouton par commande, envoyé à un relais Wi-Fi Shelly branché en parallèle du bouton ou de la télécommande ; la porte demande confirmation (voir `docs/relais.md`).
 - Alertes (notification avec son et bannière, et écran Pilotage) pour le gel (sous 5 °C), l'humidité (au-dessus de 70 %) et un capteur muet depuis plus de 30 minutes.
 - Import d'un fichier d'échange JSON contenant plusieurs capteurs.
-- Une carte par capteur : température, humidité, point de rosée, niveau de l'air (sec sous 40 %, humide au-delà de 60 %) et date du dernier relevé.
+- Une carte par capteur : température, humidité, température de condensation (en dessous, l'eau se dépose sur les parois), niveau de l'air (sec sous 40 %, humide au-delà de 60 %) et date du dernier relevé.
 - Ré-importer un fichier ajoute les nouveaux relevés sans doubler les anciens.
 - Import d'un export CSV de l'appli ThermoPro, pour récupérer l'historique gardé par les capteurs.
 - Écran des pièces : température et humidité du moment par pièce, pièce la plus fraîche et la plus humide, humidité visée et conseils d'aération (avec la météo extérieure si elle est autorisée).

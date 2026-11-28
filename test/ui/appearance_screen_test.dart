@@ -41,6 +41,21 @@ void main() {
     expect(find.textContaining('70,7 °F, 48 %'), findsOneWidget);
   });
 
+  testWidgets('l\'appli passe en anglais quand on le choisit', (pTester) async {
+    final vController = AppearanceController(MemoryAppearanceStore());
+    await vController.load();
+    final vSensors = SensorsController(MemorySensorStore());
+    await pTester.pumpWidget(HomeApp(controller: vSensors, appearance: vController));
+    await pTester.pumpAndSettle();
+
+    expect(find.text('Capteurs de la maison'), findsOneWidget);
+
+    await vController.setLanguage(AppLanguage.english);
+    await pTester.pumpAndSettle();
+
+    expect(find.text('Home sensors'), findsOneWidget);
+  });
+
   test('le thème clair a une palette plus sombre pour rester lisible', () {
     final vLight = buildTheme(pBrightness: Brightness.light);
 
