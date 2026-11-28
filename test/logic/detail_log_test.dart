@@ -63,4 +63,22 @@ void main() {
     await vApp.clear();
     expect(await vApp.read(), isEmpty);
   });
+
+  test('des notes lancées sans attendre ne se perdent pas et restent dans l\'ordre', () async {
+    final vFolder = Directory.systemTemp.createTempSync('detail_order');
+    addTearDown(() => vFolder.deleteSync(recursive: true));
+    final vLog = FileDetailLog(vFolder, pNow: () => DateTime(2026, 11, 28, 8));
+    await vLog.setOn(pOn: true);
+
+    await Future.wait([
+      vLog.note('capteur 1', 'connexion lancée'),
+      vLog.note('capteur 1', 'connexion : connected'),
+      vLog.note('capteur 1', 'trame de 11 octets'),
+    ]);
+
+    final vLines = (await vLog.read()).split('\n');
+    expect(vLines, hasLength(3));
+    expect(vLines.first, endsWith('connexion lancée'));
+    expect(vLines.last, endsWith('trame de 11 octets'));
+  });
 }

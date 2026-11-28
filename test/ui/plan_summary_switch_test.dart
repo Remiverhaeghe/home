@@ -66,6 +66,48 @@ void main() {
     expect(pTester.widget<Switch>(find.byType(Switch)).value, isTrue);
   });
 
+  testWidgets('l\'heure choisie du résumé est rangée dans le fichier du service', (pTester) async {
+    pTester.view.physicalSize = const Size(1200, 4000);
+    pTester.view.devicePixelRatio = 1;
+    addTearDown(pTester.view.reset);
+    final vFiles = BackgroundFiles(vFolder);
+    await pTester.runAsync(() => vFiles.setSummaryEnabled(pOn: true));
+    final vAc = AcController(MemoryAcStore(), FakeDaikinLink());
+    final vSensors = SensorsController(MemorySensorStore());
+    await pTester.pumpWidget(
+      localized(
+        PlanScreen(
+          plan: PlanController(MemoryPlanStore(), vAc, vSensors),
+          ac: vAc,
+          sensors: vSensors,
+          files: vFiles,
+        ),
+      ),
+    );
+    final vChoice = find.byKey(const Key('summary-hour'));
+    // Les fichiers se lisent pour de vrai : attendre que le choix d'heure apparaisse
+    for (var vTry = 0; vTry < 40 && vChoice.evaluate().isEmpty; vTry++) {
+      await pTester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 25)));
+      await pTester.pump();
+    }
+    await pTester.ensureVisible(vChoice);
+    expect(pTester.widget<DropdownButton<int>>(vChoice).value, 8);
+
+    await pTester.runAsync(() async => pTester.widget<DropdownButton<int>>(vChoice).onChanged!(10));
+    expect(await pTester.runAsync(vFiles.summaryStartHour), 10);
+    // L'écran relit les fichiers : attendre que le nouveau choix s'affiche
+    for (
+      var vTry = 0;
+      vTry < 40 && pTester.widget<DropdownButton<int>>(vChoice).value != 10;
+      vTry++
+    ) {
+      await pTester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 25)));
+      await pTester.pump();
+    }
+
+    expect(pTester.widget<DropdownButton<int>>(vChoice).value, 10);
+  });
+
   testWidgets('sans fichiers partagés, il n\'y a pas d\'interrupteur', (pTester) async {
     final vAc = AcController(MemoryAcStore(), FakeDaikinLink());
     final vSensors = SensorsController(MemorySensorStore());

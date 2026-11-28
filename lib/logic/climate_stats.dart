@@ -31,6 +31,14 @@ double dewPoint(double pTemp, double pHumidity) {
   return vB * vGamma / (vA - vGamma);
 }
 
+/// Écart (°C) entre l'air et son point de rosée en dessous duquel les vitres, plus froides que
+/// l'air, risquent d'embuer : repère de prudence, pas une mesure de la température des parois.
+const condensationMargin = 3.0;
+
+/// Vrai quand l'air est assez près de son point de rosée pour que de la condensation se forme.
+bool condensationRisk(double pTemp, double pHumidity) =>
+    pTemp - dewPoint(pTemp, pHumidity) < condensationMargin;
+
 /// Moyenne d'une journée de relevés.
 class DayAverage {
   const DayAverage({required this.day, required this.temp, required this.humidity});

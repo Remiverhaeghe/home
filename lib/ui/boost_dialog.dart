@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../l10n/gen/app_localizations.dart';
 import '../logic/boost.dart';
 import 'units_scope.dart';
+import 'value_slider.dart';
 
 /// Choix de l'utilisateur : lancer un coup de chaud, ou l'arrêter quand [kind] est null.
 typedef BoostChoice = ({BoostKind? kind, double temp, int minutes});
@@ -74,19 +75,26 @@ class _BoostDialogState extends State<_BoostDialog> {
               onSelectionChanged: (pSelected) => _pick(pSelected.first),
             ),
             const SizedBox(height: 12),
-            Text(vTexts.boostTemp(vUnits.temp(_temp))),
-            Slider(
+            ValueSlider(
+              title: vTexts.boostTemp,
+              valueText: vUnits.temp(_temp),
               value: _temp,
               min: boostMinTemp,
               max: boostMaxTemp,
+              minText: vUnits.temp(boostMinTemp),
+              maxText: vUnits.temp(boostMaxTemp),
               divisions: ((boostMaxTemp - boostMinTemp) * 2).round(),
               onChanged: (pValue) => setState(() => _temp = pValue),
             ),
-            Text(vTexts.boostDuration(_minutes)),
-            Slider(
+            const SizedBox(height: 12),
+            ValueSlider(
+              title: vTexts.boostDuration,
+              valueText: vTexts.boostMinutes(_minutes),
               value: _minutes.toDouble(),
               min: boostMinMinutes.toDouble(),
               max: boostMaxMinutes.toDouble(),
+              minText: vTexts.boostMinutes(boostMinMinutes),
+              maxText: vTexts.boostMinutes(boostMaxMinutes),
               divisions: (boostMaxMinutes - boostMinMinutes) ~/ 15,
               onChanged: (pValue) => setState(() => _minutes = (pValue / 15).round() * 15),
             ),

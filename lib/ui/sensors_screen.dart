@@ -3,14 +3,11 @@ import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../background/background_control.dart';
 import '../ble/tp357_link.dart';
 import '../l10n/gen/app_localizations.dart';
 import '../logic/climate_exchange.dart';
-import '../logic/climate_stats.dart';
-import '../logic/reading.dart';
 import '../storage/detail_log.dart';
 import '../storage/error_log_store.dart';
 import '../state/ac_controller.dart';
@@ -37,12 +34,11 @@ import 'compare_screen.dart';
 import 'house_screen.dart';
 import 'pellet_screen.dart';
 import 'relay_screen.dart';
+import 'sensor_card.dart';
 import 'rooms_screen.dart';
 import 'sensor_detail_screen.dart';
-import 'theme.dart';
 import 'wall_display.dart';
 import 'wall_screen.dart';
-import 'units_scope.dart';
 
 /// Choix d'un fichier d'échange ; renvoie son texte, ou null si l'utilisateur renonce.
 typedef TextFilePicker = Future<String?> Function();
@@ -525,93 +521,6 @@ String? _placeSummary(AppLocalizations pTexts, SensorPlace pPlace) {
   }
 
   return pTexts.placeSummary(vRoom, vFloor);
-}
-
-/// Carte d'un capteur : température, humidité, point de rosée et niveau de l'air.
-class SensorCard extends StatelessWidget {
-  const SensorCard({super.key, required this.sensor, this.onTap, this.place});
-
-  final Sensor sensor;
-
-  /// Où se trouve le capteur, sous son nom ; rien quand il n'est pas rangé.
-  final String? place;
-
-  /// Ouvre le détail du capteur.
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext pContext) {
-    final vTexts = AppLocalizations.of(pContext);
-    final vColors = HomeColors.of(pContext);
-    final vTheme = Theme.of(pContext).textTheme;
-    final vLast = sensor.last;
-    final vLocale = Localizations.localeOf(pContext).toString();
-    final vNumber = NumberFormat('0.0', vLocale);
-    final vUnits = UnitsScope.of(pContext);
-
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: vLast == null
-              ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(sensor.title, style: vTheme.titleMedium),
-                    if (place != null) Text(place!, style: vTheme.bodySmall),
-                    const SizedBox(height: 4),
-                    Text(vTexts.noReading),
-                  ],
-                )
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(sensor.title, style: vTheme.titleMedium),
-                    if (place != null) Text(place!, style: vTheme.bodySmall),
-                    const SizedBox(height: 8),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.baseline,
-                      textBaseline: TextBaseline.alphabetic,
-                      children: [
-                        Text(
-                          vTexts.temperatureValue(vUnits.temp(vLast.temp)),
-                          style: vTheme.headlineMedium?.copyWith(color: vColors.temperature),
-                        ),
-                        const SizedBox(width: 20),
-                        Text(
-                          vTexts.humidityValue(vNumber.format(vLast.humidity)),
-                          style: vTheme.headlineMedium?.copyWith(color: vColors.humidity),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      _levelLabel(vTexts, humidityLevel(vLast.humidity)),
-                      style: TextStyle(
-                        color: humidityLevel(vLast.humidity) == HumidityLevel.good
-                            ? vColors.good
-                            : vColors.warning,
-                      ),
-                    ),
-                    Text(vTexts.dewPointValue(vUnits.temp(dewPoint(vLast.temp, vLast.humidity)))),
-                    Text(
-                      vTexts.lastReading(DateFormat.yMMMd(vLocale).add_Hm().format(vLast.at)),
-                      style: vTheme.bodySmall,
-                    ),
-                  ],
-                ),
-        ),
-      ),
-    );
-  }
-
-  static String _levelLabel(AppLocalizations pTexts, HumidityLevel pLevel) => switch (pLevel) {
-    HumidityLevel.dry => pTexts.humidityDry,
-    HumidityLevel.good => pTexts.humidityGood,
-    HumidityLevel.humid => pTexts.humidityHumid,
-  };
 }
 
 /// Une ligne du menu « Plus ».

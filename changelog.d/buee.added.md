@@ -1,0 +1,1 @@
+- Carte d'un capteur : un conseil « Risque de buée sur les vitres : aérez quelques minutes ou chauffez un peu » apparaît quand l'air est à moins de 3 °C de sa température de condensation.

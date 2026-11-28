@@ -33,4 +33,9 @@ void main() {
   test('sans relevé, aucune moyenne', () {
     expect(dailyAverages([]), isEmpty);
   });
+
+  test('risque de condensation : à 20 °C, 90 % oui, 60 % non', () {
+    expect(condensationRisk(20, 90), isTrue);
+    expect(condensationRisk(20, 60), isFalse);
+  });
 }

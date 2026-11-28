@@ -1,7 +1,7 @@
 import 'reading.dart';
 
 /// Ce qui mérite une notification.
-enum AlertKind { frost, humidity, silent }
+enum AlertKind { frost, humidity, silent, stuck }
 
 /// Seuils des alertes.
 const frostAlertTemp = 5.0;
@@ -14,6 +14,28 @@ const humidityAlertMax = 85.0;
 /// Un tour de relevé dure 5 minutes et le Bluetooth manque parfois quelques tours : une heure
 /// sans relevé, pas moins, avant de dire qu'un capteur est muet.
 const silentAfter = Duration(minutes: 60);
+
+/// Un capteur qui répète exactement les mêmes valeurs depuis 6 heures, sur 12 relevés au moins,
+/// est figé : pile faible ou capteur bloqué.
+const stuckAfter = Duration(hours: 6);
+const stuckMinReadings = 12;
+
+/// Les derniers relevés sont-ils identiques depuis [stuckAfter] ? Ne lit que la fin de la liste.
+bool isStuck(List<Reading> pReadings) {
+  if (pReadings.length < stuckMinReadings) {
+    return false;
+  }
+  final vLast = pReadings.last;
+  var vFirst = pReadings.length - 1;
+  while (vFirst > 0 &&
+      pReadings[vFirst - 1].temp == vLast.temp &&
+      pReadings[vFirst - 1].humidity == vLast.humidity) {
+    vFirst--;
+  }
+
+  return pReadings.length - vFirst >= stuckMinReadings &&
+      vLast.at.difference(pReadings[vFirst].at) >= stuckAfter;
+}
 
 /// Une alerte sur un capteur. [value] est la mesure en cause, absente pour un capteur muet.
 class SensorAlert {
@@ -52,6 +74,9 @@ List<SensorAlert> evaluateAlerts(
       // Une mesure ancienne ne dit rien du gel ni de l'humidité d'aujourd'hui
       continue;
     }
+    if (isStuck(vSensor.readings)) {
+      rAlerts.add(SensorAlert(sensorName: vSensor.name, kind: AlertKind.stuck));
+    }
     if (vLast.temp < frostAlertTemp) {
       rAlerts.add(SensorAlert(sensorName: vSensor.name, kind: AlertKind.frost, value: vLast.temp));
     }
@@ -77,6 +102,7 @@ String alertSummary(List<SensorAlert> pAlerts) => pAlerts
         AlertKind.frost => 'Gel : ${pAlert.sensorName} (${_decimal(pAlert.value ?? 0)} °C)',
         AlertKind.humidity => 'Humidité : ${pAlert.sensorName} (${(pAlert.value ?? 0).round()} %)',
         AlertKind.silent => 'Capteur muet : ${pAlert.sensorName}',
+        AlertKind.stuck => 'Capteur figé : ${pAlert.sensorName}',
       },
     )
     .join(' · ');

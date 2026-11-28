@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import '../logic/day_summary.dart';
 import '../logic/pending_readings.dart';
 
 /// Fichiers partagés entre l'appli et le service d'arrière-plan, qui tourne dans un autre
@@ -13,13 +14,15 @@ class BackgroundFiles {
       _followed = File('${pFolder.path}/suivi.json'),
       _appOpen = File('${pFolder.path}/appli_ouverte.txt'),
       _summaryOn = File('${pFolder.path}/resume_actif.txt'),
-      _summarySent = File('${pFolder.path}/resume_envoye.txt');
+      _summarySent = File('${pFolder.path}/resume_envoye.txt'),
+      _summaryHour = File('${pFolder.path}/resume_heure.txt');
 
   final File _pending;
   final File _followed;
   final File _appOpen;
   final File _summaryOn;
   final File _summarySent;
+  final File _summaryHour;
 
   Future<List<FollowedDevice>> loadFollowed() async =>
       await _followed.exists() ? parseFollowed(await _followed.readAsString()) : [];
@@ -61,6 +64,19 @@ class BackgroundFiles {
       await _summaryOn.delete();
     }
   }
+
+  /// Heure à partir de laquelle le résumé part : celle choisie, sinon [summaryHour].
+  Future<int> summaryStartHour() async {
+    if (!await _summaryHour.exists()) {
+      return summaryHour;
+    }
+    final vHour = int.tryParse((await _summaryHour.readAsString()).trim());
+
+    return vHour != null && vHour >= 0 && vHour <= 23 ? vHour : summaryHour;
+  }
+
+  Future<void> setSummaryStartHour(int pHour) =>
+      _summaryHour.writeAsString('${pHour.clamp(0, 23)}', flush: true);
 
   /// Date du dernier résumé envoyé, null s'il n'en est jamais parti.
   Future<DateTime?> lastSummary() async =>

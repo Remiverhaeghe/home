@@ -50,6 +50,17 @@ class AppearanceScreen extends StatelessWidget {
                 onSelectionChanged: (pScale) => controller.setTextScale(pScale.first),
               ),
               const SizedBox(height: 24),
+              Text(vTexts.appearanceLanguage, style: Theme.of(pContext).textTheme.titleMedium),
+              const SizedBox(height: 8),
+              SegmentedButton<AppLanguage>(
+                segments: [
+                  ButtonSegment(value: AppLanguage.french, label: Text(vTexts.languageFrench)),
+                  ButtonSegment(value: AppLanguage.english, label: Text(vTexts.languageEnglish)),
+                ],
+                selected: {vSettings.language},
+                onSelectionChanged: (pLanguage) => controller.setLanguage(pLanguage.first),
+              ),
+              const SizedBox(height: 24),
               Text(vTexts.appearanceUnit, style: Theme.of(pContext).textTheme.titleMedium),
               const SizedBox(height: 8),
               SegmentedButton<TemperatureUnit>(

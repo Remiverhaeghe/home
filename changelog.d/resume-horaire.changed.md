@@ -1,0 +1,1 @@
+- Le résumé du matin part à l'heure choisie (de 5 h à 12 h, 8 h par défaut) ; le réglage est dans le plan, sous l'interrupteur du résumé.
