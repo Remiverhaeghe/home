@@ -16,6 +16,7 @@ const backupFileNames = [
   'poele.json',
   'maison.json',
   'meteo.json',
+  'apparence.json',
 ];
 
 /// Version du format de sauvegarde.

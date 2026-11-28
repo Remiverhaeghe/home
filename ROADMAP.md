@@ -35,3 +35,5 @@ Home sur un écran dans la pièce principale, avec une vue 3D de la maison et la
 - [ ] La tablette murale, toujours allumée, sert de centrale : relevés et automatismes tournent dessus, sans NAS
 - [x] Lieu de la maison saisi à la main et emplacement des capteurs (pièce, niveau, extérieur), liste groupée par niveau
 - [x] Sauvegarde et restauration de toute la configuration en un fichier
+- [x] Thème clair et taille du texte au choix
+- [ ] Unités (°F, 12 h) : les textes écrivent « °C » en dur dans une centaine d'endroits ; à faire d'un bloc avec un formateur unique
