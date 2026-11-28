@@ -8,6 +8,7 @@ import 'background/background_control.dart';
 import 'l10n/gen/app_localizations.dart';
 import 'state/ac_controller.dart';
 import 'state/plan_controller.dart';
+import 'state/house_controller.dart';
 import 'state/pellet_controller.dart';
 import 'state/relay_controller.dart';
 import 'state/sensors_controller.dart';
@@ -23,6 +24,7 @@ class HomeApp extends StatefulWidget {
     this.planController,
     this.relayController,
     this.pelletController,
+    this.houseController,
     this.notifier,
     this.background,
     this.files,
@@ -35,6 +37,7 @@ class HomeApp extends StatefulWidget {
   /// Garage et Velux à relais Wi-Fi.
   final RelayController? relayController;
   final PelletController? pelletController;
+  final HouseController? houseController;
 
   /// Notifications d'alerte ; sans elles, les alertes restent visibles dans l'écran Pilotage.
   final AlertNotifier? notifier;
@@ -114,6 +117,7 @@ class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
       planController: widget.planController,
       relayController: widget.relayController,
       pelletController: widget.pelletController,
+      houseController: widget.houseController,
       background: widget.background,
       files: widget.files,
     ),

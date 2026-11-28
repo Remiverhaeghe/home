@@ -9,12 +9,15 @@ import 'theme.dart';
 
 /// Détail d'un capteur : courbes des quatorze derniers jours, minimum et maximum.
 class SensorDetailScreen extends StatefulWidget {
-  const SensorDetailScreen({super.key, required this.sensor, this.onRename});
+  const SensorDetailScreen({super.key, required this.sensor, this.onRename, this.onEditPlace});
 
   final Sensor sensor;
 
   /// Range le nom donné au capteur ; sans lui, le nom ne se change pas ici.
   final Future<void> Function(String pLabel)? onRename;
+
+  /// Ouvre la saisie de l'emplacement ; sans lui, le bouton n'apparaît pas.
+  final Future<void> Function()? onEditPlace;
 
   /// Nombre de jours montrés sur les courbes.
   static const shownDays = 14;
@@ -60,6 +63,12 @@ class _SensorDetailScreenState extends State<SensorDetailScreen> {
       appBar: AppBar(
         title: Text(vTexts.detailTitle(_title)),
         actions: [
+          if (widget.onEditPlace != null)
+            IconButton(
+              tooltip: vTexts.placeEdit,
+              icon: const Icon(Icons.place_outlined),
+              onPressed: widget.onEditPlace,
+            ),
           if (widget.onRename != null)
             IconButton(
               tooltip: vTexts.detailRename,

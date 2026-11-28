@@ -13,6 +13,8 @@ import '../logic/climate_stats.dart';
 import '../logic/reading.dart';
 import '../state/ac_controller.dart';
 import '../state/plan_controller.dart';
+import '../logic/house.dart';
+import '../state/house_controller.dart';
 import '../state/pellet_controller.dart';
 import '../state/relay_controller.dart';
 import '../state/sensors_controller.dart';
@@ -20,6 +22,7 @@ import '../storage/background_files.dart';
 import 'ac_screen.dart';
 import 'live_screen.dart';
 import 'plan_screen.dart';
+import 'house_screen.dart';
 import 'pellet_screen.dart';
 import 'relay_screen.dart';
 import 'sensor_detail_screen.dart';
@@ -61,6 +64,7 @@ class SensorsScreen extends StatelessWidget {
     this.wallDisplay,
     this.relayController,
     this.pelletController,
+    this.houseController,
   });
 
   final SensorsController controller;
@@ -86,6 +90,7 @@ class SensorsScreen extends StatelessWidget {
   /// Garage et Velux ; le bouton qui les ouvre n'apparaît que s'ils sont fournis.
   final RelayController? relayController;
   final PelletController? pelletController;
+  final HouseController? houseController;
 
   Future<void> _import(BuildContext pContext) async {
     final vText = await pickFile();
@@ -153,6 +158,15 @@ class SensorsScreen extends StatelessWidget {
                 MaterialPageRoute(builder: (_) => RelayScreen(controller: relayController!)),
               ),
             ),
+          if (houseController != null)
+            IconButton(
+              tooltip: vTexts.houseOpen,
+              icon: const Icon(Icons.home_work_outlined),
+              onPressed: () => Navigator.push<void>(
+                pContext,
+                MaterialPageRoute(builder: (_) => HouseScreen(controller: houseController!)),
+              ),
+            ),
           if (pelletController != null)
             IconButton(
               tooltip: vTexts.pelletOpen,
@@ -212,7 +226,7 @@ class SensorsScreen extends StatelessWidget {
         label: Text(vTexts.importFile),
       ),
       body: ListenableBuilder(
-        listenable: controller,
+        listenable: Listenable.merge([controller, ?houseController]),
         builder: (pContext, _) {
           final vSensors = controller.sensors;
           if (vSensors.isEmpty) {
@@ -223,23 +237,52 @@ class SensorsScreen extends StatelessWidget {
               ),
             );
           }
+          final vHouse = houseController?.house ?? const House();
+          final vGroups = groupSensors(vSensors, vHouse);
+          final vTitled = vHouse.places.isNotEmpty;
+          final vItems = <Widget>[
+            for (final vGroup in vGroups) ...[
+              if (vTitled)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Text(
+                    _groupTitle(vTexts, vGroup),
+                    style: Theme.of(pContext).textTheme.titleSmall,
+                  ),
+                ),
+              for (final vSensor in vGroup.sensors)
+                SensorCard(
+                  sensor: vSensor,
+                  place: _placeSummary(vTexts, vHouse.placeOf(vSensor.name)),
+                  onTap: () => Navigator.push<void>(
+                    pContext,
+                    MaterialPageRoute(
+                      builder: (_) => SensorDetailScreen(
+                        sensor: vSensor,
+                        onRename: (pLabel) => controller.rename(vSensor.name, pLabel),
+                        onEditPlace: houseController == null
+                            ? null
+                            : () async {
+                                final vPlace = await editPlace(
+                                  pContext,
+                                  houseController!.house.placeOf(vSensor.name),
+                                );
+                                if (vPlace != null) {
+                                  await houseController!.setPlace(vSensor.name, vPlace);
+                                }
+                              },
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ];
 
           return ListView.separated(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 96),
-            itemCount: vSensors.length,
+            itemCount: vItems.length,
             separatorBuilder: (_, _) => const SizedBox(height: 12),
-            itemBuilder: (_, pIndex) => SensorCard(
-              sensor: vSensors[pIndex],
-              onTap: () => Navigator.push<void>(
-                pContext,
-                MaterialPageRoute(
-                  builder: (_) => SensorDetailScreen(
-                    sensor: vSensors[pIndex],
-                    onRename: (pLabel) => controller.rename(vSensors[pIndex].name, pLabel),
-                  ),
-                ),
-              ),
-            ),
+            itemBuilder: (_, pIndex) => vItems[pIndex],
           );
         },
       ),
@@ -247,11 +290,40 @@ class SensorsScreen extends StatelessWidget {
   }
 }
 
+String _groupTitle(AppLocalizations pTexts, SensorGroup pGroup) {
+  if (pGroup.outdoor) {
+    return pTexts.groupOutdoor;
+  }
+
+  return pGroup.floor == null ? pTexts.groupUnplaced : floorName(pTexts, pGroup.floor!);
+}
+
+/// « Chambre · Premier étage », ou rien quand l'emplacement est vide.
+String? _placeSummary(AppLocalizations pTexts, SensorPlace pPlace) {
+  if (pPlace.isEmpty) {
+    return null;
+  }
+  final vRoom = pPlace.room.trim();
+  final vFloor = pPlace.outdoor
+      ? pTexts.groupOutdoor
+      : pPlace.floor == null
+      ? ''
+      : floorName(pTexts, pPlace.floor!);
+  if (vRoom.isEmpty || vFloor.isEmpty) {
+    return vRoom.isEmpty ? vFloor : vRoom;
+  }
+
+  return pTexts.placeSummary(vRoom, vFloor);
+}
+
 /// Carte d'un capteur : température, humidité, point de rosée et niveau de l'air.
 class SensorCard extends StatelessWidget {
-  const SensorCard({super.key, required this.sensor, this.onTap});
+  const SensorCard({super.key, required this.sensor, this.onTap, this.place});
 
   final Sensor sensor;
+
+  /// Où se trouve le capteur, sous son nom ; rien quand il n'est pas rangé.
+  final String? place;
 
   /// Ouvre le détail du capteur.
   final VoidCallback? onTap;
@@ -276,6 +348,7 @@ class SensorCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(sensor.title, style: vTheme.titleMedium),
+                    if (place != null) Text(place!, style: vTheme.bodySmall),
                     const SizedBox(height: 4),
                     Text(vTexts.noReading),
                   ],
@@ -284,6 +357,7 @@ class SensorCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(sensor.title, style: vTheme.titleMedium),
+                    if (place != null) Text(place!, style: vTheme.bodySmall),
                     const SizedBox(height: 8),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.baseline,
