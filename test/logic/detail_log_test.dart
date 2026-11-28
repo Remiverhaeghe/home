@@ -59,7 +59,7 @@ void main() {
 
     await vApp.setOn(pOn: false);
     await vService.note('tour', 'ignorée aussi');
-    expect(await vApp.read(), hasLength(31));
+    expect(await vApp.read(), '2026-11-28 08:05:00 [tour] début');
     await vApp.clear();
     expect(await vApp.read(), isEmpty);
   });
