@@ -86,7 +86,8 @@ void main() {
     await pTester.pumpAndSettle();
     expect(vStore.saved.calendar.holidays, HolidayRule.saturday);
 
-    await pTester.scrollUntilVisible(find.byType(FilterChip).first, 200);
+    await pTester.drag(find.byType(ListView), const Offset(0, -600));
+    await pTester.pumpAndSettle();
     await pTester.tap(find.widgetWithText(FilterChip, 'mar.'));
     await pTester.pumpAndSettle();
     expect(vStore.saved.calendar.remoteWeekdays, {2});
