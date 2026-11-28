@@ -740,5 +740,7 @@
   "boostDuration": "Pendant {minutes} min",
   "@boostDuration": {"placeholders": {"minutes": {"type": "int"}}},
   "boostStart": "Démarrer",
-  "boostStop": "Arrêter"
+  "boostStop": "Arrêter",
+  "roomsPdfOpen": "Exporter le bilan en PDF",
+  "roomsPdfSaved": "Bilan enregistré."
 }
