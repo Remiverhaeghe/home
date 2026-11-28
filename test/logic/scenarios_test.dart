@@ -40,9 +40,7 @@ void main() {
     });
 
     test('les autres décisions du calendrier sont gardées', () {
-      final vCalendar = HouseCalendar(
-        overrides: {DateTime(2026, 12, 24): DayOverride.rest},
-      );
+      final vCalendar = HouseCalendar(overrides: {DateTime(2026, 12, 24): DayOverride.rest});
 
       final vNext = toggleRemoteToday(vCalendar, vNow);
 
