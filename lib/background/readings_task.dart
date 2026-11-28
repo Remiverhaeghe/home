@@ -97,6 +97,7 @@ class ReadingsTaskHandler extends TaskHandler {
             Reading(at: DateTime.now(), temp: vValue.temp, humidity: vValue.humidity),
           ),
         );
+        await _recordHealth(pFiles, pDevice.name, pOk: true);
         final vAfter = _misses.remove(pDevice.id);
         await pDetail.note(
           'capteur $pRank',
@@ -114,6 +115,7 @@ class ReadingsTaskHandler extends TaskHandler {
         );
       }
     }
+    await _recordHealth(pFiles, pDevice.name, pOk: false);
     final vMisses = (_misses[pDevice.id] ?? 0) + 1;
     _misses[pDevice.id] = vMisses;
     if (shouldLogMiss(vMisses)) {
@@ -124,6 +126,16 @@ class ReadingsTaskHandler extends TaskHandler {
       } on Object {
         // Le journal ne doit jamais arrêter les relevés
       }
+    }
+  }
+
+  /// Note le tour dans la santé du relevé ; un échec ici ne doit jamais arrêter les relevés.
+  Future<void> _recordHealth(BackgroundFiles pFiles, String pName, {required bool pOk}) async {
+    try {
+      final vHealth = await pFiles.loadHealth();
+      await pFiles.saveHealth(vHealth.record(pName, DateTime.now(), pOk: pOk));
+    } on Object {
+      // Fichier en cours d'écriture : le tour suivant le notera
     }
   }
 

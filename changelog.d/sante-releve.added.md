@@ -1,0 +1,1 @@
+- Santé du relevé : un écran (menu Plus) montre pour chaque capteur suivi le dernier relevé réussi, les tours manqués d'affilée, la part de tours réussis sur 7 jours et le détail du jour, écrits par le service à chaque tour. Il signale l'économie de batterie d'Android et propose d'en exempter Home. Le relevé reprend aussi après un redémarrage du téléphone.

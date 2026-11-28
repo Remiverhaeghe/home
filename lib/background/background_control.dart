@@ -11,6 +11,12 @@ abstract interface class BackgroundControl {
   Future<bool> start({required String pTitle, required String pText});
 
   Future<void> stop();
+
+  /// Android ménage la pile en coupant les applis en arrière-plan : vrai quand Home en est exemptée.
+  Future<bool> isIgnoringBatteryOptimizations();
+
+  /// Ouvre la demande d'exemption d'Android ; l'utilisateur décide. Renvoie vrai si elle est donnée.
+  Future<bool> requestIgnoreBatteryOptimizations();
 }
 
 /// Service de premier plan Android : une notification discrète reste affichée, et le système ne
@@ -31,7 +37,7 @@ class ForegroundBackgroundControl implements BackgroundControl {
     iosNotificationOptions: const IOSNotificationOptions(showNotification: false, playSound: false),
     foregroundTaskOptions: ForegroundTaskOptions(
       eventAction: ForegroundTaskEventAction.repeat(_interval.inMilliseconds),
-      autoRunOnBoot: false,
+      autoRunOnBoot: true,
       allowWakeLock: true,
     ),
   );
@@ -66,4 +72,12 @@ class ForegroundBackgroundControl implements BackgroundControl {
   Future<void> stop() async {
     await FlutterForegroundTask.stopService();
   }
+
+  @override
+  Future<bool> isIgnoringBatteryOptimizations() =>
+      FlutterForegroundTask.isIgnoringBatteryOptimizations;
+
+  @override
+  Future<bool> requestIgnoreBatteryOptimizations() =>
+      FlutterForegroundTask.requestIgnoreBatteryOptimization();
 }

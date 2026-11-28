@@ -2,6 +2,7 @@ import 'dart:io';
 
 import '../logic/day_summary.dart';
 import '../logic/pending_readings.dart';
+import '../logic/read_health.dart';
 
 /// Fichiers partagés entre l'appli et le service d'arrière-plan, qui tourne dans un autre
 /// processus Dart : ils ne partagent pas la mémoire, seulement ces deux fichiers.
@@ -15,13 +16,15 @@ class BackgroundFiles {
       _appOpen = File('${pFolder.path}/appli_ouverte.txt'),
       _summaryOn = File('${pFolder.path}/resume_actif.txt'),
       _summarySent = File('${pFolder.path}/resume_envoye.txt'),
-      _summaryHour = File('${pFolder.path}/resume_heure.txt');
+      _summaryHour = File('${pFolder.path}/resume_heure.txt'),
+      _health = File('${pFolder.path}/sante-releves.json');
 
   final File _pending;
   final File _followed;
   final File _appOpen;
   final File _summaryOn;
   final File _summarySent;
+  final File _health;
   final File _summaryHour;
 
   Future<List<FollowedDevice>> loadFollowed() async =>
@@ -84,6 +87,13 @@ class BackgroundFiles {
 
   Future<void> markSummarySent(DateTime pNow) =>
       _summarySent.writeAsString(pNow.toIso8601String(), flush: true);
+
+  /// Santé du relevé en arrière-plan : le service l'écrit à chaque tour, l'appli la lit.
+  Future<ReadHealth> loadHealth() async =>
+      await _health.exists() ? parseReadHealth(await _health.readAsString()) : const ReadHealth();
+
+  Future<void> saveHealth(ReadHealth pHealth) =>
+      _health.writeAsString(readHealthJson(pHealth), flush: true);
 
   /// Relevés en attente, retirés du fichier. Le fichier est d'abord renommé : une ligne ajoutée
   /// par le service pendant la lecture va dans un nouveau fichier, sans rien perdre.
