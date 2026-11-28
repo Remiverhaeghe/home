@@ -37,13 +37,12 @@ class AppearanceSettings {
 }
 
 /// Fichier `apparence.json`, version 1.
-String appearanceJson(AppearanceSettings pSettings) =>
-    jsonEncode({
-      'version': 1,
-      'theme': pSettings.theme.name,
-      'textScale': pSettings.textScale,
-      'temperatureUnit': pSettings.temperatureUnit.name,
-    });
+String appearanceJson(AppearanceSettings pSettings) => jsonEncode({
+  'version': 1,
+  'theme': pSettings.theme.name,
+  'textScale': pSettings.textScale,
+  'temperatureUnit': pSettings.temperatureUnit.name,
+});
 
 /// Relit le fichier ; une valeur inconnue ou un fichier abîmé redonnent les réglages de départ.
 AppearanceSettings parseAppearance(String pText) {
