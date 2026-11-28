@@ -23,6 +23,8 @@ class HttpDaikinLink implements DaikinLink {
   static const _timeout = Duration(seconds: 4);
   static const _discoveryPort = 30050;
   static const _discoveryWindow = Duration(seconds: 4);
+  static const _sweepTimeout = Duration(milliseconds: 800);
+  static const _sweepBatch = 48;
 
   Future<String> _get(String pHost, String pPath) async {
     if (!isPrivateAddress(pHost)) {
@@ -71,14 +73,51 @@ class HttpDaikinLink implements DaikinLink {
     if (!await requestLocalNetworkAccess()) {
       return;
     }
-    final vSocket = await RawDatagramSocket.bind(InternetAddress.anyIPv4, 0);
+    final vLocals = await _localAddresses();
+    final vSeen = <String>{...vLocals};
+    // Diffusion UDP d'abord, puis balayage du réseau pour les box qui la bloquent
+    await for (final vHost in _discoverUdp(vLocals, vSeen)) {
+      yield vHost;
+    }
+    await for (final vHost in _discoverBySweep(vLocals, vSeen)) {
+      yield vHost;
+    }
+  }
+
+  /// Adresses IPv4 de réseau privé du téléphone.
+  Future<List<String>> _localAddresses() async {
+    try {
+      final vInterfaces = await NetworkInterface.list(type: InternetAddressType.IPv4);
+
+      return [
+        for (final vInterface in vInterfaces)
+          for (final vAddress in vInterface.addresses)
+            if (isPrivateAddress(vAddress.address)) vAddress.address,
+      ];
+    } on SocketException {
+      return const [];
+    }
+  }
+
+  Stream<String> _discoverUdp(List<String> pLocals, Set<String> pSeen) async* {
+    final RawDatagramSocket vSocket;
+    try {
+      vSocket = await RawDatagramSocket.bind(InternetAddress.anyIPv4, 0);
+    } on SocketException {
+      return;
+    }
     vSocket.broadcastEnabled = true;
-    vSocket.send(
-      utf8.encode('DAIKIN_UDP/common/basic_info'),
-      InternetAddress('255.255.255.255'),
-      _discoveryPort,
-    );
-    final vSeen = <String>{};
+    final vTargets = {
+      '255.255.255.255',
+      for (final vLocal in pLocals) ?subnetBroadcast(vLocal),
+    };
+    for (final vTarget in vTargets) {
+      try {
+        vSocket.send(utf8.encode('DAIKIN_UDP/common/basic_info'), InternetAddress(vTarget), _discoveryPort);
+      } on SocketException {
+        // Une destination refusée n'empêche pas les autres
+      }
+    }
     final vEnd = DateTime.now().add(_discoveryWindow);
     try {
       await for (final vEvent in vSocket.timeout(
@@ -89,7 +128,7 @@ class HttpDaikinLink implements DaikinLink {
           final vDatagram = vSocket.receive();
           if (vDatagram != null &&
               isPrivateAddress(vDatagram.address.address) &&
-              vSeen.add(vDatagram.address.address)) {
+              pSeen.add(vDatagram.address.address)) {
             yield vDatagram.address.address;
           }
         }
@@ -99,6 +138,43 @@ class HttpDaikinLink implements DaikinLink {
       }
     } finally {
       vSocket.close();
+    }
+  }
+
+  /// Interroge chaque adresse du réseau de la maison par HTTP, quelques dizaines à la fois.
+  Stream<String> _discoverBySweep(List<String> pLocals, Set<String> pSeen) async* {
+    final vHosts = <String>{for (final vLocal in pLocals) ...subnetHosts(vLocal)}..removeAll(pSeen);
+    final vList = vHosts.toList();
+    for (var vStart = 0; vStart < vList.length; vStart += _sweepBatch) {
+      final vBatch = vList.skip(vStart).take(_sweepBatch);
+      final vFound = await Future.wait(vBatch.map(_isDaikin));
+      var vIndex = 0;
+      for (final vHost in vBatch) {
+        if (vFound[vIndex++] && pSeen.add(vHost)) {
+          yield vHost;
+        }
+      }
+    }
+  }
+
+  /// Vrai si l'adresse répond comme un module Daikin ; les délais sont courts pour tout balayer.
+  Future<bool> _isDaikin(String pHost) async {
+    final vClient = HttpClient()..connectionTimeout = _sweepTimeout;
+    try {
+      final vRequest = await vClient
+          .getUrl(Uri.parse('http://$pHost/common/basic_info'))
+          .timeout(_sweepTimeout);
+      final vResponse = await vRequest.close().timeout(_sweepTimeout);
+      if (vResponse.statusCode != 200) {
+        return false;
+      }
+      final vBody = await vResponse.transform(utf8.decoder).join().timeout(_sweepTimeout);
+
+      return vBody.contains('ret=OK');
+    } on Object {
+      return false;
+    } finally {
+      vClient.close(force: true);
     }
   }
 }

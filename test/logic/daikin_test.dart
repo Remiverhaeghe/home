@@ -175,4 +175,26 @@ void main() {
       expect(isPrivateAddress(''), isFalse);
     });
   });
+
+  group('recherche sur le réseau', () {
+    test('le balayage couvre le /24 sans l\'adresse du téléphone', () {
+      final vHosts = subnetHosts('192.168.1.42');
+
+      expect(vHosts, hasLength(253));
+      expect(vHosts.first, '192.168.1.1');
+      expect(vHosts.last, '192.168.1.254');
+      expect(vHosts, isNot(contains('192.168.1.42')));
+    });
+
+    test('hors réseau privé, rien à balayer ni à diffuser', () {
+      expect(subnetHosts('8.8.8.8'), isEmpty);
+      expect(subnetHosts('pas une adresse'), isEmpty);
+      expect(subnetBroadcast('8.8.8.8'), isNull);
+    });
+
+    test('la diffusion vise la dernière adresse du /24', () {
+      expect(subnetBroadcast('192.168.1.42'), '192.168.1.255');
+      expect(subnetBroadcast('10.0.5.7'), '10.0.5.255');
+    });
+  });
 }

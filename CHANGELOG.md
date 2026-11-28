@@ -9,6 +9,7 @@
 
 ### Ajouté
 
+- La recherche des climatisations ne dépend plus de la diffusion UDP : elle diffuse aussi sur le réseau du téléphone, puis interroge chaque adresse du même réseau pour trouver les modules que la box ne laisse pas répondre.
 - `docs/architecture.md` : couches du code, données, tests et marche à suivre pour ajouter un appareil.
 - Audit des permissions et du réseau : `docs/securite.md` liste chaque permission Android, ce qui sort du téléphone et où vivent les identifiants.
 - Captures d'écran d'une maison fictive générées par la CI (workflow Captures, `test/captures`) : liste des capteurs, courbes d'un capteur, écran des pièces. Aucune donnée réelle.

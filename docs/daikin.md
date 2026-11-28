@@ -23,7 +23,7 @@ Modes : 0, 1 et 7 automatique, 2 sec, 3 froid, 4 chaud, 6 ventilation. Home envo
 
 ## Recherche sur le réseau
 
-Home envoie `DAIKIN_UDP/common/basic_info` en diffusion UDP sur le port 30050 et garde les adresses privées qui répondent pendant quatre secondes. Si rien ne répond (certains routeurs bloquent la diffusion), l'ajout par adresse marche toujours : l'adresse est affichée dans la liste des appareils de la box.
+Home envoie `DAIKIN_UDP/common/basic_info` en diffusion UDP sur le port 30050 (adresse générale et diffusion du réseau du téléphone) et garde les adresses privées qui répondent pendant quatre secondes. Beaucoup de téléphones et de box laissent mal passer la diffusion : Home interroge alors chaque adresse du même réseau en HTTP (`/common/basic_info`, 800 ms par adresse, 48 à la fois) et garde celles qui répondent `ret=OK`. Si rien n'est trouvé, l'ajout par adresse marche toujours : l'adresse est affichée dans la liste des appareils de la box.
 
 ## Ce que Home commande
 
