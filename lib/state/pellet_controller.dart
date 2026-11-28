@@ -2,11 +2,8 @@ import 'package:flutter/foundation.dart';
 
 import '../logic/daikin.dart' show isPrivateAddress;
 import '../logic/pellet.dart';
-<<<<<<< HEAD
-import '../logic/vacation.dart';
-=======
 import '../logic/pellet_runs.dart';
->>>>>>> origin/main
+import '../logic/vacation.dart';
 import '../net/pellet_link.dart';
 import '../storage/pellet_runs_store.dart';
 import '../storage/pellet_store.dart';
