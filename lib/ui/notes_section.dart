@@ -5,6 +5,7 @@ import '../l10n/gen/app_localizations.dart';
 import '../logic/notes.dart';
 import '../logic/reading.dart';
 import '../state/notes_controller.dart';
+import 'units_scope.dart';
 
 /// Notes datées d'un capteur (travaux, changement de fenêtre) et ce que les mesures ont fait
 /// dans les deux semaines d'après.
@@ -61,7 +62,7 @@ class NotesSection extends StatelessWidget {
                     return Text(
                       vEffect == null
                           ? vDate.format(vNote.at)
-                          : '${vDate.format(vNote.at)} · ${vTexts.notesEffect(vEffect.days, signed(vEffect.tempChange), signed(vEffect.humidityChange))}',
+                          : '${vDate.format(vNote.at)} · ${vTexts.notesEffect(vEffect.days, UnitsScope.of(pContext).delta(vEffect.tempChange), signed(vEffect.humidityChange))}',
                     );
                   },
                 ),

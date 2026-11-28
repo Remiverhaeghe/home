@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../l10n/gen/app_localizations.dart';
 import '../logic/periods.dart';
 import '../logic/reading.dart';
+import 'units_scope.dart';
 
 /// Périodes de mesure d'un capteur séparées par un long trou. Chacune peut devenir un capteur à
 /// part, pour la ranger dans la pièce où il se trouvait.
@@ -40,7 +41,7 @@ class PeriodsSection extends StatelessWidget {
     final vTexts = AppLocalizations.of(pContext);
     final vLocale = Localizations.localeOf(pContext).toString();
     final vDate = DateFormat.yMMMd(vLocale);
-    final vNumber = NumberFormat('0.0', vLocale);
+    final vUnits = UnitsScope.of(pContext);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,7 +54,7 @@ class PeriodsSection extends StatelessWidget {
           ListTile(
             contentPadding: EdgeInsets.zero,
             title: Text(vTexts.periodsDates(vDate.format(vPeriod.from), vDate.format(vPeriod.to))),
-            subtitle: Text(vTexts.periodsStats(vPeriod.count, vNumber.format(vPeriod.avgTemp))),
+            subtitle: Text(vTexts.periodsStats(vPeriod.count, vUnits.temp(vPeriod.avgTemp))),
             trailing: TextButton(
               onPressed: () => _split(pContext, vPeriod),
               child: Text(vTexts.periodsSplit),
