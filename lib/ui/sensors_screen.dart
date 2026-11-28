@@ -340,7 +340,11 @@ class SensorsScreen extends StatelessWidget {
             value: vActions.length,
             enabled: vEntry.enabled,
             child: Row(
-              children: [Icon(vEntry.icon), const SizedBox(width: 12), Flexible(child: Text(vEntry.label))],
+              children: [
+                Icon(vEntry.icon),
+                const SizedBox(width: 12),
+                Flexible(child: Text(vEntry.label)),
+              ],
             ),
           ),
         );

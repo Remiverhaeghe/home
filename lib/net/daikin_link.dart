@@ -107,13 +107,14 @@ class HttpDaikinLink implements DaikinLink {
       return;
     }
     vSocket.broadcastEnabled = true;
-    final vTargets = {
-      '255.255.255.255',
-      for (final vLocal in pLocals) ?subnetBroadcast(vLocal),
-    };
+    final vTargets = {'255.255.255.255', for (final vLocal in pLocals) ?subnetBroadcast(vLocal)};
     for (final vTarget in vTargets) {
       try {
-        vSocket.send(utf8.encode('DAIKIN_UDP/common/basic_info'), InternetAddress(vTarget), _discoveryPort);
+        vSocket.send(
+          utf8.encode('DAIKIN_UDP/common/basic_info'),
+          InternetAddress(vTarget),
+          _discoveryPort,
+        );
       } on SocketException {
         // Une destination refusée n'empêche pas les autres
       }
