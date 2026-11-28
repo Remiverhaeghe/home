@@ -84,10 +84,12 @@ void main() {
         ),
       ),
     );
-    await pTester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
-    await pTester.pump();
-
     final vChoice = find.byKey(const Key('summary-hour'));
+    // Les fichiers se lisent pour de vrai : attendre que le choix d'heure apparaisse
+    for (var vTry = 0; vTry < 40 && vChoice.evaluate().isEmpty; vTry++) {
+      await pTester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 25)));
+      await pTester.pump();
+    }
     await pTester.ensureVisible(vChoice);
     expect(pTester.widget<DropdownButton<int>>(vChoice).value, 8);
 
