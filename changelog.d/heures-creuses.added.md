@@ -1,0 +1,1 @@
+- Heures creuses pour les clims : une plage horaire (qui peut passer minuit) et le prix du kWh dans cette plage, saisis dans le bilan du chauffage. Le coût des clims compte les heures de marche creuses à ce prix, le reste au prix normal. Sans ces deux réglages, rien ne change.

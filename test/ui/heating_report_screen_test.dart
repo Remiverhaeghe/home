@@ -146,12 +146,14 @@ void main() {
     await pTester.pumpAndSettle();
     final vFields = find.byType(TextField);
     await pTester.enterText(vFields.at(0), '0,25');
-    await pTester.enterText(vFields.at(1), '80');
-    await pTester.enterText(vFields.at(2), '1,4');
+    await pTester.enterText(vFields.at(1), '0,15');
+    await pTester.enterText(vFields.at(2), '80');
+    await pTester.enterText(vFields.at(3), '1,4');
     await pTester.tap(find.text('Enregistrer'));
     await pTester.pumpAndSettle();
 
     expect(vRunsStore.saved.pricePerKwh, 0.25);
+    expect(vRunsStore.saved.offPeakPrice, 0.15);
     expect(vRunsStore.saved.monthlyBudget, 80);
     expect(vRunsStore.saved.kwByHost, {_host: 1.4});
   });
