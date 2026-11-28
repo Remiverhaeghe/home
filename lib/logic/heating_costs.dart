@@ -244,7 +244,8 @@ String acRunsJson(AcRuns pRuns) => jsonEncode({
   'kw': pRuns.kwByHost,
   'prixKwh': pRuns.pricePerKwh,
   'budgetMensuel': pRuns.monthlyBudget,
-  if (pRuns.offPeak != null) 'creuses': {'debut': pRuns.offPeak!.startHour, 'fin': pRuns.offPeak!.endHour},
+  if (pRuns.offPeak != null)
+    'creuses': {'debut': pRuns.offPeak!.startHour, 'fin': pRuns.offPeak!.endHour},
   if (pRuns.offPeakPrice != null) 'prixCreuxKwh': pRuns.offPeakPrice,
 });
 

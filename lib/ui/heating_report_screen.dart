@@ -276,12 +276,7 @@ class _HeatingDialogState extends State<_HeatingDialog> {
 
 /// Choix d'une heure de 0 à 23, ou aucune.
 class _HourChoice extends StatelessWidget {
-  const _HourChoice({
-    super.key,
-    required this.label,
-    required this.value,
-    required this.onChanged,
-  });
+  const _HourChoice({super.key, required this.label, required this.value, required this.onChanged});
 
   final String label;
   final int? value;
