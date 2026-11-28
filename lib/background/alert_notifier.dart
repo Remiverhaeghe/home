@@ -5,6 +5,9 @@ import '../logic/alerts.dart';
 /// Affiche les alertes sous forme de notifications ; remplacé par un faux dans les tests.
 abstract interface class AlertNotifier {
   Future<void> show(List<SensorAlert> pAlerts);
+
+  /// Résumé du matin : une notification discrète, sans son.
+  Future<void> showSummary(String pTitle, String pBody);
 }
 
 /// Notifications Android avec son et bannière, une par alerte : une alerte qui dure garde la même
@@ -58,7 +61,29 @@ class LocalAlertNotifier implements AlertNotifier {
       );
     }
   }
+
+  @override
+  Future<void> showSummary(String pTitle, String pBody) async {
+    await _init();
+    await _plugin.show(
+      id: summaryNotificationId,
+      title: pTitle,
+      body: pBody,
+      notificationDetails: const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'resume_maison',
+          'Résumé de la maison',
+          channelDescription: 'Résumé du matin : pièces fraîches ou humides',
+          importance: Importance.low,
+          priority: Priority.low,
+        ),
+      ),
+    );
+  }
 }
+
+/// Numéro de la notification du résumé : le résumé du lendemain remplace celui de la veille.
+const summaryNotificationId = 1;
 
 /// Numéro stable d'une alerte : la même alerte remplace sa notification.
 int notificationId(SensorAlert pAlert) => pAlert.key.hashCode & 0x7fffffff;
