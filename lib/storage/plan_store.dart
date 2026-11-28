@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import '../logic/alerts.dart';
 import '../logic/automations.dart';
 import '../logic/boost.dart';
 import '../logic/plan.dart';
@@ -15,6 +16,7 @@ class PlanSettings {
     this.vacation,
     this.stoveColdBelow = defaultStoveColdBelow,
     this.boosts = const [],
+    this.humidityAlertAt = humidityAlertLevel,
   });
 
   final List<Room> rooms;
@@ -26,6 +28,9 @@ class PlanSettings {
 
   /// Coups de chaud (douche, bain, lessive), en cours ou passés.
   final List<Boost> boosts;
+
+  /// Au-dessus de ce taux d'humidité, une alerte est donnée.
+  final double humidityAlertAt;
 }
 
 /// Où vivent ces réglages : trois fichiers sur le téléphone, ou la mémoire dans les tests.
@@ -81,6 +86,7 @@ class FilePlanStore implements PlanStore {
       vacation: vVacation == null ? null : parseVacation(vVacation),
       stoveColdBelow: vOptions == null ? defaultStoveColdBelow : parseStoveColdBelow(vOptions),
       boosts: vOptions == null ? [] : parseBoostsFile(vOptions),
+      humidityAlertAt: vOptions == null ? humidityAlertLevel : parseHumidityAlertAt(vOptions),
     );
   }
 
@@ -88,7 +94,10 @@ class FilePlanStore implements PlanStore {
   Future<void> save(PlanSettings pSettings) async {
     await _write('pieces.json', roomsJson(pSettings.rooms));
     await _write('automatismes.json', autoRulesJson(pSettings.rules));
-    await _write('reglages-plan.json', planOptionsJson(pSettings.stoveColdBelow, pSettings.boosts));
+    await _write(
+      'reglages-plan.json',
+      planOptionsJson(pSettings.stoveColdBelow, pSettings.boosts, pSettings.humidityAlertAt),
+    );
     final vVacation = pSettings.vacation;
     if (vVacation == null) {
       final vFile = _file('vacances.json');
@@ -105,9 +114,14 @@ class FilePlanStore implements PlanStore {
 const stoveColdMin = 10.0;
 const stoveColdMax = 22.0;
 
-/// Contenu de `reglages-plan.json` : le seuil de froid et les coups de chaud.
-String planOptionsJson(double pStoveColdBelow, List<Boost> pBoosts) => jsonEncode({
+/// Contenu de `reglages-plan.json` : le seuil de froid, les coups de chaud et le seuil d'humidité.
+String planOptionsJson(
+  double pStoveColdBelow,
+  List<Boost> pBoosts, [
+  double pHumidityAlertAt = humidityAlertLevel,
+]) => jsonEncode({
   'poeleFroidSous': pStoveColdBelow,
+  'alerteHumidite': pHumidityAlertAt,
   'coupsDeChaud': jsonDecode(boostsToJson(pBoosts)),
 });
 
@@ -136,4 +150,19 @@ double parseStoveColdBelow(String pJson) {
   }
 
   return defaultStoveColdBelow;
+}
+
+/// Seuil d'humidité lu dans `reglages-plan.json` ; absent, illisible ou hors bornes, 70 %.
+double parseHumidityAlertAt(String pJson) {
+  try {
+    final vRoot = jsonDecode(pJson);
+    final vValue = vRoot is Map<String, dynamic> ? vRoot['alerteHumidite'] : null;
+    if (vValue is num && vValue >= humidityAlertMin && vValue <= humidityAlertMax) {
+      return vValue.toDouble();
+    }
+  } on FormatException {
+    // Fichier abîmé : valeur par défaut
+  }
+
+  return humidityAlertLevel;
 }
