@@ -25,7 +25,8 @@ class AppearanceController extends ChangeNotifier {
   Future<void> setTemperatureUnit(TemperatureUnit pUnit) =>
       _change(_settings.copyWith(temperatureUnit: pUnit));
 
-  Future<void> setLanguage(AppLanguage pLanguage) => _change(_settings.copyWith(language: pLanguage));
+  Future<void> setLanguage(AppLanguage pLanguage) =>
+      _change(_settings.copyWith(language: pLanguage));
 
   Future<void> _change(AppearanceSettings pSettings) async {
     _settings = pSettings;
