@@ -247,6 +247,7 @@ class SensorsScreen extends StatelessWidget {
                 plan: planController!,
                 ac: acController!,
                 sensors: controller,
+                pellet: pelletController,
                 files: files,
               ),
             ),

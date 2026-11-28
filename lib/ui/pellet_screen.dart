@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../l10n/gen/app_localizations.dart';
 import '../logic/pellet.dart';
 import '../state/pellet_controller.dart';
+import 'pellet_plan_section.dart';
 import 'pellet_usage_section.dart';
 
 /// Poêle à pellets : température de la pièce, état, marche ou arrêt, consigne par pas de 0,5 °C.
@@ -152,6 +153,14 @@ class _PelletScreenState extends State<PelletScreen> {
                     style: TextStyle(color: Theme.of(pContext).colorScheme.error),
                   ),
                 ),
+              if (widget.controller.unexpectedStopAt != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Text(
+                    vTexts.pelletStoppedAlone(_clockText(widget.controller.unexpectedStopAt!)),
+                    style: TextStyle(color: Theme.of(pContext).colorScheme.error),
+                  ),
+                ),
               if (vState != null) ...[
                 const SizedBox(height: 16),
                 FittedBox(
@@ -195,8 +204,10 @@ class _PelletScreenState extends State<PelletScreen> {
                 if (vState.powerLevel != null)
                   ListTile(title: Text(vTexts.pelletLevel), subtitle: Text('${vState.powerLevel}')),
               ],
-              if (widget.controller.stove != null)
+              if (widget.controller.stove != null) ...[
                 PelletUsageSection(controller: widget.controller),
+                PelletPlanSection(controller: widget.controller),
+              ],
             ],
           );
         },
@@ -281,3 +292,6 @@ class _SetupDialogState extends State<_SetupDialog> {
     );
   }
 }
+
+String _clockText(DateTime pAt) =>
+    '${pAt.hour.toString().padLeft(2, '0')}:${pAt.minute.toString().padLeft(2, '0')}';
