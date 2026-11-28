@@ -16,6 +16,7 @@ import 'boost_dialog.dart';
 import 'heating_report_screen.dart';
 import 'plan_humidity_section.dart';
 import 'plan_room_card.dart';
+import 'plan_scenarios_section.dart';
 import 'plan_stove_cold_section.dart';
 import 'plan_summary_section.dart';
 import 'rules_screen.dart';
@@ -47,6 +48,7 @@ class PlanScreen extends StatelessWidget {
     required this.ac,
     required this.sensors,
     this.pickRange = pickAbsence,
+    this.pickDay = pickReturnDay,
     this.clock = DateTime.now,
     this.pellet,
     this.files,
@@ -61,6 +63,7 @@ class PlanScreen extends StatelessWidget {
   final AcController ac;
   final SensorsController sensors;
   final DateRangePicker pickRange;
+  final ReturnDayPicker pickDay;
   final DateTime Function() clock;
 
   String _profileName(AppLocalizations pTexts, ProfileKind pProfile) => switch (pProfile) {
@@ -164,6 +167,8 @@ class PlanScreen extends StatelessWidget {
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
+              ScenariosSection(plan: plan, clock: clock, pellet: pellet, pickDay: pickDay),
+              const SizedBox(height: 24),
               if (ac.units.isEmpty)
                 Text(vTexts.planNoUnits)
               else ...[
