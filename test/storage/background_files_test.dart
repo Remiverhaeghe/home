@@ -81,16 +81,19 @@ void main() {
     expect(await vFiles.isAppOpen(vNow.add(const Duration(minutes: 7)), vWindow), isFalse);
   });
 
-  test('la fréquence du relevé vaut 5 minutes tant qu\'une valeur valable n\'est pas écrite', () async {
-    final vFolder = Directory.systemTemp.createTempSync('home_interval');
-    addTearDown(() => vFolder.deleteSync(recursive: true));
-    final vFiles = BackgroundFiles(vFolder);
-    expect(await vFiles.readIntervalMinutes(), 5);
+  test(
+    'la fréquence du relevé vaut 5 minutes tant qu\'une valeur valable n\'est pas écrite',
+    () async {
+      final vFolder = Directory.systemTemp.createTempSync('home_interval');
+      addTearDown(() => vFolder.deleteSync(recursive: true));
+      final vFiles = BackgroundFiles(vFolder);
+      expect(await vFiles.readIntervalMinutes(), 5);
 
-    await vFiles.setReadIntervalMinutes(30);
-    expect(await vFiles.readIntervalMinutes(), 30);
+      await vFiles.setReadIntervalMinutes(30);
+      expect(await vFiles.readIntervalMinutes(), 30);
 
-    await vFiles.setReadIntervalMinutes(7);
-    expect(await vFiles.readIntervalMinutes(), 5);
-  });
+      await vFiles.setReadIntervalMinutes(7);
+      expect(await vFiles.readIntervalMinutes(), 5);
+    },
+  );
 }
