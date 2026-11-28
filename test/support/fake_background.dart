@@ -29,6 +29,21 @@ class FakeBackgroundControl implements BackgroundControl {
     stops++;
     running = false;
   }
+
+  var ignoringBattery = false;
+  var allowBatteryRequest = true;
+  var batteryRequests = 0;
+
+  @override
+  Future<bool> isIgnoringBatteryOptimizations() async => ignoringBattery;
+
+  @override
+  Future<bool> requestIgnoreBatteryOptimizations() async {
+    batteryRequests++;
+    ignoringBattery = allowBatteryRequest;
+
+    return ignoringBattery;
+  }
 }
 
 /// Notifications de test : elles notent les alertes montrées.
