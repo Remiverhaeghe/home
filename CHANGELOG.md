@@ -8,9 +8,11 @@
 
 ### Ajouté
 
-- Analyses dans le détail d'un capteur, sur les trente derniers jours : heures de confort (18 à 24 °C, 40 à 60 %), eau dans l'air en g/m³, risque de moisissure d'après la plus longue période à 70 % d'humidité, capteur figé ou saut de valeur
+- Météo extérieure (écran « La maison ») : récupération par Internet des températures et humidités horaires du lieu de la maison auprès d'Open-Meteo, désactivée au départ ; seules les coordonnées partent. Archive de 400 jours sur le téléphone (`meteo.json`), actualisée au plus une fois par heure, copiable en CSV pour un tableur
+- Analyses : écart moyen avec l'extérieur sur les mêmes heures et part des variations du dehors qui passe à l'intérieur sur une journée
 - La maison (bouton « La maison » de la liste des capteurs) : lieu saisi à la main (nom, latitude, longitude, sans GPS) pour les analyses avec la météo extérieure, rangé dans `maison.json`
 - Emplacement des capteurs : pièce, niveau (sous-sol à combles) ou extérieur, choisi depuis le détail du capteur ; la liste est groupée par niveau, l'extérieur à part
+- Analyses dans le détail d'un capteur, sur les trente derniers jours : heures de confort (18 à 24 °C, 40 à 60 %), eau dans l'air en g/m³, risque de moisissure d'après la plus longue période à 70 % d'humidité, capteur figé ou saut de valeur
 - Capteurs nommables : un crayon dans le détail d'un capteur donne le nom de l'endroit (« Chambre des enfants »). Le nom s'affiche dans la liste, l'affichage mural et le choix du capteur d'une clim ; l'identifiant d'origine reste celui des pièces et des règles. Noms rangés dans `noms-capteurs.json`, hors du fichier d'échange
 - Poêle à pellets Ecoforest (bouton flamme de la liste des capteurs) : température de la pièce, étape du poêle, marche et arrêt, consigne de température par pas de 0,5 °C. Connexion HTTPS locale avec le numéro de série et le mot de passe de l'étiquette, rangés dans `poele.json`. Montage décrit dans `docs/poele-pellets.md`
 - Garage et Velux : boutons à relais Wi-Fi Shelly (Plus, Pro, 1, 2.5), un par commande, enregistrés dans `relais.json`. La porte de garage demande confirmation, un double appui en moins de 5 secondes est ignoré, les adresses hors du réseau de la maison sont refusées. Montage décrit dans `docs/relais.md`

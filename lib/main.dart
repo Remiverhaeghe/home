@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -9,11 +10,13 @@ import 'background/alert_notifier.dart';
 import 'background/background_control.dart';
 import 'net/daikin_link.dart';
 import 'net/pellet_link.dart';
+import 'net/weather_link.dart';
 import 'net/relay_link.dart';
 import 'state/ac_controller.dart';
 import 'state/plan_controller.dart';
 import 'state/house_controller.dart';
 import 'state/pellet_controller.dart';
+import 'state/weather_controller.dart';
 import 'state/relay_controller.dart';
 import 'state/sensors_controller.dart';
 import 'storage/ac_store.dart';
@@ -23,6 +26,7 @@ import 'storage/house_store.dart';
 import 'storage/label_store.dart';
 import 'storage/plan_store.dart';
 import 'storage/pellet_store.dart';
+import 'storage/weather_store.dart';
 import 'storage/relay_store.dart';
 
 Future<void> main() async {
@@ -53,6 +57,13 @@ Future<void> main() async {
   await vPellet.load();
   final vHouse = HouseController(FileHouseStore(File('${vFolder.path}/maison.json')));
   await vHouse.load();
+  final vWeather = WeatherController(
+    FileWeatherStore(File('${vFolder.path}/meteo.json')),
+    HttpWeatherLink(),
+  );
+  await vWeather.load();
+  // Sans autorisation ou sans lieu, rien ne part ; au plus une récupération par heure
+  unawaited(vWeather.refresh(vHouse.house.location));
   final vNotifier = LocalAlertNotifier();
   await vNotifier.requestPermission();
   runApp(
@@ -63,6 +74,7 @@ Future<void> main() async {
       relayController: vRelays,
       pelletController: vPellet,
       houseController: vHouse,
+      weatherController: vWeather,
       notifier: vNotifier,
       background: ForegroundBackgroundControl(),
       files: BackgroundFiles(vFolder),

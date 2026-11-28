@@ -59,3 +59,10 @@ Décision : l'appli déclare la permission réseau pour parler aux modules en HT
 Contexte : pas de NAS pour le moment, et les relevés de la maison sont privés.
 Décision : aucune partie serveur. Les capteurs se liront en Bluetooth depuis le téléphone, l'historique reste dans `capteurs.json`, et l'échange avec Atelier passe par un fichier partagé depuis le téléphone.
 Écarté : un service sur le NAS qui collecterait les relevés en continu. À reconsidérer si un NAS arrive, avec le même fichier d'échange comme format.
+
+## 2026-11-27 : météo extérieure, seule sortie vers Internet
+
+Contexte : comparer les pièces avec l'extérieur (écart, amortissement du bâtiment) demande des relevés de température et d'humidité du dehors, que ni les capteurs ni les climatisations ne donnent toujours.
+Décision : un interrupteur, désactivé au départ, autorise la récupération auprès d'Open-Meteo, sans compte ni clé. Seules les coordonnées de la maison partent, vers ce seul serveur ; les relevés sont gardés 400 jours sur le téléphone, une récupération par heure au plus.
+Écarté : un service météo à compte (clé à stocker, quotas), et l'estimation de l'extérieur par les climatisations, qui n'existe pas sur tous les modules. À reconsidérer si une sonde extérieure Bluetooth est posée.
+
