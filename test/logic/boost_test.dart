@@ -23,7 +23,7 @@ const _off = DaikinControl(
 
 PlanResult _plan(double pTemp, {Map<String, Boost> pBoosts = const {}, List<Room>? pRooms}) =>
     evaluatePlan(
-      pRooms: pRooms ?? const [Room(acHost: _host, targets: RoomTargets(comfort: 19, eco: 19))],
+      pRooms: pRooms ?? const [Room(acHost: _host, targets: RoomTargets(comfort: 20, eco: 20))],
       pRules: const [],
       pVacation: null,
       pUnits: const [_unit],
