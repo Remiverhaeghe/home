@@ -58,6 +58,10 @@ class FileDetailLog implements DetailLog {
   final File _flag;
   final DateTime Function() _now;
 
+  /// Les notes s'écrivent l'une après l'autre : relire puis réécrire le fichier en même temps
+  /// perdrait des lignes.
+  Future<void> _queue = Future<void>.value();
+
   @override
   Future<bool> isOn() => _flag.exists();
 
@@ -71,7 +75,14 @@ class FileDetailLog implements DetailLog {
   }
 
   @override
-  Future<void> note(String pTopic, String pMessage) async {
+  Future<void> note(String pTopic, String pMessage) {
+    final vWrite = _queue.then((_) => _write(pTopic, pMessage));
+    _queue = vWrite;
+
+    return vWrite;
+  }
+
+  Future<void> _write(String pTopic, String pMessage) async {
     try {
       if (!await isOn()) {
         return;
