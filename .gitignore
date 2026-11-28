@@ -35,3 +35,6 @@ lib/l10n/gen/
 *.jks
 *.keystore
 key.properties
+
+# Captures générées par le workflow Captures
+test/captures/png/
