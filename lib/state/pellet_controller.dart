@@ -118,9 +118,13 @@ class PelletController extends ChangeNotifier {
     return PelletResult.done;
   }
 
-  /// Range le débit de pellets (kg par heure de marche, null pour l'effacer) et le poids d'un sac.
-  Future<void> setFlow({required double? pKgPerHour, required double pBagKg}) async {
-    _runs = _runs.withFlow(pKgPerHour: pKgPerHour, pBagKg: pBagKg);
+  /// Range le débit de pellets (kg par heure de marche, null pour l'effacer) le poids et le prix d'un sac.
+  Future<void> setFlow({
+    required double? pKgPerHour,
+    required double pBagKg,
+    double? pBagPrice,
+  }) async {
+    _runs = _runs.withFlow(pKgPerHour: pKgPerHour, pBagKg: pBagKg, pBagPrice: pBagPrice);
     await _runsStore.save(_runs);
     notifyListeners();
   }

@@ -47,8 +47,9 @@ void main() {
       runsStore: vRunsStore,
     );
 
-    await vController.setFlow(pKgPerHour: 1.3, pBagKg: 15);
+    await vController.setFlow(pKgPerHour: 1.3, pBagKg: 15, pBagPrice: 7);
     expect(vController.runs.kgPerHour, 1.3);
+    expect(vController.runs.bagPrice, 7);
     expect(vRunsStore.saved.kgPerHour, 1.3);
 
     final vOther = PelletController(
