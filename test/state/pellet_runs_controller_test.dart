@@ -124,27 +124,30 @@ void main() {
   });
 
   group('arrêt programmé et stock', () {
-    test('le service éteint le poêle dans la fenêtre de l\'arrêt programmé, pas avant ni après', () async {
-      final vLink = FakePelletLink();
-      await vLink.setPower(_stove, pOn: true);
-      final vController = PelletController(
-        MemoryPelletStore(_stove),
-        vLink,
-        runsStore: MemoryPelletRunsStore(),
-      );
-      await vController.load();
-      await vController.setStopAt(23 * 60);
+    test(
+      'le service éteint le poêle dans la fenêtre de l\'arrêt programmé, pas avant ni après',
+      () async {
+        final vLink = FakePelletLink();
+        await vLink.setPower(_stove, pOn: true);
+        final vController = PelletController(
+          MemoryPelletStore(_stove),
+          vLink,
+          runsStore: MemoryPelletRunsStore(),
+        );
+        await vController.load();
+        await vController.setStopAt(23 * 60);
 
-      expect(await vController.refreshAndStopIfAway(null, DateTime(2026, 12, 7, 22, 50)), isTrue);
-      expect(vLink.powers, isEmpty);
+        expect(await vController.refreshAndStopIfAway(null, DateTime(2026, 12, 7, 22, 50)), isTrue);
+        expect(vLink.powers, isEmpty);
 
-      expect(await vController.refreshAndStopIfAway(null, DateTime(2026, 12, 7, 23, 5)), isFalse);
-      expect(vLink.powers, [false]);
+        expect(await vController.refreshAndStopIfAway(null, DateTime(2026, 12, 7, 23, 5)), isFalse);
+        expect(vLink.powers, [false]);
 
-      // Rallumé à la main plus tard : hors de la fenêtre, il reste allumé
-      await vLink.setPower(_stove, pOn: true);
-      expect(await vController.refreshAndStopIfAway(null, DateTime(2026, 12, 8, 8)), isTrue);
-    });
+        // Rallumé à la main plus tard : hors de la fenêtre, il reste allumé
+        await vLink.setPower(_stove, pOn: true);
+        expect(await vController.refreshAndStopIfAway(null, DateTime(2026, 12, 8, 8)), isTrue);
+      },
+    );
 
     test('le stock et l\'arrêt se rangent et se rechargent', () async {
       final vRunsStore = MemoryPelletRunsStore();

@@ -117,7 +117,8 @@ class PelletController extends ChangeNotifier {
   Future<bool> refreshAndStopIfAway(VacationMode? pVacation, DateTime pNow) async {
     await refresh();
     final vOn = !failed && (state?.isOn ?? false);
-    final vMustStop = stoveMustStop(pVacation, pNow, pStoveOn: vOn) || (vOn && _runs.shouldStopNow(pNow));
+    final vMustStop =
+        stoveMustStop(pVacation, pNow, pStoveOn: vOn) || (vOn && _runs.shouldStopNow(pNow));
     if (vMustStop && await setPower(pOn: false) == PelletResult.done) {
       return false;
     }

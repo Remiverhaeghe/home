@@ -54,11 +54,7 @@ void main() {
     final vController = controller();
     await vController.load();
 
-    await vController.setHeating(
-      pKwByHost: {_host: 1.4},
-      pPricePerKwh: 0.22,
-      pMonthlyBudget: 90,
-    );
+    await vController.setHeating(pKwByHost: {_host: 1.4}, pPricePerKwh: 0.22, pMonthlyBudget: 90);
 
     final vOther = controller();
     await vOther.load();
