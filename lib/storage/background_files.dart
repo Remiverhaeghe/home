@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import '../logic/alert_history.dart';
 import '../logic/day_summary.dart';
+import '../logic/heating_costs.dart';
 import '../logic/pending_readings.dart';
 import '../logic/read_health.dart';
 
@@ -17,7 +19,9 @@ class BackgroundFiles {
       _summaryOn = File('${pFolder.path}/resume_actif.txt'),
       _summarySent = File('${pFolder.path}/resume_envoye.txt'),
       _summaryHour = File('${pFolder.path}/resume_heure.txt'),
-      _health = File('${pFolder.path}/sante-releves.json');
+      _health = File('${pFolder.path}/sante-releves.json'),
+      _quiet = File('${pFolder.path}/heures-silencieuses.txt'),
+      _alerts = File('${pFolder.path}/historique-alertes.jsonl');
 
   final File _pending;
   final File _followed;
@@ -26,6 +30,8 @@ class BackgroundFiles {
   final File _summarySent;
   final File _health;
   final File _summaryHour;
+  final File _quiet;
+  final File _alerts;
 
   Future<List<FollowedDevice>> loadFollowed() async =>
       await _followed.exists() ? parseFollowed(await _followed.readAsString()) : [];
@@ -80,6 +86,32 @@ class BackgroundFiles {
 
   Future<void> setSummaryStartHour(int pHour) =>
       _summaryHour.writeAsString('${pHour.clamp(0, 23)}', flush: true);
+
+  /// Heures silencieuses (« 22-7 »), null quand il n'y en a pas : seul le gel sonne dans la plage.
+  Future<OffPeak?> quietHours() async {
+    if (!await _quiet.exists()) {
+      return null;
+    }
+    final vParts = (await _quiet.readAsString()).trim().split('-');
+    final vStart = vParts.length == 2 ? int.tryParse(vParts[0]) : null;
+    final vEnd = vParts.length == 2 ? int.tryParse(vParts[1]) : null;
+    if (vStart == null || vEnd == null) {
+      return null;
+    }
+    final vQuiet = OffPeak(startHour: vStart, endHour: vEnd);
+
+    return vQuiet.isValid ? vQuiet : null;
+  }
+
+  Future<void> setQuietHours(OffPeak? pQuiet) => pQuiet == null || !pQuiet.isValid
+      ? _quiet.writeAsString('', flush: true)
+      : _quiet.writeAsString('${pQuiet.startHour}-${pQuiet.endHour}', flush: true);
+
+  Future<List<AlertEntry>> loadAlertHistory() async =>
+      await _alerts.exists() ? parseAlertHistory(await _alerts.readAsString()) : [];
+
+  Future<void> saveAlertHistory(List<AlertEntry> pEntries) =>
+      _alerts.writeAsString(alertHistoryText(pEntries), flush: true);
 
   /// Date du dernier résumé envoyé, null s'il n'en est jamais parti.
   Future<DateTime?> lastSummary() async =>

@@ -14,6 +14,7 @@ import '../net/pellet_link.dart';
 import '../storage/background_files.dart';
 import '../storage/detail_log.dart';
 import '../storage/error_log_store.dart';
+import 'alert_delivery.dart';
 import 'alert_notifier.dart';
 import 'day_summary_runner.dart';
 import 'plan_runner.dart';
@@ -64,11 +65,18 @@ class ReadingsTaskHandler extends TaskHandler {
       final vAlerts = await vRunner.run(DateTime.now(), pDetail: pDetail);
       if (vAlerts.isNotEmpty) {
         await pDetail.note('plan', '${vAlerts.length} alerte(s) à signaler');
-        await _notifier.show(vAlerts);
-        await FlutterForegroundTask.updateService(
-          notificationTitle: 'Alerte',
-          notificationText: alertSummary(vAlerts),
+        final vAudible = await deliverAlerts(
+          pFiles: BackgroundFiles(pFolder),
+          pNotifier: _notifier,
+          pAlerts: vAlerts,
+          pNow: DateTime.now(),
         );
+        if (vAudible.isNotEmpty) {
+          await FlutterForegroundTask.updateService(
+            notificationTitle: 'Alerte',
+            notificationText: alertSummary(vAudible),
+          );
+        }
       }
     } on Object catch (pCaught) {
       // Réseau de la maison indisponible, fichier en cours d'écriture : tour suivant

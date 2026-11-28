@@ -19,6 +19,7 @@ import 'plan_room_card.dart';
 import 'plan_scenarios_section.dart';
 import 'plan_stove_cold_section.dart';
 import 'plan_summary_section.dart';
+import 'quiet_hours_section.dart';
 import 'rules_screen.dart';
 import 'schedule_screen.dart';
 import '../logic/units.dart';
@@ -266,7 +267,12 @@ class PlanScreen extends StatelessWidget {
                     ),
                     title: Text(_alertText(vTexts, vAlert, vUnits, vNumber)),
                   ),
-              if (files != null) ...[const SizedBox(height: 24), SummarySection(files: files!)],
+              if (files != null) ...[
+                const SizedBox(height: 24),
+                SummarySection(files: files!),
+                const SizedBox(height: 24),
+                QuietHoursSection(files: files!),
+              ],
             ],
           );
         },
