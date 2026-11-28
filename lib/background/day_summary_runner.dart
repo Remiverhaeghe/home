@@ -17,7 +17,11 @@ Future<bool> sendDaySummaryIfDue({
   required AlertNotifier pNotifier,
 }) async {
   final vFiles = BackgroundFiles(pFolder);
-  if (!await vFiles.summaryEnabled() || !summaryDue(pNow, pLastSent: await vFiles.lastSummary())) {
+  if (!await vFiles.summaryEnabled() || !summaryDue(
+        pNow,
+        pLastSent: await vFiles.lastSummary(),
+        pHour: await vFiles.summaryStartHour(),
+      )) {
     return false;
   }
   final vSensors = applyPending(

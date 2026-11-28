@@ -56,6 +56,22 @@ void main() {
     expect(await run(DateTime(2026, 12, 7, 6)), isFalse);
   });
 
+  test('l\'heure choisie remplace 8 h', () async {
+    await vFiles.setSummaryEnabled(pOn: true);
+    await vFiles.setSummaryStartHour(10);
+
+    expect(await run(DateTime(2026, 12, 7, 9, 30)), isFalse);
+    expect(await run(DateTime(2026, 12, 7, 10, 5)), isTrue);
+  });
+
+  test('une heure illisible ramène à 8 h', () async {
+    File('${vFolder.path}/resume_heure.txt').writeAsStringSync('abc');
+
+    expect(await vFiles.summaryStartHour(), 8);
+    File('${vFolder.path}/resume_heure.txt').writeAsStringSync('30');
+    expect(await vFiles.summaryStartHour(), 8);
+  });
+
   test('sans pièce rangée, rien ne part et l\'envoi n\'est pas noté', () async {
     await vFiles.setSummaryEnabled(pOn: true);
     await FileHouseStore(File('${vFolder.path}/maison.json')).save(const House());

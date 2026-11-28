@@ -66,6 +66,39 @@ void main() {
     expect(pTester.widget<Switch>(find.byType(Switch)).value, isTrue);
   });
 
+  testWidgets('l\'heure choisie du résumé est rangée dans le fichier du service', (pTester) async {
+    pTester.view.physicalSize = const Size(1200, 4000);
+    pTester.view.devicePixelRatio = 1;
+    addTearDown(pTester.view.reset);
+    final vFiles = BackgroundFiles(vFolder);
+    await pTester.runAsync(() => vFiles.setSummaryEnabled(pOn: true));
+    final vAc = AcController(MemoryAcStore(), FakeDaikinLink());
+    final vSensors = SensorsController(MemorySensorStore());
+    await pTester.pumpWidget(
+      localized(
+        PlanScreen(
+          plan: PlanController(MemoryPlanStore(), vAc, vSensors),
+          ac: vAc,
+          sensors: vSensors,
+          files: vFiles,
+        ),
+      ),
+    );
+    await pTester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
+    await pTester.pump();
+
+    final vChoice = find.byKey(const Key('summary-hour'));
+    await pTester.ensureVisible(vChoice);
+    expect(pTester.widget<DropdownButton<int>>(vChoice).value, 8);
+
+    await pTester.runAsync(() async => pTester.widget<DropdownButton<int>>(vChoice).onChanged!(10));
+    await pTester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
+    await pTester.pump();
+
+    expect(await pTester.runAsync(vFiles.summaryStartHour), 10);
+    expect(pTester.widget<DropdownButton<int>>(vChoice).value, 10);
+  });
+
   testWidgets('sans fichiers partagés, il n\'y a pas d\'interrupteur', (pTester) async {
     final vAc = AcController(MemoryAcStore(), FakeDaikinLink());
     final vSensors = SensorsController(MemorySensorStore());
