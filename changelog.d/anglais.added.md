@@ -1,0 +1,1 @@
+- Texte de l'appli en anglais : choix de la langue (français ou anglais) dans Affichage. Le français reste la langue de départ. Les notifications du service, le PDF et le résumé du soir restent en français pour l'instant.

@@ -35,4 +35,13 @@ void main() {
       TemperatureUnit.celsius,
     );
   });
+
+  test('le fichier d\'apparence garde la langue, français par défaut', () {
+    const vSettings = AppearanceSettings(language: AppLanguage.english);
+
+    expect(parseAppearance(appearanceJson(vSettings)).language, AppLanguage.english);
+    expect(AppLanguage.english.code, 'en');
+    expect(parseAppearance('{"version":1}').language, AppLanguage.french);
+    expect(parseAppearance('{"version":1,"language":"de"}').language, AppLanguage.french);
+  });
 }
