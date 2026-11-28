@@ -1,8 +1,11 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../l10n/gen/app_localizations.dart';
 import '../logic/advice.dart';
+import '../logic/pdf_report.dart';
 import '../logic/rooms.dart';
 import '../state/house_controller.dart';
 import '../state/sensors_controller.dart';
@@ -12,11 +15,32 @@ import 'house_screen.dart';
 /// Les pièces : mesure du moment, humidité visée, pièce la plus fraîche et la plus humide, et
 /// conseils d'aération.
 class RoomsScreen extends StatelessWidget {
-  const RoomsScreen({super.key, required this.sensors, required this.house, this.weather});
+  const RoomsScreen({
+    super.key,
+    required this.sensors,
+    required this.house,
+    this.weather,
+    this.saveFile,
+    this.clock = DateTime.now,
+  });
 
   final SensorsController sensors;
   final HouseController house;
   final WeatherController? weather;
+
+  /// Enregistre le bilan PDF ; sans lui, pas de bouton d'export.
+  final Future<bool> Function(String pFileName, Uint8List pBytes)? saveFile;
+  final DateTime Function() clock;
+
+  Future<void> _export(BuildContext pContext) async {
+    final vTexts = AppLocalizations.of(pContext);
+    final vMessenger = ScaffoldMessenger.of(pContext);
+    final vNow = clock();
+    final vPdf = buildReportPdf(buildRoomReports(sensors.sensors, house.house, vNow), vNow);
+    if (await saveFile!('home-bilan.pdf', vPdf)) {
+      vMessenger.showSnackBar(SnackBar(content: Text(vTexts.roomsPdfSaved)));
+    }
+  }
 
   @override
   Widget build(BuildContext pContext) {
@@ -24,7 +48,22 @@ class RoomsScreen extends StatelessWidget {
     final vNumber = NumberFormat('0.0', Localizations.localeOf(pContext).toString());
 
     return Scaffold(
-      appBar: AppBar(title: Text(vTexts.roomsTitle)),
+      appBar: AppBar(
+        title: Text(vTexts.roomsTitle),
+        actions: [
+          if (saveFile != null)
+            ListenableBuilder(
+              listenable: Listenable.merge([sensors, house]),
+              builder: (pContext, _) => IconButton(
+                tooltip: vTexts.roomsPdfOpen,
+                icon: const Icon(Icons.picture_as_pdf_outlined),
+                onPressed: roomStatuses(sensors.sensors, house.house).isEmpty
+                    ? null
+                    : () => _export(pContext),
+              ),
+            ),
+        ],
+      ),
       body: ListenableBuilder(
         listenable: Listenable.merge([sensors, house, ?weather]),
         builder: (pContext, _) {

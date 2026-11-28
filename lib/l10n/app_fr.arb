@@ -421,6 +421,8 @@
   "pelletUsagePrice": "Prix d'un sac (€), pour estimer le coût",
   "planSummaryTitle": "Résumé du matin",
   "planSummaryHint": "Chaque matin à partir de 8 h, une notification discrète donne la pièce la plus fraîche, la plus humide et le nombre de pièces hors plage d'humidité.",
+  "roomsPdfOpen": "Exporter le bilan en PDF",
+  "roomsPdfSaved": "Bilan enregistré.",
   "heatingOpen": "Bilan du chauffage",
   "heatingTitle": "Bilan du chauffage",
   "heatingEmpty": "Ajoute une climatisation ou le poêle pour suivre leurs heures de marche.",
