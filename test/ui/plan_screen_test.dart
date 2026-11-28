@@ -161,8 +161,8 @@ void main() {
     expect(find.text('Coup de chaud : Salon'), findsOneWidget);
     await pTester.tap(find.text('Bain'));
     await pTester.pumpAndSettle();
-    expect(find.text('Température : 25,0 °C'), findsOneWidget);
-    expect(find.text('Pendant 90 min'), findsOneWidget);
+    expect(find.text('25,0 °C'), findsOneWidget);
+    expect(find.text('90 min'), findsOneWidget);
     await pTester.tap(find.widgetWithText(FilledButton, 'Démarrer'));
     await pTester.pumpAndSettle();
 
