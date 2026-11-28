@@ -34,7 +34,11 @@ class FakeBackgroundControl implements BackgroundControl {
 /// Notifications de test : elles notent les alertes montrées.
 class FakeAlertNotifier implements AlertNotifier {
   final shown = <List<SensorAlert>>[];
+  final summaries = <String>[];
 
   @override
   Future<void> show(List<SensorAlert> pAlerts) async => shown.add(pAlerts);
+
+  @override
+  Future<void> showSummary(String pTitle, String pBody) async => summaries.add('$pTitle|$pBody');
 }

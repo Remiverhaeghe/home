@@ -740,5 +740,7 @@
   "boostDuration": "Pendant {minutes} min",
   "@boostDuration": {"placeholders": {"minutes": {"type": "int"}}},
   "boostStart": "Démarrer",
-  "boostStop": "Arrêter"
+  "boostStop": "Arrêter",
+  "planSummaryTitle": "Résumé du matin",
+  "planSummaryHint": "Chaque matin à partir de 8 h, une notification discrète donne la pièce la plus fraîche, la plus humide et le nombre de pièces hors plage d'humidité."
 }

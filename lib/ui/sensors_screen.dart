@@ -349,7 +349,12 @@ class SensorsScreen extends StatelessWidget {
                 pContext,
                 MaterialPageRoute(
                   builder: (_) =>
-                      PlanScreen(plan: planController!, ac: acController!, sensors: controller),
+                      PlanScreen(
+                    plan: planController!,
+                    ac: acController!,
+                    sensors: controller,
+                    files: files,
+                  ),
                 ),
               ),
             ),

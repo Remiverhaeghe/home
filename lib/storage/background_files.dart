@@ -11,11 +11,15 @@ class BackgroundFiles {
   BackgroundFiles(Directory pFolder)
     : _pending = File('${pFolder.path}/releves_en_attente.jsonl'),
       _followed = File('${pFolder.path}/suivi.json'),
-      _appOpen = File('${pFolder.path}/appli_ouverte.txt');
+      _appOpen = File('${pFolder.path}/appli_ouverte.txt'),
+      _summaryOn = File('${pFolder.path}/resume_actif.txt'),
+      _summarySent = File('${pFolder.path}/resume_envoye.txt');
 
   final File _pending;
   final File _followed;
   final File _appOpen;
+  final File _summaryOn;
+  final File _summarySent;
 
   Future<List<FollowedDevice>> loadFollowed() async =>
       await _followed.exists() ? parseFollowed(await _followed.readAsString()) : [];
@@ -46,6 +50,24 @@ class BackgroundFiles {
 
     return vSeen != null && pNow.difference(vSeen) < pWithin;
   }
+
+  /// Le résumé du matin est-il voulu ? L'appli écrit le fichier, le service le lit.
+  Future<bool> summaryEnabled() => _summaryOn.exists();
+
+  Future<void> setSummaryEnabled({required bool pOn}) async {
+    if (pOn) {
+      await _summaryOn.writeAsString('1', flush: true);
+    } else if (await _summaryOn.exists()) {
+      await _summaryOn.delete();
+    }
+  }
+
+  /// Date du dernier résumé envoyé, null s'il n'en est jamais parti.
+  Future<DateTime?> lastSummary() async =>
+      await _summarySent.exists() ? DateTime.tryParse(await _summarySent.readAsString()) : null;
+
+  Future<void> markSummarySent(DateTime pNow) =>
+      _summarySent.writeAsString(pNow.toIso8601String(), flush: true);
 
   /// Relevés en attente, retirés du fichier. Le fichier est d'abord renommé : une ligne ajoutée
   /// par le service pendant la lecture va dans un nouveau fichier, sans rien perdre.

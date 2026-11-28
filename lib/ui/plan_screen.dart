@@ -10,6 +10,7 @@ import '../logic/vacation.dart';
 import '../state/ac_controller.dart';
 import '../state/plan_controller.dart';
 import '../state/sensors_controller.dart';
+import '../storage/background_files.dart';
 import '../storage/plan_store.dart';
 import 'boost_dialog.dart';
 import 'rules_screen.dart';
@@ -41,8 +42,11 @@ class PlanScreen extends StatelessWidget {
     required this.sensors,
     this.pickRange = pickAbsence,
     this.clock = DateTime.now,
+    this.files,
   });
 
+  /// Fichiers partagés avec le service d'arrière-plan ; sans eux, pas de résumé du matin.
+  final BackgroundFiles? files;
   final PlanController plan;
   final AcController ac;
   final SensorsController sensors;
@@ -348,6 +352,43 @@ class _StoveColdSectionState extends State<_StoveColdSection> {
           },
         ),
       ],
+    );
+  }
+}
+
+/// Interrupteur du résumé du matin, envoyé par le service d'arrière-plan.
+class _SummarySection extends StatefulWidget {
+  const _SummarySection({required this.files});
+
+  final BackgroundFiles files;
+
+  @override
+  State<_SummarySection> createState() => _SummarySectionState();
+}
+
+class _SummarySectionState extends State<_SummarySection> {
+  late Future<bool> _enabled = widget.files.summaryEnabled();
+
+  @override
+  Widget build(BuildContext pContext) {
+    final vTexts = AppLocalizations.of(pContext);
+
+    return FutureBuilder<bool>(
+      future: _enabled,
+      builder: (pContext, pSnapshot) => SwitchListTile(
+        contentPadding: EdgeInsets.zero,
+        title: Text(vTexts.planSummaryTitle),
+        subtitle: Text(vTexts.planSummaryHint),
+        value: pSnapshot.data ?? false,
+        onChanged: (pOn) async {
+          await widget.files.setSummaryEnabled(pOn: pOn);
+          if (mounted) {
+            setState(() {
+              _enabled = widget.files.summaryEnabled();
+            });
+          }
+        },
+      ),
     );
   }
 }
