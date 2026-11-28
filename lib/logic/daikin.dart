@@ -228,3 +228,27 @@ bool isPrivateAddress(String pHost) {
       (vNumbers[0] == 172 && vNumbers[1] >= 16 && vNumbers[1] <= 31) ||
       (vNumbers[0] == 192 && vNumbers[1] == 168);
 }
+
+/// Adresses à essayer sur le réseau de pAddress (de .1 à .254 du même /24, sans pAddress) ;
+/// vide si pAddress n'est pas une adresse de réseau privé.
+List<String> subnetHosts(String pAddress) {
+  if (!isPrivateAddress(pAddress)) {
+    return const [];
+  }
+  final vParts = pAddress.trim().split('.');
+  final vPrefix = vParts.take(3).join('.');
+
+  return [
+    for (var vLast = 1; vLast <= 254; vLast++)
+      if ('$vPrefix.$vLast' != pAddress.trim()) '$vPrefix.$vLast',
+  ];
+}
+
+/// Adresse de diffusion du /24 de pAddress, null si ce n'est pas une adresse de réseau privé.
+String? subnetBroadcast(String pAddress) {
+  if (!isPrivateAddress(pAddress)) {
+    return null;
+  }
+
+  return '${pAddress.trim().split('.').take(3).join('.')}.255';
+}

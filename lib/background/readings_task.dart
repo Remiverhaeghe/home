@@ -6,11 +6,13 @@ import 'package:path_provider/path_provider.dart';
 
 import '../ble/tp357_link.dart';
 import '../logic/alerts.dart';
+import '../logic/error_log.dart';
 import '../logic/pending_readings.dart';
 import '../logic/reading.dart';
 import '../net/daikin_link.dart';
 import '../net/pellet_link.dart';
 import '../storage/background_files.dart';
+import '../storage/error_log_store.dart';
 import 'alert_notifier.dart';
 import 'day_summary_runner.dart';
 import 'plan_runner.dart';
@@ -25,10 +27,12 @@ void readingsTaskStart() {
 /// fichier des relevés en attente et se déconnecte. Une connexion courte laisse le capteur libre
 /// pour l'appli du fabricant.
 class ReadingsTaskHandler extends TaskHandler {
-  static const _wait = Duration(seconds: 25);
+  static const _wait = Duration(seconds: 30);
+  static const _tries = 2;
 
   final _link = BleTp357Link();
   var _busy = false;
+  final _misses = <String, int>{};
 
   @override
   Future<void> onStart(DateTime timestamp, TaskStarter starter) async {}
@@ -69,6 +73,45 @@ class ReadingsTaskHandler extends TaskHandler {
     }
   }
 
+  /// Une mesure du capteur, avec une seconde tentative : le Bluetooth manque parfois un tour. Les
+  /// tours manqués d'affilée sont comptés et notés au journal, pour comprendre un capteur muet.
+  Future<void> _readOne(
+    Directory pFolder,
+    BackgroundFiles pFiles,
+    FollowedDevice pDevice,
+    int pRank,
+  ) async {
+    Object? vError;
+    for (var vTry = 0; vTry < _tries; vTry++) {
+      try {
+        final vValue = await _link.live(pDevice.id).first.timeout(_wait);
+        await pFiles.appendPending(
+          pendingLine(
+            pDevice.name,
+            Reading(at: DateTime.now(), temp: vValue.temp, humidity: vValue.humidity),
+          ),
+        );
+        _misses.remove(pDevice.id);
+
+        return;
+      } on Object catch (pCaught) {
+        // Capteur hors de portée ou Bluetooth coupé : seconde tentative, puis tour suivant
+        vError = pCaught;
+      }
+    }
+    final vMisses = (_misses[pDevice.id] ?? 0) + 1;
+    _misses[pDevice.id] = vMisses;
+    if (shouldLogMiss(vMisses)) {
+      try {
+        await FileErrorLogStore(
+          File('${pFolder.path}/journal-erreurs.txt'),
+        ).append(backgroundMissEntry(DateTime.now(), pRank, vMisses, vError ?? 'inconnue'));
+      } on Object {
+        // Le journal ne doit jamais arrêter les relevés
+      }
+    }
+  }
+
   /// Résumé du matin ; un échec ici ne doit jamais arrêter les relevés.
   Future<void> _summary(Directory pFolder) async {
     try {
@@ -87,19 +130,9 @@ class ReadingsTaskHandler extends TaskHandler {
     try {
       final vFolder = await getApplicationDocumentsDirectory();
       final vFiles = BackgroundFiles(vFolder);
-      for (final vDevice in await vFiles.loadFollowed()) {
-        try {
-          final vValue = await _link.live(vDevice.id).first.timeout(_wait);
-          await vFiles.appendPending(
-            pendingLine(
-              vDevice.name,
-              Reading(at: DateTime.now(), temp: vValue.temp, humidity: vValue.humidity),
-            ),
-          );
-        } on Object {
-          // Capteur hors de portée ou Bluetooth coupé : on réessaie au tour suivant
-          continue;
-        }
+      final vDevices = await vFiles.loadFollowed();
+      for (var vRank = 0; vRank < vDevices.length; vRank++) {
+        await _readOne(vFolder, vFiles, vDevices[vRank], vRank + 1);
       }
       await _plan(vFolder);
       await _summary(vFolder);

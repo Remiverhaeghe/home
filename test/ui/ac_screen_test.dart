@@ -11,6 +11,7 @@ import 'package:home/ui/sensors_screen.dart';
 
 import '../support/fake_daikin.dart';
 import '../support/localized.dart';
+import '../support/menu.dart';
 
 void main() {
   const vHost = '192.168.1.20';
@@ -221,7 +222,7 @@ void main() {
       localized(SensorsScreen(controller: vSensors, acController: vController)),
     );
 
-    await pTester.tap(find.byTooltip('Climatisations'));
+    await openMenuEntry(pTester, 'Climatisations');
     await pTester.pumpAndSettle();
 
     expect(find.textContaining('Aucune climatisation pour l'), findsOneWidget);
@@ -230,6 +231,6 @@ void main() {
   testWidgets('sans climatisations fournies, le bouton n\'apparaît pas', (pTester) async {
     await pTester.pumpWidget(localized(SensorsScreen(controller: vSensors)));
 
-    expect(find.byTooltip('Climatisations'), findsNothing);
+    expect(await menuHas(pTester, 'Climatisations'), isFalse);
   });
 }

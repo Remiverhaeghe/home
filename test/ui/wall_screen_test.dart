@@ -12,6 +12,7 @@ import 'package:home/ui/wall_screen.dart';
 
 import '../support/fake_daikin.dart';
 import '../support/localized.dart';
+import '../support/menu.dart';
 
 class _FakeDisplay implements WallDisplay {
   final calls = <String>[];
@@ -168,7 +169,7 @@ void main() {
     );
     await pTester.pumpAndSettle();
 
-    await pTester.tap(find.byTooltip('Affichage mural'));
+    await openMenuEntry(pTester, 'Affichage mural');
     await pTester.pumpAndSettle();
     expect(find.byType(WallScreen), findsOneWidget);
     expect(vDisplay.calls, ['enter']);

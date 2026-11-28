@@ -60,4 +60,41 @@ void main() {
 
     expect(find.text('Journal enregistré.'), findsNothing);
   });
+
+  testWidgets('les nouveautés de la dernière version se déplient', (pTester) async {
+    await pTester.pumpWidget(
+      localized(
+        AboutScreen(
+          log: MemoryErrorLogStore(),
+          saveFile: (_, _) async => true,
+          loadChangelog: () async => '## 0.2.0\n\n### Ajouté\n\n- Un menu `Plus`.\n',
+        ),
+      ),
+    );
+    await pTester.pumpAndSettle();
+    expect(find.text('Un menu Plus.'), findsNothing);
+
+    await pTester.tap(find.text('Nouveautés'));
+    await pTester.pumpAndSettle();
+
+    expect(find.text('0.2.0'), findsOneWidget);
+    expect(find.text('Ajouté'), findsOneWidget);
+    expect(find.text('Un menu Plus.'), findsOneWidget);
+  });
+
+  testWidgets('un CHANGELOG illisible ne montre aucune rubrique', (pTester) async {
+    await pTester.pumpWidget(
+      localized(
+        AboutScreen(
+          log: MemoryErrorLogStore(),
+          saveFile: (_, _) async => true,
+          loadChangelog: () async => throw StateError('absent'),
+        ),
+      ),
+    );
+    await pTester.pumpAndSettle();
+
+    expect(find.text('Nouveautés'), findsNothing);
+    expect(find.textContaining('version 0.1.0'), findsOneWidget);
+  });
 }
