@@ -22,16 +22,22 @@ class SensorAlert {
 
 /// Alertes à l'instant [pNow] : gel sous [frostAlertTemp], humidité au-dessus de
 /// [humidityAlertLevel], capteur sans relevé depuis [silentAfter]. Un capteur sans aucun relevé
-/// n'alerte pas : il n'a encore jamais parlé.
-List<SensorAlert> evaluateAlerts(List<Sensor> pSensors, DateTime pNow) {
+/// n'alerte pas : il n'a encore jamais parlé. Seuls les capteurs de [pWatched] (ceux que le service
+/// d'arrière-plan suit) peuvent être muets : les autres ne donnent un relevé que quand on ouvre
+/// l'appli. Sans [pWatched], tous les capteurs sont surveillés.
+List<SensorAlert> evaluateAlerts(List<Sensor> pSensors, DateTime pNow, {Set<String>? pWatched}) {
   final rAlerts = <SensorAlert>[];
   for (final vSensor in pSensors) {
     final vLast = vSensor.last;
     if (vLast == null) {
       continue;
     }
-    if (pNow.difference(vLast.at) > silentAfter) {
+    final vSilent = pNow.difference(vLast.at) > silentAfter;
+    if (vSilent && (pWatched == null || pWatched.contains(vSensor.name))) {
       rAlerts.add(SensorAlert(sensorName: vSensor.name, kind: AlertKind.silent));
+    }
+    if (vSilent) {
+      // Une mesure ancienne ne dit rien du gel ni de l'humidité d'aujourd'hui
       continue;
     }
     if (vLast.temp < frostAlertTemp) {

@@ -46,6 +46,7 @@ class PlanRunner {
     await _sensors.load();
     await _ac.load();
     await _plan.load();
+    _plan.watched = {for (final vDevice in await _files.loadFollowed()) vDevice.name};
     await _ac.refresh();
 
     return _plan.tick(pNow);

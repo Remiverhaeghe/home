@@ -50,6 +50,23 @@ void main() {
       expect(vAlerts.single.value, isNull);
     });
 
+    test('seuls les capteurs suivis en arrière-plan peuvent être muets', () {
+      final vSensors = [
+        _sensor('A', 20, 50, pAge: const Duration(hours: 5)),
+        _sensor('B', 20, 50, pAge: const Duration(hours: 5)),
+      ];
+
+      expect(evaluateAlerts(vSensors, _now, pWatched: {'B'}).single.sensorName, 'B');
+      expect(evaluateAlerts(vSensors, _now, pWatched: <String>{}), isEmpty);
+      expect(evaluateAlerts(vSensors, _now), hasLength(2));
+    });
+
+    test('un capteur muet non suivi ne signale pas non plus de gel ancien', () {
+      final vSensors = [_sensor('A', 1, 90, pAge: const Duration(hours: 5))];
+
+      expect(evaluateAlerts(vSensors, _now, pWatched: <String>{}), isEmpty);
+    });
+
     test('un capteur qui n\'a jamais parlé n\'alerte pas', () {
       expect(evaluateAlerts(const [Sensor(name: 'A')], _now), isEmpty);
     });

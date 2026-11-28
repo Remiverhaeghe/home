@@ -15,6 +15,10 @@ import 'sensors_controller.dart';
 class PlanController extends ChangeNotifier {
   PlanController(this._store, this._ac, this._sensors);
 
+  /// Capteurs suivis en arrière-plan, seuls à pouvoir être signalés muets ; null avant la première
+  /// lecture de la liste, tous sont alors surveillés.
+  Set<String>? watched;
+
   final PlanStore _store;
   final AcController _ac;
   final SensorsController _sensors;
@@ -111,7 +115,7 @@ class PlanController extends ChangeNotifier {
         _applied.add(vCommand);
       }
     }
-    final vCurrent = evaluateAlerts(_sensors.sensors, pNow);
+    final vCurrent = evaluateAlerts(_sensors.sensors, pNow, pWatched: watched);
     final rFresh = freshAlerts(vCurrent, _knownAlerts);
     _knownAlerts = {for (final vAlert in vCurrent) vAlert.key};
     notifyListeners();

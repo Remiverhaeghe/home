@@ -4,10 +4,13 @@
 
 ### Corrigé
 
+- Alerte « capteur muet » : seuls les capteurs suivis en arrière-plan peuvent être signalés muets ; les autres ne donnent un relevé que quand l'appli est ouverte.
 - Climatisations et relais : sous Android 17, l'accès au réseau local est maintenant déclaré et demandé avant la première connexion ; sans lui, le système bloque les appareils de la maison
 
 ### Ajouté
 
+- Actualiser les capteurs : un bouton et le geste de tirer la liste vers le bas lisent une mesure sur chaque thermo-hygromètre à portée.
+- Import d'un export CSV de l'appli ThermoPro (bouton d'historique de la liste des capteurs) : le nom du fichier donne le nom du capteur, les lignes sans mesure sont ignorées et un relevé par tranche de dix minutes est gardé. L'export va dans un capteur existant ou dans un nouveau.
 - Les pièces (bouton « Les pièces » de la liste des capteurs) : température et humidité du moment par pièce, pièce la plus fraîche et la plus humide, humidité visée (40 à 60 %, 45 à 70 % pour une cave ou un garage) et conseils : aérer quand l'air du dehors contient moins d'eau, garder fermé sinon, air sec signalé. Les conseils d'aération demandent la météo extérieure.
 - Comparer deux capteurs (bouton de la liste des capteurs, dès qu'il y en a deux) : température et humidité moyennes par jour sur les mêmes courbes, une seule échelle, et l'écart moyen sur les jours communs
 - Notes datées (détail d'un capteur) : « isolation posée », « fenêtre changée », pour un capteur ou toute la maison, avec l'évolution de la température et de l'humidité sur les deux semaines d'après par rapport aux deux semaines d'avant. Rangées dans `notes.json`, reprises par la sauvegarde

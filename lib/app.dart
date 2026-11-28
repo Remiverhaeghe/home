@@ -92,6 +92,12 @@ class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
     final vNow = DateTime.now();
     // Le service d'arrière-plan s'efface tant que l'appli se signale
     await widget.files?.markAppOpen(vNow);
+    final vFiles = widget.files;
+    if (vFiles != null) {
+      widget.planController!.watched = {
+        for (final vDevice in await vFiles.loadFollowed()) vDevice.name,
+      };
+    }
     await widget.acController!.refresh();
     final vFresh = await widget.planController!.tick(vNow);
     await widget.notifier?.show(vFresh);
