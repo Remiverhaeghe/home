@@ -8,7 +8,6 @@ import '../background/background_control.dart';
 import '../ble/tp357_link.dart';
 import '../l10n/gen/app_localizations.dart';
 import '../logic/climate_exchange.dart';
-import '../logic/reading.dart';
 import '../storage/error_log_store.dart';
 import '../state/ac_controller.dart';
 import '../state/plan_controller.dart';
