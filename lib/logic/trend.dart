@@ -24,7 +24,11 @@ List<double> recentTemps(
 
   return [
     for (var vIndex = 0; vIndex < pMaxPoints; vIndex++)
-      _mean(vTemps, vIndex * vTemps.length ~/ pMaxPoints, (vIndex + 1) * vTemps.length ~/ pMaxPoints),
+      _mean(
+        vTemps,
+        vIndex * vTemps.length ~/ pMaxPoints,
+        (vIndex + 1) * vTemps.length ~/ pMaxPoints,
+      ),
   ];
 }
 

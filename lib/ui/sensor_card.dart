@@ -55,7 +55,8 @@ class SensorCard extends StatelessWidget {
                       ],
                     ),
                   ),
-                  if (vLevel != null) _LevelChip(label: _levelLabel(vTexts, vLevel), color: vLevelColor),
+                  if (vLevel != null)
+                    _LevelChip(label: _levelLabel(vTexts, vLevel), color: vLevelColor),
                 ],
               ),
               if (vLast == null) ...[
@@ -136,10 +137,7 @@ class _LevelChip extends StatelessWidget {
     ),
     child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      child: Text(
-        label,
-        style: Theme.of(pContext).textTheme.labelMedium?.copyWith(color: color),
-      ),
+      child: Text(label, style: Theme.of(pContext).textTheme.labelMedium?.copyWith(color: color)),
     ),
   );
 }
@@ -207,5 +205,8 @@ class HumidityBarPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(HumidityBarPainter pOld) =>
-      pOld.humidity != humidity || pOld.track != track || pOld.band != band || pOld.marker != marker;
+      pOld.humidity != humidity ||
+      pOld.track != track ||
+      pOld.band != band ||
+      pOld.marker != marker;
 }

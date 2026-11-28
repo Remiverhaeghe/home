@@ -14,7 +14,9 @@ class Sparkline extends StatelessWidget {
     child: SizedBox(
       height: height,
       width: double.infinity,
-      child: CustomPaint(painter: SparklinePainter(values: values, color: color)),
+      child: CustomPaint(
+        painter: SparklinePainter(values: values, color: color),
+      ),
     ),
   );
 }

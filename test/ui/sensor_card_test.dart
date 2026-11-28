@@ -9,8 +9,11 @@ import '../support/localized.dart';
 void main() {
   final vNow = DateTime(2026, 11, 28, 12);
   Sensor sensor(List<Reading> pReadings) => Sensor(name: 'Salon', readings: pReadings);
-  Reading at(int pMinutesAgo, double pTemp, double pHumidity) =>
-      Reading(at: vNow.subtract(Duration(minutes: pMinutesAgo)), temp: pTemp, humidity: pHumidity);
+  Reading at(int pMinutesAgo, double pTemp, double pHumidity) => Reading(
+    at: vNow.subtract(Duration(minutes: pMinutesAgo)),
+    temp: pTemp,
+    humidity: pHumidity,
+  );
 
   testWidgets('la carte montre température, humidité, niveau, rosée et courbe', (pTester) async {
     await pTester.pumpWidget(
