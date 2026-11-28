@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:home/logic/boost.dart';
+import 'package:home/logic/comfort.dart';
 import 'package:home/logic/house_calendar.dart';
+import 'package:home/logic/plan.dart';
 import 'package:home/logic/pellet.dart';
 import 'package:home/state/ac_controller.dart';
 import 'package:home/state/pellet_controller.dart';
@@ -113,5 +116,28 @@ void main() {
     await pTester.pumpAndSettle();
 
     expect(pTester.widget<FilterChip>(find.byKey(const Key('scenario-remote'))).selected, isFalse);
+  });
+
+  testWidgets('Nuit règle chaque pièce sur sa température de nuit jusqu\'au matin', (pTester) async {
+    await open(pTester);
+    await vPlan.setRoom(const Room(acHost: '192.168.1.20', targets: RoomTargets(night: 16)));
+    await vPlan.setRoom(const Room(acHost: '192.168.1.21'));
+    await pTester.pump();
+
+    await pTester.tap(find.byKey(const Key('scenario-night')));
+    await pTester.pumpAndSettle();
+
+    final vBoost = vPlan.boostOf('192.168.1.20', vNow)!;
+    expect(vBoost.kind, BoostKind.night);
+    expect(vBoost.temp, 16);
+    expect(vBoost.until, DateTime(2026, 12, 8, 7));
+    expect(vPlan.boostOf('192.168.1.21', vNow)!.temp, 17);
+    expect(pTester.widget<FilterChip>(find.byKey(const Key('scenario-night'))).selected, isTrue);
+
+    await pTester.tap(find.byKey(const Key('scenario-night')));
+    await pTester.pumpAndSettle();
+
+    expect(vPlan.boostOf('192.168.1.20', vNow), isNull);
+    expect(pTester.widget<FilterChip>(find.byKey(const Key('scenario-night'))).selected, isFalse);
   });
 }

@@ -13,6 +13,7 @@ String boostKindName(AppLocalizations pTexts, BoostKind pKind) => switch (pKind)
   BoostKind.shower => pTexts.boostShower,
   BoostKind.bath => pTexts.boostBath,
   BoostKind.laundry => pTexts.boostLaundry,
+  BoostKind.night => pTexts.planScenarioNight,
 };
 
 /// Coup de chaud d'une pièce : usage, température et durée. Renvoie le choix, ou null si on
@@ -68,7 +69,7 @@ class _BoostDialogState extends State<_BoostDialog> {
             const SizedBox(height: 12),
             SegmentedButton<BoostKind>(
               segments: [
-                for (final vKind in BoostKind.values)
+                for (final vKind in BoostKind.values.where((pKind) => pKind != BoostKind.night))
                   ButtonSegment(value: vKind, label: Text(boostKindName(vTexts, vKind))),
               ],
               selected: {_kind},

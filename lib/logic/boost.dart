@@ -4,13 +4,15 @@ library;
 
 import 'dart:convert';
 
-enum BoostKind { shower, bath, laundry }
+enum BoostKind { shower, bath, laundry, night }
 
 /// Réglage de départ de chaque usage : température en °C et durée en minutes.
 ({double temp, int minutes}) defaultBoost(BoostKind pKind) => switch (pKind) {
   BoostKind.shower => (temp: 24.0, minutes: 45),
   BoostKind.bath => (temp: 25.0, minutes: 90),
   BoostKind.laundry => (temp: 22.0, minutes: 180),
+  // La nuit a sa propre température par pièce et dure jusqu'au matin : voir scenarios.dart
+  BoostKind.night => (temp: 17.0, minutes: 480),
 };
 
 /// Bornes des réglages, par pas de 0,5 °C et de 15 minutes.

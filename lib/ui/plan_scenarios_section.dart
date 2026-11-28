@@ -56,6 +56,15 @@ class ScenariosSection extends StatelessWidget {
     await plan.tick(clock());
   }
 
+  Future<void> _toggleNight() async {
+    if (isNightOn(plan.boosts, clock())) {
+      await plan.stopNight(clock());
+    } else {
+      await plan.startNight(clock());
+    }
+    await plan.tick(clock());
+  }
+
   Future<void> _toggleRemote() async {
     await plan.setCalendar(toggleRemoteToday(plan.calendar, clock()));
     await plan.tick(clock());
@@ -88,6 +97,12 @@ class ScenariosSection extends StatelessWidget {
                 onPressed: () => _leave(pContext),
                 child: Text(vTexts.planScenarioLeave),
               ),
+            FilterChip(
+              key: const Key('scenario-night'),
+              label: Text(vTexts.planScenarioNight),
+              selected: isNightOn(plan.boosts, clock()),
+              onSelected: (_) => _toggleNight(),
+            ),
             FilterChip(
               key: const Key('scenario-remote'),
               label: Text(vTexts.planScenarioRemote),

@@ -2,7 +2,9 @@
 /// que Home sait déjà faire (mode vacances, calendrier) ; les règles restent dans leurs fichiers.
 library;
 
+import 'boost.dart';
 import 'house_calendar.dart';
+import 'plan.dart';
 import 'vacation.dart';
 
 DateTime _dayOf(DateTime pAt) => DateTime(pAt.year, pAt.month, pAt.day);
@@ -30,3 +32,29 @@ HouseCalendar toggleRemoteToday(HouseCalendar pCalendar, DateTime pNow) => pCale
     _dayOf(pNow): isRemoteToday(pCalendar, pNow) ? DayOverride.normal : DayOverride.remote,
   },
 );
+
+/// Heure du matin où la nuit se termine : celle du planning de départ (7 h).
+const nightEndMinute = 420;
+
+/// Prochain réveil strictement après [pNow].
+DateTime nightEnd(DateTime pNow) {
+  final vToday = DateTime(pNow.year, pNow.month, pNow.day, 0, nightEndMinute);
+
+  return vToday.isAfter(pNow) ? vToday : DateTime(pNow.year, pNow.month, pNow.day + 1, 0, nightEndMinute);
+}
+
+/// Une consigne de nuit par pièce, jusqu'au prochain réveil : la température « nuit » de chaque
+/// pièce remplace son planning pour cette nuit seulement.
+List<Boost> nightBoosts(List<Room> pRooms, DateTime pNow) => [
+  for (final vRoom in pRooms)
+    Boost(
+      host: vRoom.acHost,
+      kind: BoostKind.night,
+      temp: vRoom.targets.night,
+      until: nightEnd(pNow),
+    ),
+];
+
+/// La nuit est-elle lancée, d'après les coups de chaud encore en cours ?
+bool isNightOn(List<Boost> pBoosts, DateTime pNow) =>
+    activeBoosts(pBoosts, pNow).values.any((pBoost) => pBoost.kind == BoostKind.night);

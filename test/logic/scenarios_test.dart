@@ -1,5 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:home/logic/comfort.dart';
 import 'package:home/logic/house_calendar.dart';
+import 'package:home/logic/plan.dart';
 import 'package:home/logic/scenarios.dart';
 
 void main() {
@@ -46,6 +48,27 @@ void main() {
 
       expect(vNext.overrides[DateTime(2026, 12, 24)], DayOverride.rest);
       expect(vNext.overrides[DateTime(2026, 12, 7)], DayOverride.remote);
+    });
+  });
+
+  group('nuit', () {
+    test('le réveil est à 7 h, le lendemain une fois l\'heure passée', () {
+      expect(nightEnd(DateTime(2026, 12, 7, 18, 30)), DateTime(2026, 12, 8, 7));
+      expect(nightEnd(DateTime(2026, 12, 7, 2)), DateTime(2026, 12, 7, 7));
+      expect(nightEnd(DateTime(2026, 12, 7, 7)), DateTime(2026, 12, 8, 7));
+    });
+
+    test('chaque pièce prend sa température de nuit', () {
+      final vBoosts = nightBoosts([
+        const Room(acHost: 'a', targets: RoomTargets(night: 16.5)),
+        const Room(acHost: 'b'),
+      ], vNow);
+
+      expect(vBoosts.map((pBoost) => pBoost.temp), [16.5, 17]);
+      expect(vBoosts.every((pBoost) => pBoost.until == DateTime(2026, 12, 8, 7)), isTrue);
+      expect(isNightOn(vBoosts, vNow), isTrue);
+      expect(isNightOn(vBoosts, DateTime(2026, 12, 8, 7)), isFalse);
+      expect(isNightOn(const [], vNow), isFalse);
     });
   });
 }

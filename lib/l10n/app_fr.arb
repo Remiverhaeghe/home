@@ -123,6 +123,7 @@
   "planScenarioLeaveHint": "Choisis le jour de retour : la maison reste hors gel et le poêle s'arrête tout de suite.",
   "planScenarioBack": "Retour",
   "planScenarioBackHint": "Annule l'absence : les pièces reprennent leur planning tout de suite.",
+  "planScenarioNight": "Nuit",
   "planScenarioRemote": "Télétravail aujourd'hui",
   "planScenarioReturnDay": "Jour de retour",
   "planVacationTitle": "Vacances",
