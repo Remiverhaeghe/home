@@ -283,8 +283,6 @@ class _PlaceDialogState extends State<_PlaceDialog> {
                   if (vVolume == null) {
                     return const SizedBox.shrink();
                   }
-                  final vNumber = NumberFormat('0.0', Localizations.localeOf(pContext).toString());
-
                   return Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(

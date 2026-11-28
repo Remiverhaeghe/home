@@ -110,7 +110,7 @@ void main() {
     await pTester.pump();
 
     expect(find.textContaining('Volume d\'air : environ 110 m³'), findsOneWidget);
-    expect(find.textContaining('environ 0,0 kWh'), findsNothing);
+    expect(find.textContaining('environ 37 Wh'), findsOneWidget);
 
     await pTester.tap(find.widgetWithText(FilledButton, 'Enregistrer'));
     await pTester.pumpAndSettle();
