@@ -90,11 +90,15 @@ class AcController extends ChangeNotifier {
     required Map<String, double> pKwByHost,
     required double? pPricePerKwh,
     required double? pMonthlyBudget,
+    OffPeak? pOffPeak,
+    double? pOffPeakPrice,
   }) async {
     _runs = _runs.withSettings(
       pKwByHost: pKwByHost,
       pPricePerKwh: pPricePerKwh,
       pMonthlyBudget: pMonthlyBudget,
+      pOffPeak: pOffPeak,
+      pOffPeakPrice: pOffPeakPrice,
     );
     await _runsStore.save(_runs);
     notifyListeners();

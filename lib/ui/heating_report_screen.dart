@@ -32,6 +32,8 @@ class HeatingReportScreen extends StatelessWidget {
         pKwByHost: vChoice.kwByHost,
         pPricePerKwh: vChoice.price,
         pMonthlyBudget: vChoice.budget,
+        pOffPeak: vChoice.offPeak,
+        pOffPeakPrice: vChoice.offPeakPrice,
       );
     }
   }
@@ -72,7 +74,7 @@ class HeatingReportScreen extends StatelessWidget {
                       final vWeek = vLog.hoursOver(7, vNow);
                       final vBefore = vLog.hoursPreviousWeek(vNow);
                       final vKwh = vRuns.kwhOver(vUnit.host, 7, vNow);
-                      final vCost = vRuns.costOf(vKwh);
+                      final vCost = vRuns.costOver(vUnit.host, 7, vNow);
 
                       return Card(
                         child: ListTile(
@@ -145,7 +147,13 @@ class HeatingReportScreen extends StatelessWidget {
 }
 
 /// Ce que l'utilisateur a saisi dans la boîte des réglages de coût.
-typedef _HeatingChoice = ({Map<String, double> kwByHost, double? price, double? budget});
+typedef _HeatingChoice = ({
+  Map<String, double> kwByHost,
+  double? price,
+  double? budget,
+  OffPeak? offPeak,
+  double? offPeakPrice,
+});
 
 /// Saisie de la puissance de chaque clim, du prix du kWh et du budget mensuel. Les champs vivent
 /// dans cette boîte.
@@ -161,6 +169,9 @@ class _HeatingDialog extends StatefulWidget {
 class _HeatingDialogState extends State<_HeatingDialog> {
   late final _price = TextEditingController(text: _text(widget.ac.runs.pricePerKwh));
   late final _budget = TextEditingController(text: _text(widget.ac.runs.monthlyBudget));
+  late final _offPrice = TextEditingController(text: _text(widget.ac.runs.offPeakPrice));
+  late int? _offFrom = widget.ac.runs.offPeak?.startHour;
+  late int? _offTo = widget.ac.runs.offPeak?.endHour;
   late final _kw = {
     for (final vUnit in widget.ac.units)
       vUnit.host: TextEditingController(text: _text(widget.ac.runs.kwByHost[vUnit.host])),
@@ -178,6 +189,7 @@ class _HeatingDialogState extends State<_HeatingDialog> {
   void dispose() {
     _price.dispose();
     _budget.dispose();
+    _offPrice.dispose();
     for (final vController in _kw.values) {
       vController.dispose();
     }
@@ -199,6 +211,28 @@ class _HeatingDialogState extends State<_HeatingDialog> {
               controller: _price,
               keyboardType: vKeyboard,
               decoration: InputDecoration(labelText: vTexts.heatingPrice),
+            ),
+            TextField(
+              key: const Key('off-peak-price'),
+              controller: _offPrice,
+              keyboardType: vKeyboard,
+              decoration: InputDecoration(
+                labelText: vTexts.heatingOffPrice,
+                helperText: vTexts.heatingOffHelp,
+                helperMaxLines: 3,
+              ),
+            ),
+            _HourChoice(
+              key: const Key('off-peak-from'),
+              label: vTexts.heatingOffFrom,
+              value: _offFrom,
+              onChanged: (pHour) => setState(() => _offFrom = pHour),
+            ),
+            _HourChoice(
+              key: const Key('off-peak-to'),
+              label: vTexts.heatingOffTo,
+              value: _offTo,
+              onChanged: (pHour) => setState(() => _offTo = pHour),
             ),
             TextField(
               controller: _budget,
@@ -228,8 +262,46 @@ class _HeatingDialogState extends State<_HeatingDialog> {
             },
             price: _parse(_price.text),
             budget: _parse(_budget.text),
+            offPeak: _offFrom != null && _offTo != null
+                ? OffPeak(startHour: _offFrom!, endHour: _offTo!)
+                : null,
+            offPeakPrice: _parse(_offPrice.text),
           )),
           child: Text(vTexts.save),
+        ),
+      ],
+    );
+  }
+}
+
+/// Choix d'une heure de 0 à 23, ou aucune.
+class _HourChoice extends StatelessWidget {
+  const _HourChoice({
+    super.key,
+    required this.label,
+    required this.value,
+    required this.onChanged,
+  });
+
+  final String label;
+  final int? value;
+  final ValueChanged<int?> onChanged;
+
+  @override
+  Widget build(BuildContext pContext) {
+    final vTexts = AppLocalizations.of(pContext);
+
+    return Row(
+      children: [
+        Expanded(child: Text(label)),
+        DropdownButton<int?>(
+          value: value,
+          items: [
+            DropdownMenuItem<int?>(value: null, child: Text(vTexts.heatingOffNone)),
+            for (var vHour = 0; vHour < 24; vHour++)
+              DropdownMenuItem<int?>(value: vHour, child: Text(vTexts.heatingHourValue(vHour))),
+          ],
+          onChanged: onChanged,
         ),
       ],
     );
