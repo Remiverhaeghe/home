@@ -1,0 +1,1 @@
+- Journal détaillé, activable dans À propos : chaque tour du service en arrière-plan est noté (essais par capteur, durée, plan, résumé), ainsi que l'actualisation des capteurs. Désactivé au départ, sans nom de pièce ni adresse, enregistrable dans un fichier.
