@@ -283,10 +283,11 @@ class _PlaceDialogState extends State<_PlaceDialog> {
                   if (vVolume == null) {
                     return const SizedBox.shrink();
                   }
+
                   return Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
-                      vTexts.placeVolume(vVolume.round(), vNumber.format(airEnergyKwh(vVolume, 1))),
+                      vTexts.placeVolume(vVolume.round(), (airEnergyKwh(vVolume, 1) * 1000).round()),
                       key: const Key('place-volume'),
                     ),
                   );
