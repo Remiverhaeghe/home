@@ -34,3 +34,11 @@ Deux processus Dart écrivent : l'appli et le service d'arrière-plan. Ils ne se
 2. Le lien réseau ou Bluetooth va dans `lib/net/` ou `lib/ble/`, derrière une interface, avec une fausse dans `test/support/`.
 3. Le fichier de données reçoit sa paire de stockage, et son nom entre dans `backupFileNames` s'il doit être sauvegardé.
 4. Les textes vont dans `lib/l10n/app_fr.arb`.
+
+## Éviter les conflits entre lots
+
+- Changelog : un fragment par lot dans `changelog.d/`, assemblé par `python3 tool/changelog.py` ; `CHANGELOG.md` n'est modifié qu'à l'assemblage.
+- Textes : les nouvelles clés de `lib/l10n/app_fr.arb` se rangent près des clés du même écran, une clé par ligne.
+- Écrans : une section ou un dialogue dans son propre fichier plutôt qu'une classe de plus dans un écran déjà long.
+- Fusion : dans l'ordre d'ouverture des pull requests, de la plus ancienne à la plus récente.
+
