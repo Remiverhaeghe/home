@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../l10n/gen/app_localizations.dart';
 import '../logic/scenarios.dart';
-import '../logic/vacation.dart';
 import '../state/pellet_controller.dart';
 import '../state/plan_controller.dart';
 
