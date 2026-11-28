@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:home/logic/alert_history.dart';
 import 'package:home/logic/alerts.dart';
+import 'package:home/logic/heating_costs.dart';
 import 'package:home/storage/background_files.dart';
 import 'package:home/ui/quiet_hours_section.dart';
 
@@ -39,10 +40,10 @@ void main() {
     await pTester.runAsync(() async => vTo.onChanged!(7));
     await pTester.pump();
 
-    var vQuiet = await pTester.runAsync(vFiles.quietHours);
+    OffPeak? vQuiet = await pTester.runAsync<OffPeak?>(vFiles.quietHours);
     for (var vTry = 0; vTry < 20 && vQuiet == null; vTry++) {
       await settle(pTester);
-      vQuiet = await pTester.runAsync(vFiles.quietHours);
+      vQuiet = await pTester.runAsync<OffPeak?>(vFiles.quietHours);
     }
 
     expect(vQuiet?.startHour, 22);
