@@ -98,6 +98,11 @@ class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
         for (final vDevice in await vFiles.loadFollowed()) vDevice.name,
       };
     }
+    final vPellet = widget.pelletController;
+    if (vPellet != null) {
+      await vPellet.refresh();
+      widget.planController!.stoveRunning = !vPellet.failed && (vPellet.state?.isOn ?? false);
+    }
     await widget.acController!.refresh();
     final vFresh = await widget.planController!.tick(vNow);
     await widget.notifier?.show(vFresh);

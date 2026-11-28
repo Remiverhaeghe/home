@@ -19,6 +19,9 @@ class PlanController extends ChangeNotifier {
   /// lecture de la liste, tous sont alors surveillés.
   Set<String>? watched;
 
+  /// Le poêle à pellets est allumé : la clim ne chauffe pas en plus, sauf s'il fait très froid.
+  bool stoveRunning = false;
+
   final PlanStore _store;
   final AcController _ac;
   final SensorsController _sensors;
@@ -104,6 +107,7 @@ class PlanController extends ChangeNotifier {
       pOutdoors: vOutdoors,
       pLastRuns: _lastRuns,
       pWindowSince: _windowSince,
+      pStoveRunning: stoveRunning,
     );
     for (final vHost in vResult.windowHosts) {
       _windowSince[vHost] = pNow;
