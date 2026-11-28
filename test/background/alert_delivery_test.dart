@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:home/background/alert_delivery.dart';
 import 'package:home/logic/alerts.dart';
 import 'package:home/logic/heating_costs.dart';
+import 'package:home/logic/reminders.dart';
 import 'package:home/storage/background_files.dart';
 
 import '../support/fake_background.dart';
@@ -72,5 +73,22 @@ void main() {
 
     await vFiles.setQuietHours(null);
     expect(await vFiles.quietHours(), isNull);
+  });
+
+  test('un entretien échu est notifié même sans alerte de capteur', () async {
+    await vFiles.saveReminders([
+      Reminder(name: 'Filtres', everyDays: 30, lastDone: DateTime(2026, 10, 1)),
+    ]);
+
+    final vShown = await deliverAlerts(
+      pFiles: vFiles,
+      pNotifier: vNotifier,
+      pAlerts: const [],
+      pNow: DateTime(2026, 11, 28, 12),
+    );
+
+    expect(vShown.single.kind, AlertKind.maintenance);
+    expect(vNotifier.shown.single.single.sensorName, 'Filtres');
+    expect((await vFiles.loadAlertHistory()).single.kind, AlertKind.maintenance);
   });
 }

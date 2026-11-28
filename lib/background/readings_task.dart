@@ -67,18 +67,19 @@ class ReadingsTaskHandler extends TaskHandler {
       final vAlerts = await vRunner.run(DateTime.now(), pDetail: pDetail);
       if (vAlerts.isNotEmpty) {
         await pDetail.note('plan', '${vAlerts.length} alerte(s) à signaler');
-        final vAudible = await deliverAlerts(
-          pFiles: BackgroundFiles(pFolder),
-          pNotifier: _notifier,
-          pAlerts: vAlerts,
-          pNow: DateTime.now(),
+      }
+      // Même sans alerte de capteur : un entretien échu doit être signalé
+      final vAudible = await deliverAlerts(
+        pFiles: BackgroundFiles(pFolder),
+        pNotifier: _notifier,
+        pAlerts: vAlerts,
+        pNow: DateTime.now(),
+      );
+      if (vAudible.isNotEmpty) {
+        await FlutterForegroundTask.updateService(
+          notificationTitle: 'Alerte',
+          notificationText: alertSummary(vAudible),
         );
-        if (vAudible.isNotEmpty) {
-          await FlutterForegroundTask.updateService(
-            notificationTitle: 'Alerte',
-            notificationText: alertSummary(vAudible),
-          );
-        }
       }
     } on Object catch (pCaught) {
       // Réseau de la maison indisponible, fichier en cours d'écriture : tour suivant

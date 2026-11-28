@@ -56,6 +56,7 @@ class LocalAlertNotifier implements AlertNotifier {
             channelDescription: 'Gel, humidité haute, capteur muet ou figé',
             importance: Importance.high,
             priority: Priority.high,
+            onlyAlertOnce: true,
           ),
         ),
       );
@@ -95,4 +96,5 @@ String alertTitle(SensorAlert pAlert) => switch (pAlert.kind) {
   AlertKind.silent => 'Capteur muet',
   AlertKind.stuck => 'Capteur figé',
   AlertKind.ventilate => 'Aération conseillée',
+  AlertKind.maintenance => 'Entretien à faire',
 };

@@ -1,5 +1,6 @@
 import '../logic/alert_history.dart';
 import '../logic/alerts.dart';
+import '../logic/reminders.dart';
 import '../storage/background_files.dart';
 import 'alert_notifier.dart';
 
@@ -11,11 +12,13 @@ Future<List<SensorAlert>> deliverAlerts({
   required List<SensorAlert> pAlerts,
   required DateTime pNow,
 }) async {
-  if (pAlerts.isEmpty) {
+  // Les entretiens échus voyagent avec les alertes : même historique, mêmes heures silencieuses
+  final vAlerts = [...pAlerts, ...dueReminderAlerts(await pFiles.loadReminders(), pNow)];
+  if (vAlerts.isEmpty) {
     return const [];
   }
-  await pFiles.saveAlertHistory(appendAlerts(await pFiles.loadAlertHistory(), pAlerts, pNow));
-  final rAudible = audibleAlerts(pAlerts, pNow, await pFiles.quietHours());
+  await pFiles.saveAlertHistory(appendAlerts(await pFiles.loadAlertHistory(), vAlerts, pNow));
+  final rAudible = audibleAlerts(vAlerts, pNow, await pFiles.quietHours());
   await pNotifier.show(rAudible);
 
   return rAudible;

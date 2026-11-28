@@ -35,6 +35,7 @@ import 'house_screen.dart';
 import 'pellet_screen.dart';
 import 'relay_screen.dart';
 import 'reading_health_screen.dart';
+import 'reminders_screen.dart';
 import 'sensor_card.dart';
 import 'rooms_screen.dart';
 import 'sensor_detail_screen.dart';
@@ -346,6 +347,12 @@ class SensorsScreen extends StatelessWidget {
             pTexts.readingHealthOpen,
             () =>
                 _open(pContext, (_) => ReadingHealthScreen(files: files!, background: background)),
+          ),
+        if (files != null)
+          _MenuEntry(
+            Icons.checklist,
+            pTexts.remindersOpen,
+            () => _open(pContext, (_) => RemindersScreen(files: files!)),
           ),
         if (appearance != null)
           _MenuEntry(

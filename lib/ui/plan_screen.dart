@@ -122,6 +122,7 @@ class PlanScreen extends StatelessWidget {
       AlertKind.silent => pTexts.planAlertSilent(pAlert.sensorName),
       AlertKind.stuck => pTexts.planAlertStuck(pAlert.sensorName),
       AlertKind.ventilate => pTexts.planAlertVentilate(pAlert.sensorName),
+      AlertKind.maintenance => pTexts.planAlertMaintenance(pAlert.sensorName),
     };
   }
 

@@ -1,7 +1,7 @@
 import 'reading.dart';
 
 /// Ce qui mérite une notification.
-enum AlertKind { frost, humidity, silent, stuck, ventilate }
+enum AlertKind { frost, humidity, silent, stuck, ventilate, maintenance }
 
 /// Seuils des alertes.
 const frostAlertTemp = 5.0;
@@ -144,6 +144,7 @@ String alertSummary(List<SensorAlert> pAlerts) => pAlerts
         AlertKind.silent => 'Capteur muet : ${pAlert.sensorName}',
         AlertKind.stuck => 'Capteur figé : ${pAlert.sensorName}',
         AlertKind.ventilate => 'Aérer : ${pAlert.sensorName}',
+        AlertKind.maintenance => 'Entretien : ${pAlert.sensorName}',
       },
     )
     .join(' · ');

@@ -5,6 +5,7 @@ import '../logic/day_summary.dart';
 import '../logic/heating_costs.dart';
 import '../logic/pending_readings.dart';
 import '../logic/read_health.dart';
+import '../logic/reminders.dart';
 
 /// Fichiers partagés entre l'appli et le service d'arrière-plan, qui tourne dans un autre
 /// processus Dart : ils ne partagent pas la mémoire, seulement ces deux fichiers.
@@ -21,6 +22,7 @@ class BackgroundFiles {
       _summaryHour = File('${pFolder.path}/resume_heure.txt'),
       _health = File('${pFolder.path}/sante-releves.json'),
       _interval = File('${pFolder.path}/releve_intervalle.txt'),
+      _reminders = File('${pFolder.path}/rappels.json'),
       _quiet = File('${pFolder.path}/heures-silencieuses.txt'),
       _alerts = File('${pFolder.path}/historique-alertes.jsonl');
 
@@ -32,6 +34,7 @@ class BackgroundFiles {
   final File _health;
   final File _summaryHour;
   final File _quiet;
+  final File _reminders;
   final File _interval;
   final File _alerts;
 
@@ -103,6 +106,12 @@ class BackgroundFiles {
 
   Future<void> setReadIntervalMinutes(int pMinutes) =>
       _interval.writeAsString('$pMinutes', flush: true);
+
+  Future<List<Reminder>> loadReminders() async =>
+      await _reminders.exists() ? parseReminders(await _reminders.readAsString()) : [];
+
+  Future<void> saveReminders(List<Reminder> pReminders) =>
+      _reminders.writeAsString(remindersJson(pReminders), flush: true);
 
   /// Heures silencieuses (« 22-7 »), null quand il n'y en a pas : seul le gel sonne dans la plage.
   Future<OffPeak?> quietHours() async {
