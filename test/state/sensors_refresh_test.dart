@@ -52,4 +52,38 @@ void main() {
     expect(vStore.saved, hasLength(1));
     expect(vStore.saved.single.readings, hasLength(2));
   });
+
+  test('refreshIfStale lance la première actualisation, puis attend le délai', () async {
+    final vController = SensorsController(MemorySensorStore());
+    final vLink = FakeTp357Link();
+    final vStart = DateTime(2026, 11, 28, 12);
+
+    expect(vController.lastRefresh, isNull);
+    final vFirst = vController.refreshIfStale(
+      vLink,
+      vStart,
+      pScan: const Duration(milliseconds: 20),
+    );
+    expect(vController.lastRefresh, vStart);
+    // Personne à portée : la recherche se termine sans capteur
+    expect(await vFirst, 0);
+
+    expect(
+      await vController.refreshIfStale(
+        vLink,
+        vStart.add(const Duration(minutes: 9)),
+        pScan: const Duration(milliseconds: 20),
+      ),
+      isNull,
+    );
+    expect(vController.lastRefresh, vStart);
+
+    final vAgain = vController.refreshIfStale(
+      vLink,
+      vStart.add(const Duration(minutes: 10)),
+      pScan: const Duration(milliseconds: 20),
+    );
+    expect(vController.lastRefresh, vStart.add(const Duration(minutes: 10)));
+    expect(await vAgain, 0);
+  });
 }

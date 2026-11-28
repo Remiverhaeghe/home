@@ -117,4 +117,60 @@ void main() {
       );
     });
   });
+
+  group('capteur figé', () {
+    List<Reading> steady(
+      int pCount,
+      Duration pStep, {
+      double pTemp = 20,
+      double pHumidity = 50,
+    }) => [
+      for (var vIndex = 0; vIndex < pCount; vIndex++)
+        Reading(at: _now.subtract(pStep * (pCount - 1 - vIndex)), temp: pTemp, humidity: pHumidity),
+    ];
+
+    test('des valeurs identiques depuis six heures alertent', () {
+      final vReadings = steady(13, const Duration(minutes: 30));
+
+      expect(isStuck(vReadings), isTrue);
+      expect(
+        evaluateAlerts([Sensor(name: 'A', readings: vReadings)], _now).single.kind,
+        AlertKind.stuck,
+      );
+    });
+
+    test('moins de six heures, ou moins de douze relevés, n\'alertent pas', () {
+      expect(isStuck(steady(13, const Duration(minutes: 20))), isFalse);
+      expect(isStuck(steady(11, const Duration(hours: 1))), isFalse);
+      expect(isStuck(const []), isFalse);
+    });
+
+    test('une valeur qui change redémarre le compte', () {
+      final vReadings = [
+        ...steady(12, const Duration(minutes: 40)),
+        Reading(at: _now, temp: 20.1, humidity: 50),
+      ];
+
+      expect(isStuck(vReadings), isFalse);
+    });
+
+    test('un capteur muet n\'est pas dit figé en plus', () {
+      final vOld = [
+        for (var vIndex = 0; vIndex < 13; vIndex++)
+          Reading(at: _now.subtract(Duration(hours: 5 + 13 - vIndex)), temp: 20, humidity: 50),
+      ];
+
+      expect(
+        evaluateAlerts([Sensor(name: 'A', readings: vOld)], _now).map((pAlert) => pAlert.kind),
+        [AlertKind.silent],
+      );
+    });
+
+    test('la phrase de notification le nomme', () {
+      expect(
+        alertSummary(const [SensorAlert(sensorName: 'Cave', kind: AlertKind.stuck)]),
+        'Capteur figé : Cave',
+      );
+    });
+  });
 }

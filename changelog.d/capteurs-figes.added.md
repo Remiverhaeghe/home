@@ -1,0 +1,2 @@
+- Alerte « capteur figé » : un capteur qui répète exactement les mêmes valeurs depuis 6 heures (12 relevés au moins) est signalé, dans Pilotage et par notification : pile faible ou capteur bloqué.
+- Au retour dans l'appli, les capteurs suivis en arrière-plan sont relevés tout de suite si la dernière relève date de plus de 10 minutes.

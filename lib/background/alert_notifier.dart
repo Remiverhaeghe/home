@@ -53,7 +53,7 @@ class LocalAlertNotifier implements AlertNotifier {
           android: AndroidNotificationDetails(
             'alertes_maison',
             'Alertes de la maison',
-            channelDescription: 'Gel, humidité haute et capteur muet',
+            channelDescription: 'Gel, humidité haute, capteur muet ou figé',
             importance: Importance.high,
             priority: Priority.high,
           ),
@@ -93,4 +93,5 @@ String alertTitle(SensorAlert pAlert) => switch (pAlert.kind) {
   AlertKind.frost => 'Risque de gel',
   AlertKind.humidity => 'Humidité haute',
   AlertKind.silent => 'Capteur muet',
+  AlertKind.stuck => 'Capteur figé',
 };

@@ -116,6 +116,7 @@ class PlanScreen extends StatelessWidget {
       AlertKind.frost => pTexts.planAlertFrost(pAlert.sensorName, pUnits.temp(vValue)),
       AlertKind.humidity => pTexts.planAlertHumidity(pAlert.sensorName, pNumber.format(vValue)),
       AlertKind.silent => pTexts.planAlertSilent(pAlert.sensorName),
+      AlertKind.stuck => pTexts.planAlertStuck(pAlert.sensorName),
     };
   }
 

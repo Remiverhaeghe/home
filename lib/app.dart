@@ -9,6 +9,7 @@ import 'l10n/gen/app_localizations.dart';
 import 'state/ac_controller.dart';
 import 'state/plan_controller.dart';
 import 'state/house_controller.dart';
+import 'ble/tp357_link.dart';
 import 'logic/appearance.dart';
 import 'logic/units.dart';
 import 'state/appearance_controller.dart';
@@ -44,6 +45,7 @@ class HomeApp extends StatefulWidget {
     this.notifier,
     this.background,
     this.files,
+    this.link,
   });
 
   final SensorsController controller;
@@ -70,6 +72,9 @@ class HomeApp extends StatefulWidget {
   /// Service de relevé en arrière-plan et fichiers qu'il partage avec l'appli.
   final BackgroundControl? background;
   final BackgroundFiles? files;
+
+  /// Liaison Bluetooth ; remplacée par une fausse dans les tests.
+  final Tp357Link? link;
 
   @override
   State<HomeApp> createState() => _HomeAppState();
@@ -128,6 +133,21 @@ class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState pState) {
     if (pState == AppLifecycleState.resumed) {
       _syncPending();
+      unawaited(_refreshOnResume());
+    }
+  }
+
+  /// Au retour dans l'appli, relève les capteurs à portée si la dernière relève date. Seulement
+  /// quand des capteurs sont suivis en arrière-plan : l'accord Bluetooth est alors déjà donné.
+  Future<void> _refreshOnResume() async {
+    final vFiles = widget.files;
+    if (vFiles == null || (await vFiles.loadFollowed()).isEmpty) {
+      return;
+    }
+    try {
+      await widget.controller.refreshIfStale(widget.link ?? BleTp357Link(), DateTime.now());
+    } on Object {
+      // Bluetooth coupé : la relève manuelle reste possible
     }
   }
 
