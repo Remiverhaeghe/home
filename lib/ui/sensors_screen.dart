@@ -318,6 +318,7 @@ class SensorsScreen extends StatelessWidget {
                     sensors: controller,
                     house: houseController!,
                     weather: weatherController,
+                    saveFile: saveFile,
                   ),
                 ),
               ),
