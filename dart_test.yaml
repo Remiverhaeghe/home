@@ -1,0 +1,5 @@
+# Les captures d'écran ne sont pas des tests : le workflow Captures les génère
+# avec --run-skipped --update-goldens.
+tags:
+  captures:
+    skip: "Captures d'écran, générées par le workflow Captures"

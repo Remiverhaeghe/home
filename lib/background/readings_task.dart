@@ -9,6 +9,7 @@ import '../logic/alerts.dart';
 import '../logic/pending_readings.dart';
 import '../logic/reading.dart';
 import '../net/daikin_link.dart';
+import '../net/pellet_link.dart';
 import '../storage/background_files.dart';
 import 'alert_notifier.dart';
 import 'day_summary_runner.dart';
@@ -50,7 +51,11 @@ class ReadingsTaskHandler extends TaskHandler {
   /// service. Un échec ici ne doit jamais arrêter les relevés.
   Future<void> _plan(Directory pFolder) async {
     try {
-      final vRunner = _runner ??= PlanRunner(pFolder: pFolder, pLink: HttpDaikinLink());
+      final vRunner = _runner ??= PlanRunner(
+        pFolder: pFolder,
+        pLink: HttpDaikinLink(),
+        pPelletLink: HttpsPelletLink(),
+      );
       final vAlerts = await vRunner.run(DateTime.now());
       if (vAlerts.isNotEmpty) {
         await _notifier.show(vAlerts);
