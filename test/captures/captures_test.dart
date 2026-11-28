@@ -40,14 +40,16 @@ Future<void> _loadFonts() async {
 Future<void> _capture(String pName) =>
     expectLater(find.byType(MaterialApp), matchesGoldenFile('png/$pName.png'));
 
+void _done() => debugDisableShadows = true;
+
 Future<void> _openApp(WidgetTester pTester) async {
   // Écran de téléphone : 1080 × 2340 pixels
   pTester.view.physicalSize = const Size(1080, 2340);
   pTester.view.devicePixelRatio = 3;
   addTearDown(pTester.view.reset);
-  // Les tests remplacent les ombres par un trait ; les captures veulent les vraies.
+  // Les tests remplacent les ombres par un trait ; les captures veulent les vraies. Remises en
+  // fin de test par _done, avant le contrôle des variables de dessin.
   debugDisableShadows = false;
-  addTearDown(() => debugDisableShadows = true);
 
   final vSensors = SensorsController(MemorySensorStore(demoSensors()));
   await vSensors.load();
@@ -64,6 +66,7 @@ void main() {
     await _openApp(pTester);
 
     await _capture('01-capteurs');
+    _done();
   });
 
   testWidgets('courbes d\'un capteur', (pTester) async {
@@ -73,6 +76,7 @@ void main() {
     await pTester.pumpAndSettle();
 
     await _capture('02-capteur');
+    _done();
   });
 
   testWidgets('les pièces', (pTester) async {
@@ -82,5 +86,6 @@ void main() {
     await pTester.pumpAndSettle();
 
     await _capture('03-pieces');
+    _done();
   });
 }
