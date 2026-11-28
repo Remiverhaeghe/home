@@ -358,6 +358,7 @@
   "csvNotCsv": "Ce fichier n'est pas un export de l'appli ThermoPro.",
   "csvEmpty": "Aucun relevé valide dans ce fichier.",
   "refreshOpen": "Actualiser les capteurs",
+  "moreOpen": "Plus d'options",
   "refreshDone": "{count, plural, =0{Aucun capteur à portée} =1{1 capteur mis à jour} other{{count} capteurs mis à jour}}",
   "@refreshDone": {"placeholders": {"count": {"type": "int"}}},
   "periodsTitle": "Périodes de mesure",

@@ -6,6 +6,7 @@ import 'package:home/storage/sensor_store.dart';
 import 'package:home/ui/sensors_screen.dart';
 
 import '../support/localized.dart';
+import '../support/menu.dart';
 
 const _csv =
     'Horodatage pour chaque échantillon de fréquence chaque 1 min\n'
@@ -34,7 +35,7 @@ void main() {
   ) async {
     final vController = await _open(pTester, () async => (name: _name, text: _csv));
 
-    await pTester.tap(find.byTooltip('Importer un export ThermoPro'));
+    await openMenuEntry(pTester, 'Importer un export ThermoPro');
     await pTester.pumpAndSettle();
     await pTester.tap(find.text('Nouveau capteur « Bureau »'));
     await pTester.pumpAndSettle();
@@ -56,7 +57,7 @@ void main() {
       ],
     );
 
-    await pTester.tap(find.byTooltip('Importer un export ThermoPro'));
+    await openMenuEntry(pTester, 'Importer un export ThermoPro');
     await pTester.pumpAndSettle();
     await pTester.tap(
       find.descendant(of: find.byType(SimpleDialog), matching: find.text('TP357 (A1B2)')),
@@ -70,7 +71,7 @@ void main() {
   testWidgets('un fichier qui n\'est pas un export est refusé', (pTester) async {
     final vController = await _open(pTester, () async => (name: 'x.csv', text: 'a,b'));
 
-    await pTester.tap(find.byTooltip('Importer un export ThermoPro'));
+    await openMenuEntry(pTester, 'Importer un export ThermoPro');
     await pTester.pumpAndSettle();
 
     expect(find.text('Ce fichier n\'est pas un export de l\'appli ThermoPro.'), findsOneWidget);
@@ -81,7 +82,7 @@ void main() {
     const vEmpty = 'Date,Heure,Température_Celsius,Humidité_Relative(%)\n19/01/2025,10:45,-,-\n';
     final vController = await _open(pTester, () async => (name: _name, text: vEmpty));
 
-    await pTester.tap(find.byTooltip('Importer un export ThermoPro'));
+    await openMenuEntry(pTester, 'Importer un export ThermoPro');
     await pTester.pumpAndSettle();
     expect(find.text('Aucun relevé valide dans ce fichier.'), findsOneWidget);
     expect(vController.sensors, isEmpty);
@@ -90,7 +91,7 @@ void main() {
   testWidgets('fermer le choix du capteur n\'importe rien', (pTester) async {
     final vController = await _open(pTester, () async => (name: _name, text: _csv));
 
-    await pTester.tap(find.byTooltip('Importer un export ThermoPro'));
+    await openMenuEntry(pTester, 'Importer un export ThermoPro');
     await pTester.pumpAndSettle();
     await pTester.tapAt(const Offset(5, 5));
     await pTester.pumpAndSettle();

@@ -12,6 +12,7 @@ import 'package:home/state/sensors_controller.dart';
 import 'package:home/storage/house_store.dart';
 import 'package:home/storage/sensor_store.dart';
 
+import '../support/menu.dart';
 import 'demo.dart';
 
 /// Polices de Flutter : sans elles, les tests dessinent des carrés à la place du texte.
@@ -82,7 +83,7 @@ void main() {
   testWidgets('les pièces', (pTester) async {
     await _openApp(pTester);
 
-    await pTester.tap(find.byTooltip('Les pièces'));
+    await openMenuEntry(pTester, 'Les pièces');
     await pTester.pumpAndSettle();
 
     await _capture('03-pieces');

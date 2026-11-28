@@ -212,6 +212,149 @@ class SensorsScreen extends StatelessWidget {
     }
   }
 
+  void _open(BuildContext pContext, WidgetBuilder pBuilder) =>
+      Navigator.push<void>(pContext, MaterialPageRoute(builder: pBuilder));
+
+  /// Menu « Plus » : les écrans et actions rangés par famille, pour garder la barre lisible.
+  Widget _moreMenu(BuildContext pContext, AppLocalizations pTexts) {
+    final vGroups = <List<_MenuEntry>>[
+      [
+        if (acController != null)
+          _MenuEntry(
+            Icons.ac_unit,
+            pTexts.acOpen,
+            () => _open(pContext, (_) => AcScreen(controller: acController!, sensors: controller)),
+          ),
+        if (pelletController != null)
+          _MenuEntry(
+            Icons.local_fire_department_outlined,
+            pTexts.pelletOpen,
+            () => _open(pContext, (_) => PelletScreen(controller: pelletController!)),
+          ),
+        if (relayController != null)
+          _MenuEntry(
+            Icons.garage_outlined,
+            pTexts.relayOpen,
+            () => _open(pContext, (_) => RelayScreen(controller: relayController!)),
+          ),
+        if (acController != null && planController != null)
+          _MenuEntry(
+            Icons.tune,
+            pTexts.planOpen,
+            () => _open(
+              pContext,
+              (_) => PlanScreen(plan: planController!, ac: acController!, sensors: controller),
+            ),
+          ),
+        if (acController != null)
+          _MenuEntry(
+            Icons.tablet_android,
+            pTexts.wallOpen,
+            () => _open(
+              pContext,
+              (_) => WallScreen(
+                sensors: controller,
+                ac: acController!,
+                display: wallDisplay ?? PlatformWallDisplay(),
+              ),
+            ),
+          ),
+      ],
+      [
+        if (houseController != null)
+          _MenuEntry(
+            Icons.meeting_room_outlined,
+            pTexts.roomsOpen,
+            () => _open(
+              pContext,
+              (_) => RoomsScreen(
+                sensors: controller,
+                house: houseController!,
+                weather: weatherController,
+              ),
+            ),
+          ),
+        if (houseController != null)
+          _MenuEntry(
+            Icons.home_work_outlined,
+            pTexts.houseOpen,
+            () => _open(
+              pContext,
+              (_) => HouseScreen(controller: houseController!, weather: weatherController),
+            ),
+          ),
+        if (controller.sensors.length > 1)
+          _MenuEntry(
+            Icons.compare_arrows,
+            pTexts.compareOpen,
+            () => _open(pContext, (_) => CompareScreen(controller: controller)),
+          ),
+      ],
+      [
+        _MenuEntry(
+          Icons.ios_share,
+          pTexts.exportFile,
+          () => _export(pContext),
+          enabled: controller.sensors.isNotEmpty,
+        ),
+        _MenuEntry(Icons.history, pTexts.csvOpen, () => _importCsv(pContext)),
+        if (backupFiles != null && onRestored != null)
+          _MenuEntry(
+            Icons.backup_outlined,
+            pTexts.backupOpen,
+            () => _open(
+              pContext,
+              (_) => BackupScreen(
+                files: backupFiles!,
+                pickFile: pickFile,
+                saveFile: saveFile,
+                onRestored: onRestored!,
+              ),
+            ),
+          ),
+      ],
+      [
+        if (appearance != null)
+          _MenuEntry(
+            Icons.palette_outlined,
+            pTexts.appearanceOpen,
+            () => _open(pContext, (_) => AppearanceScreen(controller: appearance!)),
+          ),
+        if (errorLog != null)
+          _MenuEntry(
+            Icons.info_outline,
+            pTexts.aboutOpen,
+            () => _open(pContext, (_) => AboutScreen(log: errorLog!, saveFile: saveFile)),
+          ),
+      ],
+    ].where((pGroup) => pGroup.isNotEmpty).toList();
+    final vActions = <_MenuEntry>[];
+    final vItems = <PopupMenuEntry<int>>[];
+    for (var vGroup = 0; vGroup < vGroups.length; vGroup++) {
+      if (vGroup > 0) {
+        vItems.add(const PopupMenuDivider());
+      }
+      for (final vEntry in vGroups[vGroup]) {
+        vItems.add(
+          PopupMenuItem<int>(
+            value: vActions.length,
+            enabled: vEntry.enabled,
+            child: Row(
+              children: [Icon(vEntry.icon), const SizedBox(width: 12), Flexible(child: Text(vEntry.label))],
+            ),
+          ),
+        );
+        vActions.add(vEntry);
+      }
+    }
+
+    return PopupMenuButton<int>(
+      tooltip: pTexts.moreOpen,
+      onSelected: (pIndex) => vActions[pIndex].onTap(),
+      itemBuilder: (_) => vItems,
+    );
+  }
+
   @override
   Widget build(BuildContext pContext) {
     final vTexts = AppLocalizations.of(pContext);
@@ -220,170 +363,27 @@ class SensorsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(vTexts.sensorsTitle),
         actions: [
-          ListenableBuilder(
-            listenable: controller,
-            builder: (pContext, _) => IconButton(
-              tooltip: vTexts.exportFile,
-              icon: const Icon(Icons.ios_share),
-              onPressed: controller.sensors.isEmpty ? null : () => _export(pContext),
-            ),
-          ),
           IconButton(
             tooltip: vTexts.refreshOpen,
             icon: const Icon(Icons.refresh),
             onPressed: () => _refresh(pContext),
           ),
           IconButton(
-            tooltip: vTexts.csvOpen,
-            icon: const Icon(Icons.history),
-            onPressed: () => _importCsv(pContext),
-          ),
-          if (acController != null)
-            IconButton(
-              tooltip: vTexts.acOpen,
-              icon: const Icon(Icons.ac_unit),
-              onPressed: () => Navigator.push<void>(
-                pContext,
-                MaterialPageRoute(
-                  builder: (_) => AcScreen(controller: acController!, sensors: controller),
-                ),
-              ),
-            ),
-          if (relayController != null)
-            IconButton(
-              tooltip: vTexts.relayOpen,
-              icon: const Icon(Icons.garage_outlined),
-              onPressed: () => Navigator.push<void>(
-                pContext,
-                MaterialPageRoute(builder: (_) => RelayScreen(controller: relayController!)),
-              ),
-            ),
-          ListenableBuilder(
-            listenable: controller,
-            builder: (_, _) => controller.sensors.length > 1
-                ? IconButton(
-                    tooltip: vTexts.compareOpen,
-                    icon: const Icon(Icons.compare_arrows),
-                    onPressed: () => Navigator.push<void>(
-                      pContext,
-                      MaterialPageRoute(builder: (_) => CompareScreen(controller: controller)),
-                    ),
-                  )
-                : const SizedBox.shrink(),
-          ),
-          if (appearance != null)
-            IconButton(
-              tooltip: vTexts.appearanceOpen,
-              icon: const Icon(Icons.palette_outlined),
-              onPressed: () => Navigator.push<void>(
-                pContext,
-                MaterialPageRoute(builder: (_) => AppearanceScreen(controller: appearance!)),
-              ),
-            ),
-          if (errorLog != null)
-            IconButton(
-              tooltip: vTexts.aboutOpen,
-              icon: const Icon(Icons.info_outline),
-              onPressed: () => Navigator.push<void>(
-                pContext,
-                MaterialPageRoute(
-                  builder: (_) => AboutScreen(log: errorLog!, saveFile: saveFile),
-                ),
-              ),
-            ),
-          if (backupFiles != null && onRestored != null)
-            IconButton(
-              tooltip: vTexts.backupOpen,
-              icon: const Icon(Icons.backup_outlined),
-              onPressed: () => Navigator.push<void>(
-                pContext,
-                MaterialPageRoute(
-                  builder: (_) => BackupScreen(
-                    files: backupFiles!,
-                    pickFile: pickFile,
-                    saveFile: saveFile,
-                    onRestored: onRestored!,
-                  ),
-                ),
-              ),
-            ),
-          if (houseController != null)
-            IconButton(
-              tooltip: vTexts.roomsOpen,
-              icon: const Icon(Icons.meeting_room_outlined),
-              onPressed: () => Navigator.push<void>(
-                pContext,
-                MaterialPageRoute(
-                  builder: (_) => RoomsScreen(
-                    sensors: controller,
-                    house: houseController!,
-                    weather: weatherController,
-                  ),
-                ),
-              ),
-            ),
-          if (houseController != null)
-            IconButton(
-              tooltip: vTexts.houseOpen,
-              icon: const Icon(Icons.home_work_outlined),
-              onPressed: () => Navigator.push<void>(
-                pContext,
-                MaterialPageRoute(
-                  builder: (_) =>
-                      HouseScreen(controller: houseController!, weather: weatherController),
-                ),
-              ),
-            ),
-          if (pelletController != null)
-            IconButton(
-              tooltip: vTexts.pelletOpen,
-              icon: const Icon(Icons.local_fire_department_outlined),
-              onPressed: () => Navigator.push<void>(
-                pContext,
-                MaterialPageRoute(builder: (_) => PelletScreen(controller: pelletController!)),
-              ),
-            ),
-          if (acController != null)
-            IconButton(
-              tooltip: vTexts.wallOpen,
-              icon: const Icon(Icons.tablet_android),
-              onPressed: () => Navigator.push<void>(
-                pContext,
-                MaterialPageRoute(
-                  builder: (_) => WallScreen(
-                    sensors: controller,
-                    ac: acController!,
-                    display: wallDisplay ?? PlatformWallDisplay(),
-                  ),
-                ),
-              ),
-            ),
-          if (acController != null && planController != null)
-            IconButton(
-              tooltip: vTexts.planOpen,
-              icon: const Icon(Icons.tune),
-              onPressed: () => Navigator.push<void>(
-                pContext,
-                MaterialPageRoute(
-                  builder: (_) =>
-                      PlanScreen(plan: planController!, ac: acController!, sensors: controller),
-                ),
-              ),
-            ),
-          IconButton(
             tooltip: vTexts.liveOpen,
             icon: const Icon(Icons.bluetooth_searching),
-            onPressed: () => Navigator.push<void>(
+            onPressed: () => _open(
               pContext,
-              MaterialPageRoute(
-                builder: (_) => LiveScreen(
-                  link: link ?? BleTp357Link(),
-                  controller: controller,
-                  background: background,
-                  files: files,
-                ),
+              (_) => LiveScreen(
+                link: link ?? BleTp357Link(),
+                controller: controller,
+                background: background,
+                files: files,
               ),
             ),
+          ),
+          ListenableBuilder(
+            listenable: controller,
+            builder: (pContext, _) => _moreMenu(pContext, vTexts),
           ),
         ],
       ),
@@ -577,4 +577,14 @@ class SensorCard extends StatelessWidget {
     HumidityLevel.good => pTexts.humidityGood,
     HumidityLevel.humid => pTexts.humidityHumid,
   };
+}
+
+/// Une ligne du menu « Plus ».
+class _MenuEntry {
+  const _MenuEntry(this.icon, this.label, this.onTap, {this.enabled = true});
+
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  final bool enabled;
 }
