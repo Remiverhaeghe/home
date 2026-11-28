@@ -15,6 +15,7 @@ import '../state/ac_controller.dart';
 import '../state/plan_controller.dart';
 import '../logic/house.dart';
 import '../state/house_controller.dart';
+import '../storage/backup_files.dart';
 import '../state/pellet_controller.dart';
 import '../state/weather_controller.dart';
 import '../state/relay_controller.dart';
@@ -23,6 +24,7 @@ import '../storage/background_files.dart';
 import 'ac_screen.dart';
 import 'live_screen.dart';
 import 'plan_screen.dart';
+import 'backup_screen.dart';
 import 'house_screen.dart';
 import 'pellet_screen.dart';
 import 'relay_screen.dart';
@@ -67,6 +69,8 @@ class SensorsScreen extends StatelessWidget {
     this.pelletController,
     this.houseController,
     this.weatherController,
+    this.backupFiles,
+    this.onRestored,
   });
 
   final SensorsController controller;
@@ -94,6 +98,10 @@ class SensorsScreen extends StatelessWidget {
   final PelletController? pelletController;
   final HouseController? houseController;
   final WeatherController? weatherController;
+
+  /// Sauvegarde et restauration ; le bouton n'apparaît que si les fichiers et la relecture sont fournis.
+  final BackupFiles? backupFiles;
+  final Future<void> Function()? onRestored;
 
   Future<void> _import(BuildContext pContext) async {
     final vText = await pickFile();
@@ -159,6 +167,22 @@ class SensorsScreen extends StatelessWidget {
               onPressed: () => Navigator.push<void>(
                 pContext,
                 MaterialPageRoute(builder: (_) => RelayScreen(controller: relayController!)),
+              ),
+            ),
+          if (backupFiles != null && onRestored != null)
+            IconButton(
+              tooltip: vTexts.backupOpen,
+              icon: const Icon(Icons.backup_outlined),
+              onPressed: () => Navigator.push<void>(
+                pContext,
+                MaterialPageRoute(
+                  builder: (_) => BackupScreen(
+                    files: backupFiles!,
+                    pickFile: pickFile,
+                    saveFile: saveFile,
+                    onRestored: onRestored!,
+                  ),
+                ),
               ),
             ),
           if (houseController != null)

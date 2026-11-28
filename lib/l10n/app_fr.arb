@@ -590,5 +590,38 @@
         "type": "int"
       }
     }
+  },
+  "backupOpen": "Sauvegarde",
+  "backupTitle": "Sauvegarde",
+  "backupHelp": "Un seul fichier contient tout : capteurs et noms, climatisations, pièces et règles, vacances, relais, poêle, maison et météo. Garde-le pour changer de téléphone ou repartir après un problème.",
+  "backupSave": "Enregistrer une sauvegarde",
+  "backupRestore": "Restaurer une sauvegarde",
+  "backupSecrets": "Le fichier contient le mot de passe du poêle : garde-le en lieu sûr et ne le partage pas.",
+  "backupSaved": "Sauvegarde enregistrée.",
+  "backupNotJson": "Ce fichier n'est pas une sauvegarde : il n'est pas lisible.",
+  "backupNotBackup": "Ce fichier n'est pas une sauvegarde de Home.",
+  "backupWrongVersion": "Cette sauvegarde vient d'une autre version de Home, qu'elle ne sait pas relire.",
+  "backupEmpty": "Cette sauvegarde ne contient aucune donnée utilisable.",
+  "backupUnknownDate": "date inconnue",
+  "backupRestoreTitle": "Restaurer cette sauvegarde ?",
+  "backupRestoreBody": "{count} fichiers de la sauvegarde du {date} remplaceront les données actuelles. Chaque fichier remplacé est gardé à côté, avec l'extension .avant.",
+  "@backupRestoreBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "backupRestoreGo": "Restaurer",
+  "backupRestored": "{count} fichiers restaurés.",
+  "@backupRestored": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }
