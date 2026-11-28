@@ -234,8 +234,14 @@ class SensorsScreen extends StatelessWidget {
         if (relayController != null)
           _MenuEntry(
             Icons.garage_outlined,
-            pTexts.relayOpen,
-            () => _open(pContext, (_) => RelayScreen(controller: relayController!)),
+            pTexts.garageOpen,
+            () => _open(pContext, (_) => RelayScreen.garage(controller: relayController!)),
+          ),
+        if (relayController != null)
+          _MenuEntry(
+            Icons.roofing,
+            pTexts.veluxOpen,
+            () => _open(pContext, (_) => RelayScreen.velux(controller: relayController!)),
           ),
         if (acController != null && planController != null)
           _MenuEntry(
