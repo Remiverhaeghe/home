@@ -101,12 +101,7 @@ class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
     }
     final vPellet = widget.pelletController;
     if (vPellet != null) {
-      await vPellet.refresh();
-      var vOn = !vPellet.failed && (vPellet.state?.isOn ?? false);
-      if (stoveMustStop(widget.planController!.vacation, vNow, pStoveOn: vOn) &&
-          await vPellet.setPower(pOn: false) == PelletResult.done) {
-        vOn = false;
-      }
+      final vOn = await vPellet.refreshAndStopIfAway(widget.planController!.vacation, vNow);
       widget.planController!.stoveRunning = vOn;
     }
     await widget.acController!.refresh();

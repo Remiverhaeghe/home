@@ -3,12 +3,15 @@ import 'dart:io';
 import '../logic/alerts.dart';
 import '../logic/pending_readings.dart';
 import '../net/daikin_link.dart';
+import '../net/pellet_link.dart';
 import '../state/ac_controller.dart';
+import '../state/pellet_controller.dart';
 import '../state/plan_controller.dart';
 import '../state/sensors_controller.dart';
 import '../storage/ac_store.dart';
 import '../storage/background_files.dart';
 import '../storage/file_sensor_store.dart';
+import '../storage/pellet_store.dart';
 import '../storage/plan_store.dart';
 import '../storage/sensor_store.dart';
 
@@ -20,13 +23,16 @@ const appOpenWindow = Duration(minutes: 7);
 /// Garde ses contrôleurs d'un tour à l'autre : les délais entre commandes et les alertes déjà
 /// signalées se retiennent.
 class PlanRunner {
-  PlanRunner({required Directory pFolder, required DaikinLink pLink})
+  PlanRunner({required Directory pFolder, required DaikinLink pLink, PelletLink? pPelletLink})
     : _files = BackgroundFiles(pFolder),
       _sensorFile = FileSensorStore(File('${pFolder.path}/capteurs.json')),
       _sensorStore = MemorySensorStore() {
     _sensors = SensorsController(_sensorStore);
     _ac = AcController(FileAcStore(File('${pFolder.path}/climatisations.json')), pLink);
     _plan = PlanController(FilePlanStore(pFolder), _ac, _sensors);
+    if (pPelletLink != null) {
+      _pellet = PelletController(FilePelletStore(File('${pFolder.path}/poele.json')), pPelletLink);
+    }
   }
 
   final BackgroundFiles _files;
@@ -35,6 +41,7 @@ class PlanRunner {
   late final SensorsController _sensors;
   late final AcController _ac;
   late final PlanController _plan;
+  PelletController? _pellet;
 
   /// Un tour : renvoie les alertes apparues, ou une liste vide quand l'appli est ouverte (c'est
   /// elle qui applique alors le plan).
@@ -47,6 +54,11 @@ class PlanRunner {
     await _ac.load();
     await _plan.load();
     _plan.watched = {for (final vDevice in await _files.loadFollowed()) vDevice.name};
+    final vPellet = _pellet;
+    if (vPellet != null) {
+      await vPellet.load();
+      _plan.stoveRunning = await vPellet.refreshAndStopIfAway(_plan.vacation, pNow);
+    }
     await _ac.refresh();
 
     return _plan.tick(pNow);

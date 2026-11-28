@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import '../logic/daikin.dart' show isPrivateAddress;
 import '../logic/pellet.dart';
+import '../logic/vacation.dart';
 import '../net/pellet_link.dart';
 import '../storage/pellet_store.dart';
 
@@ -78,6 +79,19 @@ class PelletController extends ChangeNotifier {
       _failed = true;
     }
     notifyListeners();
+  }
+
+  /// Relit le poêle et l'éteint pendant les vacances s'il marche. Renvoie true s'il marche encore
+  /// à la fin, ce que le plan utilise pour ne pas lancer la clim en même temps sans besoin.
+  Future<bool> refreshAndStopIfAway(VacationMode? pVacation, DateTime pNow) async {
+    await refresh();
+    final vOn = !failed && (state?.isOn ?? false);
+    if (stoveMustStop(pVacation, pNow, pStoveOn: vOn) &&
+        await setPower(pOn: false) == PelletResult.done) {
+      return false;
+    }
+
+    return vOn;
   }
 
   Future<PelletResult> setPower({required bool pOn}) =>
