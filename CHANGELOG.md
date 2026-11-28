@@ -9,6 +9,7 @@
 
 ### Ajouté
 
+- `docs/architecture.md` : couches du code, données, tests et marche à suivre pour ajouter un appareil.
 - Audit des permissions et du réseau : `docs/securite.md` liste chaque permission Android, ce qui sort du téléphone et où vivent les identifiants.
 - Captures d'écran d'une maison fictive générées par la CI (workflow Captures, `test/captures`) : liste des capteurs, courbes d'un capteur, écran des pièces. Aucune donnée réelle.
 - Poêle éteint en vacances même appli fermée : le service d'arrière-plan relit le poêle à chaque tour et l'éteint s'il marche pendant l'absence (hors remontée avant le retour).
