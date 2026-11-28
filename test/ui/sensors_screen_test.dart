@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:home/logic/climate_exchange.dart';
 import 'package:home/logic/reading.dart';
 import 'package:home/state/sensors_controller.dart';
+import 'package:home/storage/error_log_store.dart';
 import 'package:home/storage/sensor_store.dart';
 import 'package:home/ui/sensors_screen.dart';
 
@@ -114,6 +115,22 @@ void main() {
     await pTester.pumpAndSettle();
 
     expect(find.text('Recherche des capteurs TP357…'), findsOneWidget);
+  });
+
+  testWidgets('le bouton À propos n\'apparaît qu\'avec un journal et ouvre l\'écran', (
+    pTester,
+  ) async {
+    final vController = SensorsController(MemorySensorStore());
+    await pTester.pumpWidget(localized(SensorsScreen(controller: vController)));
+    expect(find.byTooltip('À propos'), findsNothing);
+
+    await pTester.pumpWidget(
+      localized(SensorsScreen(controller: vController, errorLog: MemoryErrorLogStore())),
+    );
+    await pTester.tap(find.byTooltip('À propos'));
+    await pTester.pumpAndSettle();
+
+    expect(find.text('À propos de Home'), findsOneWidget);
   });
 
   group('export pour Atelier', () {

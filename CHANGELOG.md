@@ -13,7 +13,9 @@
 - Poêle : stock de pellets (sacs comptés, diminués de la consommation estimée, autonomie et alerte de stock bas), arrêt programmé du soir appliqué dans la demi-heure qui suit son heure (appli ou service d'arrière-plan), et message quand le poêle s'éteint sans ordre de Home.
 - Le service d'arrière-plan tient aussi le journal des heures de marche du poêle et des clims appli fermée.
 - Bilan du poêle : prix du sac à saisir, coût estimé sur 7 et 30 jours, et comparaison des heures de marche avec la semaine d'avant (« Marche et pellets »).
+- Captures d'écran d'une maison fictive générées par la CI (workflow Captures, `test/captures`) : liste des capteurs, courbes d'un capteur, écran des pièces. Aucune donnée réelle.
 - Poêle éteint en vacances même appli fermée : le service d'arrière-plan relit le poêle à chaque tour et l'éteint s'il marche pendant l'absence (hors remontée avant le retour).
+- Écran « À propos » (bouton i de la liste des capteurs) : version de l'appli et journal local des erreurs (`journal-erreurs.txt`, 300 lignes au plus, adresses réseau masquées), à enregistrer dans un fichier ou à vider. Rien n'est envoyé.
 - Poêle à pellets : heures de marche relevées à chaque lecture de l'état (appli ouverte), sur 7 et 30 jours, et pellets estimés avec le débit (kg par heure) et le sac (kg) que l'on donne. Sans débit donné, aucun chiffre n'est avancé. Le journal est dans la sauvegarde.
 - Coup de chaud par pièce (écran du plan, bouton « Douche, bain, lessive ») : la clim chauffe à la température choisie pendant la durée choisie (douche 24 °C 45 min, bain 25 °C 90 min, lessive 22 °C 3 h au départ), puis le planning reprend. Réglage dans la sauvegarde.
 - Seuil de froid réglable (écran du plan, de 10 à 22 °C par demi-degré) : sous ce seuil la clim peut chauffer en plus du poêle ; le réglage est dans la sauvegarde.
