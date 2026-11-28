@@ -56,4 +56,5 @@ Map<DateTime, Holiday> holidaysOf(int pYear) {
 }
 
 /// Le jour férié de [pDay], ou null.
-Holiday? holidayOn(DateTime pDay) => holidaysOf(pDay.year)[DateTime(pDay.year, pDay.month, pDay.day)];
+Holiday? holidayOn(DateTime pDay) =>
+    holidaysOf(pDay.year)[DateTime(pDay.year, pDay.month, pDay.day)];

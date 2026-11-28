@@ -55,9 +55,7 @@ ProfileKind profileAt(
     final vStarted =
         pSlots
             .where(
-              (pSlot) =>
-                  pSlot.weekdays.contains(vKey) &&
-                  (vBack > 0 || pSlot.minute <= vNowMinute),
+              (pSlot) => pSlot.weekdays.contains(vKey) && (vBack > 0 || pSlot.minute <= vNowMinute),
             )
             .toList()
           ..sort((pA, pB) => pB.minute.compareTo(pA.minute));

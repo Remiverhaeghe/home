@@ -60,10 +60,9 @@ void main() {
     expect(vBack.overrides, {DateTime(2026, 12, 24): DayOverride.rest});
     expect(parseCalendar('pas du json').isDefault, isTrue);
     expect(parseCalendar('{"version":2}').isDefault, isTrue);
-    expect(
-      parseCalendar('{"version":1,"remoteWeekdays":[0,9,3],"holidays":"x"}').remoteWeekdays,
-      {3},
-    );
+    expect(parseCalendar('{"version":1,"remoteWeekdays":[0,9,3],"holidays":"x"}').remoteWeekdays, {
+      3,
+    });
   });
 
   group('planning avec calendrier', () {

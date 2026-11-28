@@ -21,7 +21,8 @@ class CalendarScreen extends StatefulWidget {
 class _CalendarScreenState extends State<CalendarScreen> {
   late DateTime _month = DateTime(widget.clock().year, widget.clock().month);
 
-  void _shift(int pMonths) => setState(() => _month = DateTime(_month.year, _month.month + pMonths));
+  void _shift(int pMonths) =>
+      setState(() => _month = DateTime(_month.year, _month.month + pMonths));
 
   String _holidayName(AppLocalizations pTexts, Holiday pHoliday) => switch (pHoliday) {
     Holiday.newYear => pTexts.holidayNewYear,
@@ -99,11 +100,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              _MonthHeader(
-                month: _month,
-                onPrevious: () => _shift(-1),
-                onNext: () => _shift(1),
-              ),
+              _MonthHeader(month: _month, onPrevious: () => _shift(-1), onNext: () => _shift(1)),
               const SizedBox(height: 8),
               _MonthGrid(
                 month: _month,
@@ -114,17 +111,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
               const SizedBox(height: 8),
               _Legend(texts: vTexts),
               const SizedBox(height: 24),
-              Text(
-                vTexts.calendarHolidaysTitle,
-                style: Theme.of(pContext).textTheme.titleMedium,
-              ),
+              Text(vTexts.calendarHolidaysTitle, style: Theme.of(pContext).textTheme.titleMedium),
               const SizedBox(height: 8),
               SegmentedButton<HolidayRule>(
                 segments: [
-                  ButtonSegment(
-                    value: HolidayRule.none,
-                    label: Text(vTexts.calendarHolidaysNone),
-                  ),
+                  ButtonSegment(value: HolidayRule.none, label: Text(vTexts.calendarHolidaysNone)),
                   ButtonSegment(
                     value: HolidayRule.saturday,
                     label: Text(vTexts.calendarHolidaysSaturday),
@@ -333,7 +324,8 @@ class _WeekdayChips extends StatelessWidget {
           FilterChip(
             label: Text(vFormat.format(DateTime(2024, 1, vDay))),
             selected: selected.contains(vDay),
-            onSelected: (pOn) => onChanged(pOn ? {...selected, vDay} : ({...selected}..remove(vDay))),
+            onSelected: (pOn) =>
+                onChanged(pOn ? {...selected, vDay} : ({...selected}..remove(vDay))),
           ),
       ],
     );
