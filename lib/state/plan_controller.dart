@@ -38,6 +38,9 @@ class PlanController extends ChangeNotifier {
   /// Sous cette température, la clim peut chauffer en plus du poêle.
   double get stoveColdBelow => _settings.stoveColdBelow;
 
+  /// Au-dessus de ce taux d'humidité, une alerte est donnée.
+  double get humidityAlertAt => _settings.humidityAlertAt;
+
   /// Coups de chaud enregistrés, en cours ou passés.
   List<Boost> get boosts => _settings.boosts;
   VacationMode? get vacation => _settings.vacation;
@@ -69,6 +72,7 @@ class PlanController extends ChangeNotifier {
       rules: rules,
       vacation: vacation,
       stoveColdBelow: stoveColdBelow,
+      humidityAlertAt: humidityAlertAt,
       boosts: boosts,
     ),
   );
@@ -88,6 +92,7 @@ class PlanController extends ChangeNotifier {
       rules: pRules,
       vacation: vacation,
       stoveColdBelow: stoveColdBelow,
+      humidityAlertAt: humidityAlertAt,
       boosts: boosts,
     ),
   );
@@ -99,6 +104,7 @@ class PlanController extends ChangeNotifier {
       rules: rules,
       vacation: pVacation,
       stoveColdBelow: stoveColdBelow,
+      humidityAlertAt: humidityAlertAt,
       boosts: boosts,
     ),
   );
@@ -114,7 +120,24 @@ class PlanController extends ChangeNotifier {
         rules: rules,
         vacation: vacation,
         stoveColdBelow: vValue,
+        humidityAlertAt: humidityAlertAt,
         boosts: boosts,
+      ),
+    );
+  }
+
+  /// Règle le seuil d'humidité des alertes : borné et arrondi au pour cent.
+  Future<void> setHumidityAlertAt(double pValue) {
+    final vValue = pValue.clamp(humidityAlertMin, humidityAlertMax).roundToDouble();
+
+    return _save(
+      PlanSettings(
+        rooms: rooms,
+        rules: rules,
+        vacation: vacation,
+        stoveColdBelow: stoveColdBelow,
+        boosts: boosts,
+        humidityAlertAt: vValue,
       ),
     );
   }
@@ -138,6 +161,7 @@ class PlanController extends ChangeNotifier {
         rules: rules,
         vacation: vacation,
         stoveColdBelow: stoveColdBelow,
+        humidityAlertAt: humidityAlertAt,
         boosts: [
           ...vKept,
           Boost(
@@ -158,6 +182,7 @@ class PlanController extends ChangeNotifier {
       rules: rules,
       vacation: vacation,
       stoveColdBelow: stoveColdBelow,
+      humidityAlertAt: humidityAlertAt,
       boosts: [
         for (final vBoost in boosts)
           if (vBoost.host != pHost) vBoost,
@@ -209,7 +234,12 @@ class PlanController extends ChangeNotifier {
         _applied.add(vCommand);
       }
     }
-    final vCurrent = evaluateAlerts(_sensors.sensors, pNow, pWatched: watched);
+    final vCurrent = evaluateAlerts(
+      _sensors.sensors,
+      pNow,
+      pWatched: watched,
+      pHumidityLevel: humidityAlertAt,
+    );
     final rFresh = freshAlerts(vCurrent, _knownAlerts);
     _knownAlerts = {for (final vAlert in vCurrent) vAlert.key};
     notifyListeners();

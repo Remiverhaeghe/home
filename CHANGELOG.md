@@ -10,6 +10,7 @@
 ### Ajouté
 
 - Résumé du matin (interrupteur dans l'écran Pilotage) : à partir de 8 h, le service d'arrière-plan envoie une notification discrète avec la pièce la plus fraîche, la plus humide et le nombre de pièces hors plage d'humidité, une fois par jour.
+- Seuil d'alerte d'humidité réglable dans l'écran Pilotage (de 55 à 85 %, 70 % au départ), gardé dans `reglages-plan.json` et pris en compte par le service d'arrière-plan.
 - Captures d'écran d'une maison fictive générées par la CI (workflow Captures, `test/captures`) : liste des capteurs, courbes d'un capteur, écran des pièces. Aucune donnée réelle.
 - Poêle éteint en vacances même appli fermée : le service d'arrière-plan relit le poêle à chaque tour et l'éteint s'il marche pendant l'absence (hors remontée avant le retour).
 - Écran « À propos » (bouton i de la liste des capteurs) : version de l'appli et journal local des erreurs (`journal-erreurs.txt`, 300 lignes au plus, adresses réseau masquées), à enregistrer dans un fichier ou à vider. Rien n'est envoyé.

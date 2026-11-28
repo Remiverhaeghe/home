@@ -6,6 +6,10 @@ enum AlertKind { frost, humidity, silent }
 /// Seuils des alertes.
 const frostAlertTemp = 5.0;
 const humidityAlertLevel = 70.0;
+
+/// Bornes du seuil d'humidité réglable, par pas de 1 %.
+const humidityAlertMin = 55.0;
+const humidityAlertMax = 85.0;
 const silentAfter = Duration(minutes: 30);
 
 /// Une alerte sur un capteur. [value] est la mesure en cause, absente pour un capteur muet.
@@ -21,11 +25,16 @@ class SensorAlert {
 }
 
 /// Alertes à l'instant [pNow] : gel sous [frostAlertTemp], humidité au-dessus de
-/// [humidityAlertLevel], capteur sans relevé depuis [silentAfter]. Un capteur sans aucun relevé
+/// [pHumidityLevel] (70 % au départ, réglable), capteur sans relevé depuis [silentAfter]. Un capteur sans aucun relevé
 /// n'alerte pas : il n'a encore jamais parlé. Seuls les capteurs de [pWatched] (ceux que le service
 /// d'arrière-plan suit) peuvent être muets : les autres ne donnent un relevé que quand on ouvre
 /// l'appli. Sans [pWatched], tous les capteurs sont surveillés.
-List<SensorAlert> evaluateAlerts(List<Sensor> pSensors, DateTime pNow, {Set<String>? pWatched}) {
+List<SensorAlert> evaluateAlerts(
+  List<Sensor> pSensors,
+  DateTime pNow, {
+  Set<String>? pWatched,
+  double pHumidityLevel = humidityAlertLevel,
+}) {
   final rAlerts = <SensorAlert>[];
   for (final vSensor in pSensors) {
     final vLast = vSensor.last;
@@ -43,7 +52,7 @@ List<SensorAlert> evaluateAlerts(List<Sensor> pSensors, DateTime pNow, {Set<Stri
     if (vLast.temp < frostAlertTemp) {
       rAlerts.add(SensorAlert(sensorName: vSensor.name, kind: AlertKind.frost, value: vLast.temp));
     }
-    if (vLast.humidity > humidityAlertLevel) {
+    if (vLast.humidity > pHumidityLevel) {
       rAlerts.add(
         SensorAlert(sensorName: vSensor.name, kind: AlertKind.humidity, value: vLast.humidity),
       );
