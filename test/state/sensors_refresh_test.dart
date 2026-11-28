@@ -59,7 +59,11 @@ void main() {
     final vStart = DateTime(2026, 11, 28, 12);
 
     expect(vController.lastRefresh, isNull);
-    final vFirst = vController.refreshIfStale(vLink, vStart, pScan: const Duration(milliseconds: 20));
+    final vFirst = vController.refreshIfStale(
+      vLink,
+      vStart,
+      pScan: const Duration(milliseconds: 20),
+    );
     expect(vController.lastRefresh, vStart);
     // Personne à portée : la recherche se termine sans capteur
     expect(await vFirst, 0);
