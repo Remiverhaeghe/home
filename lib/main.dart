@@ -30,6 +30,7 @@ import 'storage/house_store.dart';
 import 'storage/label_store.dart';
 import 'storage/plan_store.dart';
 import 'storage/notes_store.dart';
+import 'storage/pellet_runs_store.dart';
 import 'storage/pellet_store.dart';
 import 'storage/weather_store.dart';
 import 'storage/relay_store.dart';
@@ -58,6 +59,7 @@ Future<void> main() async {
   final vPellet = PelletController(
     FilePelletStore(File('${vFolder.path}/poele.json')),
     HttpsPelletLink(),
+    runsStore: FilePelletRunsStore(File('${vFolder.path}/marche-poele.json')),
   );
   await vPellet.load();
   final vHouse = HouseController(FileHouseStore(File('${vFolder.path}/maison.json')));
