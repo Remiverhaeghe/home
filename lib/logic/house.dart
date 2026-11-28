@@ -21,9 +21,20 @@ bool isValidCoordinates(double pLatitude, double pLongitude) =>
 /// Niveaux proposés : -1 sous-sol, 0 rez-de-chaussée, 1 et 2 étages, 3 combles.
 const floorLevels = [-1, 0, 1, 2, 3];
 
+/// Hauteur sous plafond acceptée, en mètres : de quoi couvrir un rampant bas comme un double volume.
+const ceilingMin = 1.5;
+const ceilingMax = 12.0;
+
+/// Hauteur lue dans un champ de saisie (« 5,5 » ou « 5.5 »), null si vide ou hors des bornes.
+double? parseCeiling(String pText) {
+  final vValue = double.tryParse(pText.trim().replaceAll(',', '.'));
+
+  return vValue != null && vValue >= ceilingMin && vValue <= ceilingMax ? vValue : null;
+}
+
 /// Où se trouve un capteur : la pièce, le niveau, ou dehors.
 class SensorPlace {
-  const SensorPlace({this.room = '', this.floor, this.outdoor = false});
+  const SensorPlace({this.room = '', this.floor, this.outdoor = false, this.ceiling});
 
   final String room;
 
@@ -31,7 +42,11 @@ class SensorPlace {
   final int? floor;
   final bool outdoor;
 
-  bool get isEmpty => room.trim().isEmpty && floor == null && !outdoor;
+  /// Hauteur sous plafond de la pièce en mètres (l'air chaud monte : un capteur à hauteur d'homme
+  /// lit moins que le haut d'une pièce de 5 ou 6 m), null quand elle n'est pas dite.
+  final double? ceiling;
+
+  bool get isEmpty => room.trim().isEmpty && floor == null && !outdoor && ceiling == null;
 }
 
 class House {
@@ -56,6 +71,7 @@ class House {
         room: pPlace.room.trim(),
         floor: pPlace.outdoor ? null : pPlace.floor,
         outdoor: pPlace.outdoor,
+        ceiling: pPlace.ceiling,
       );
     }
 
@@ -112,6 +128,7 @@ String houseJson(House pHouse) => jsonEncode({
         'room': vEntry.value.room,
         'floor': vEntry.value.floor,
         'outdoor': vEntry.value.outdoor,
+        if (vEntry.value.ceiling != null) 'ceiling': vEntry.value.ceiling,
       },
   },
 });
@@ -154,10 +171,12 @@ House parseHouse(String pText) {
       }
       final vRoom = vValue['room'];
       final vFloor = vValue['floor'];
+      final vCeiling = vValue['ceiling'];
       final vPlace = SensorPlace(
         room: vRoom is String ? vRoom : '',
         floor: vFloor is int && floorLevels.contains(vFloor) ? vFloor : null,
         outdoor: vValue['outdoor'] == true,
+        ceiling: vCeiling is num ? parseCeiling('${vCeiling.toDouble()}') : null,
       );
       if (!vPlace.isEmpty) {
         vPlaces[vEntry.key] = vPlace;

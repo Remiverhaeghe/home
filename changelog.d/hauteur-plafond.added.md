@@ -1,0 +1,1 @@
+- Hauteur sous plafond par pièce (de 1,5 à 12 m) dans l'emplacement d'un capteur : elle est rangée avec la maison, pour tenir compte des pièces hautes (l'air chaud monte).
