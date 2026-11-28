@@ -58,7 +58,8 @@ void main() {
   testWidgets('un capteur qui n\'a jamais répondu le dit', (pTester) async {
     await open(pTester, pHealth: const ReadHealth().record('Chambre', vNow, pOk: false));
 
-    expect(find.text('Aucun relevé réussi en arrière-plan'), findsOneWidget);
+    expect(find.textContaining('Aucun relevé réussi en arrière-plan'), findsOneWidget);
+    expect(find.textContaining('1 tour manqué d\'affilée'), findsOneWidget);
   });
 
   testWidgets('l\'économie de batterie se signale et se demande', (pTester) async {

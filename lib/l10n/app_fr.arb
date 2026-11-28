@@ -473,7 +473,7 @@
   "readingHealthNeverOk": "Aucun relevé réussi en arrière-plan",
   "readingHealthLastOk": "Dernier relevé réussi : {date}",
   "@readingHealthLastOk": {"placeholders": {"date": {"type": "String"}}},
-  "readingHealthStreak": "{count} tours manqués d'affilée",
+  "readingHealthStreak": "{count, plural, =1{1 tour manqué d'affilée} other{{count} tours manqués d'affilée}}",
   "@readingHealthStreak": {"placeholders": {"count": {"type": "int"}}},
   "readingHealthRate": "Réussite sur 7 jours : {percent} %",
   "@readingHealthRate": {"placeholders": {"percent": {"type": "int"}}},
