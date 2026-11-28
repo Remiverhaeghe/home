@@ -77,26 +77,14 @@ class PlanController extends ChangeNotifier {
     );
   }
 
-  Future<void> setRules(List<AutoRule> pRules) =>
-      _save(
-        PlanSettings(
-          rooms: rooms,
-          rules: pRules,
-          vacation: vacation,
-          stoveColdBelow: stoveColdBelow,
-        ),
-      );
+  Future<void> setRules(List<AutoRule> pRules) => _save(
+    PlanSettings(rooms: rooms, rules: pRules, vacation: vacation, stoveColdBelow: stoveColdBelow),
+  );
 
   /// Règle le mode vacances, ou le retire avec null.
-  Future<void> setVacation(VacationMode? pVacation) =>
-      _save(
-        PlanSettings(
-          rooms: rooms,
-          rules: rules,
-          vacation: pVacation,
-          stoveColdBelow: stoveColdBelow,
-        ),
-      );
+  Future<void> setVacation(VacationMode? pVacation) => _save(
+    PlanSettings(rooms: rooms, rules: rules, vacation: pVacation, stoveColdBelow: stoveColdBelow),
+  );
 
   /// Règle le seuil de froid sous lequel la clim chauffe en plus du poêle : borné et arrondi au
   /// demi-degré.
@@ -104,12 +92,7 @@ class PlanController extends ChangeNotifier {
     final vValue = (pValue.clamp(stoveColdMin, stoveColdMax) * 2).round() / 2;
 
     return _save(
-      PlanSettings(
-        rooms: rooms,
-        rules: rules,
-        vacation: vacation,
-        stoveColdBelow: vValue,
-      ),
+      PlanSettings(rooms: rooms, rules: rules, vacation: vacation, stoveColdBelow: vValue),
     );
   }
 
