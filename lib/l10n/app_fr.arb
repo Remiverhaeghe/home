@@ -725,5 +725,16 @@
   "periodsSplitFailed": "Choisis un autre nom que celui du capteur.",
   "planStoveTitle": "Poêle et clim ensemble",
   "planStoveHint": "Quand le poêle marche, la clim ne chauffe pas en plus. Sous {temp} °C dans la pièce, les deux peuvent tourner ensemble.",
-  "@planStoveHint": {"placeholders": {"temp": {"type": "String"}}}
+  "@planStoveHint": {"placeholders": {"temp": {"type": "String"}}},
+  "pelletUsageTitle": "Marche et pellets",
+  "pelletUsageHours": "{week} h de marche sur 7 jours, {month} h sur 30 jours.",
+  "@pelletUsageHours": {"placeholders": {"week": {"type": "String"}, "month": {"type": "String"}}},
+  "pelletUsageKg": "Environ {week} kg sur 7 jours et {month} kg sur 30 jours, soit {bags} sacs sur 30 jours.",
+  "@pelletUsageKg": {"placeholders": {"week": {"type": "String"}, "month": {"type": "String"}, "bags": {"type": "String"}}},
+  "pelletUsageNoFlow": "Donne le débit de pellets de ton poêle pour estimer ce qu'il consomme.",
+  "pelletUsageNote": "Les heures comptent quand l'appli est ouverte et lit l'état du poêle.",
+  "pelletUsageSet": "Débit et sac",
+  "pelletUsageFlow": "Débit à pleine marche (kg par heure)",
+  "pelletUsageFlowHelp": "Se lit dans la notice du poêle. Laisse vide pour effacer.",
+  "pelletUsageBag": "Poids d'un sac (kg)"
 }
