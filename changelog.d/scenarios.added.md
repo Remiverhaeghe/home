@@ -1,0 +1,1 @@
+- Scénarios en un geste en haut du plan : « Départ » (choix du jour de retour, maison hors gel, poêle arrêté tout de suite), « Retour » (annule l'absence et applique le planning) et « Télétravail aujourd'hui » (bascule le jour). Velux et porte de garage ne sont pas touchés : leurs boutons envoient une impulsion sans connaître l'état.
