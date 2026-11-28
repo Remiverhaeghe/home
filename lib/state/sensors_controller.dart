@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../ble/tp357_link.dart';
 import '../logic/climate_exchange.dart';
 import '../logic/pending_readings.dart';
 import '../logic/reading.dart';
@@ -85,6 +86,36 @@ class SensorsController extends ChangeNotifier {
     }
     await _store.save(_sensors);
     notifyListeners();
+  }
+
+  /// Cherche les capteurs à portée pendant [pScan], puis lit une mesure sur chacun (au plus [pWait]
+  /// d'attente) et la range. Renvoie le nombre de capteurs lus.
+  Future<int> refreshFromBluetooth(
+    Tp357Link pLink, {
+    Duration pScan = const Duration(seconds: 6),
+    Duration pWait = const Duration(seconds: 20),
+  }) async {
+    final vDevices = await pLink.scan().timeout(pScan, onTimeout: (pSink) => pSink.close()).toList();
+    final vResults = await Future.wait([
+      for (final vDevice in vDevices) _readOnce(pLink, vDevice, pWait),
+    ]);
+
+    return vResults.where((pRead) => pRead).length;
+  }
+
+  Future<bool> _readOnce(Tp357Link pLink, Tp357Device pDevice, Duration pWait) async {
+    try {
+      final vValue = await pLink.live(pDevice.id).first.timeout(pWait);
+      await addLiveReading(
+        pDevice.name,
+        Reading(at: DateTime.now(), temp: vValue.temp, humidity: vValue.humidity),
+      );
+
+      return true;
+    } on Object {
+      // Capteur sorti de portée ou occupé par l'appli du fabricant : on passe au suivant
+      return false;
+    }
   }
 
   /// Range les relevés pris en arrière-plan. [pTake] les rend et les retire de leur fichier.

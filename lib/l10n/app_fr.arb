@@ -707,5 +707,8 @@
   "csvDone": "{count} relevés importés dans {sensor} ({skipped} lignes sans mesure ignorées).",
   "@csvDone": {"placeholders": {"count": {"type": "int"}, "sensor": {"type": "String"}, "skipped": {"type": "int"}}},
   "csvNotCsv": "Ce fichier n'est pas un export de l'appli ThermoPro.",
-  "csvEmpty": "Aucun relevé valide dans ce fichier."
+  "csvEmpty": "Aucun relevé valide dans ce fichier.",
+  "refreshOpen": "Actualiser les capteurs",
+  "refreshDone": "{count, plural, =0{Aucun capteur à portée} =1{1 capteur mis à jour} other{{count} capteurs mis à jour}}",
+  "@refreshDone": {"placeholders": {"count": {"type": "int"}}}
 }

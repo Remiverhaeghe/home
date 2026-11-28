@@ -147,6 +147,15 @@ class SensorsScreen extends StatelessWidget {
     ScaffoldMessenger.of(pContext).showSnackBar(SnackBar(content: Text(vMessage)));
   }
 
+  /// Lit une mesure sur chaque capteur à portée et le dit.
+  Future<void> _refresh(BuildContext pContext) async {
+    final vTexts = AppLocalizations.of(pContext);
+    final vMessenger = ScaffoldMessenger.of(pContext);
+    final vCount = await controller.refreshFromBluetooth(link ?? BleTp357Link());
+    vMessenger.hideCurrentSnackBar();
+    vMessenger.showSnackBar(SnackBar(content: Text(vTexts.refreshDone(vCount))));
+  }
+
   /// Importe un export CSV de l'appli ThermoPro dans un capteur au choix ou dans un nouveau.
   Future<void> _importCsv(BuildContext pContext) async {
     final vTexts = AppLocalizations.of(pContext);
@@ -212,6 +221,11 @@ class SensorsScreen extends StatelessWidget {
               icon: const Icon(Icons.ios_share),
               onPressed: controller.sensors.isEmpty ? null : () => _export(pContext),
             ),
+          ),
+          IconButton(
+            tooltip: vTexts.refreshOpen,
+            icon: const Icon(Icons.refresh),
+            onPressed: () => _refresh(pContext),
           ),
           IconButton(
             tooltip: vTexts.csvOpen,
@@ -416,11 +430,15 @@ class SensorsScreen extends StatelessWidget {
             ],
           ];
 
-          return ListView.separated(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 96),
-            itemCount: vItems.length,
-            separatorBuilder: (_, _) => const SizedBox(height: 12),
-            itemBuilder: (_, pIndex) => vItems[pIndex],
+          return RefreshIndicator(
+            onRefresh: () => _refresh(pContext),
+            child: ListView.separated(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 96),
+              itemCount: vItems.length,
+              separatorBuilder: (_, _) => const SizedBox(height: 12),
+              itemBuilder: (_, pIndex) => vItems[pIndex],
+            ),
           );
         },
       ),

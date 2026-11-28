@@ -110,7 +110,7 @@ class PlanScreen extends StatelessWidget {
         listenable: Listenable.merge([plan, ac, sensors]),
         builder: (pContext, _) {
           final vVacation = plan.vacation;
-          final vAlerts = evaluateAlerts(sensors.sensors, clock());
+          final vAlerts = evaluateAlerts(sensors.sensors, clock(), pWatched: plan.watched);
           final vDate = DateFormat.yMMMd(vLocale);
 
           return ListView(
