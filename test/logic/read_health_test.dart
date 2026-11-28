@@ -22,9 +22,7 @@ void main() {
   });
 
   test('chaque capteur a sa propre santé', () {
-    final vHealth = const ReadHealth()
-        .record('A', vNow, pOk: true)
-        .record('B', vNow, pOk: false);
+    final vHealth = const ReadHealth().record('A', vNow, pOk: true).record('B', vNow, pOk: false);
 
     expect(vHealth.of('A').streak, 0);
     expect(vHealth.of('B').streak, 1);
@@ -67,9 +65,9 @@ void main() {
     expect(parseReadHealth('{"version": 2}').sensors, isEmpty);
     expect(parseReadHealth('{"version": 1, "capteurs": []}').sensors, isEmpty);
     expect(
-      parseReadHealth('{"version":1,"capteurs":{"A":{"serie":-3,"jours":{"2026-12-07":[1]}}}}')
-          .of('A')
-          .days,
+      parseReadHealth(
+        '{"version":1,"capteurs":{"A":{"serie":-3,"jours":{"2026-12-07":[1]}}}}',
+      ).of('A').days,
       isEmpty,
     );
   });

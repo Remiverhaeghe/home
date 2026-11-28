@@ -344,10 +344,8 @@ class SensorsScreen extends StatelessWidget {
           _MenuEntry(
             Icons.monitor_heart_outlined,
             pTexts.readingHealthOpen,
-            () => _open(
-              pContext,
-              (_) => ReadingHealthScreen(files: files!, background: background),
-            ),
+            () =>
+                _open(pContext, (_) => ReadingHealthScreen(files: files!, background: background)),
           ),
         if (appearance != null)
           _MenuEntry(
