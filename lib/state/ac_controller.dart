@@ -108,6 +108,35 @@ class AcController extends ChangeNotifier {
     }
   }
 
+  /// Essaie un module sans l'ajouter : lit son identité puis son état, et dit lequel des deux
+  /// échoue. Sert à savoir si un nouveau modèle de module répond comme les autres.
+  Future<ModuleProbe> probe(String pHost) async {
+    final vHost = pHost.trim();
+    if (!isPrivateAddress(vHost)) {
+      const vReason = 'adresse hors du réseau de la maison';
+
+      return const ModuleProbe(identityProblem: vReason, stateProblem: vReason);
+    }
+    String? vName;
+    String? vIdentityProblem;
+    String? vStateProblem;
+    try {
+      vName = (await _link.info(vHost)).name;
+    } on Object catch (pError) {
+      vIdentityProblem = _reason(pError);
+    }
+    try {
+      await _link.read(vHost);
+    } on Object catch (pError) {
+      vStateProblem = _reason(pError);
+    }
+
+    return ModuleProbe(name: vName, identityProblem: vIdentityProblem, stateProblem: vStateProblem);
+  }
+
+  static String _reason(Object pError) =>
+      pError is DaikinException ? pError.reason : pError.runtimeType.toString();
+
   /// Ajoute la climatisation qui répond à cette adresse, sous le nom que son module donne (ou
   /// [pName] si l'utilisateur en a choisi un). Renvoie le motif du refus, null si c'est fait.
   Future<AddProblem?> add(String pHost, {String? pName}) async {

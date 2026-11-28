@@ -20,6 +20,40 @@ void main() {
     vController = AcController(vStore, vLink);
   });
 
+  group('essai d\'un module', () {
+    test('un module qui répond est reconnu sans être ajouté', () async {
+      final vProbe = await vController.probe(' $vHost ');
+
+      expect(vProbe.identityOk, isTrue);
+      expect(vProbe.name, 'Salon');
+      expect(vProbe.stateOk, isTrue);
+      expect(vController.units, isEmpty);
+    });
+
+    test('un module muet donne le motif pour chaque étape', () async {
+      final vProbe = await vController.probe('192.168.1.99');
+
+      expect(vProbe.identityProblem, 'injoignable');
+      expect(vProbe.stateProblem, 'injoignable');
+    });
+
+    test('un module dont seule la lecture de l\'état échoue est distingué', () async {
+      vLink.states.remove(vHost);
+
+      final vProbe = await vController.probe(vHost);
+
+      expect(vProbe.identityOk, isTrue);
+      expect(vProbe.stateOk, isFalse);
+    });
+
+    test('une adresse hors du réseau de la maison n\'est pas essayée', () async {
+      final vProbe = await vController.probe('8.8.8.8');
+
+      expect(vProbe.identityOk, isFalse);
+      expect(vProbe.stateOk, isFalse);
+    });
+  });
+
   group('ajout', () {
     test('une climatisation qui répond est ajoutée sous son nom, enregistrée et lue', () async {
       final vProblem = await vController.add(' $vHost ');

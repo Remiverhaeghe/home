@@ -183,6 +183,19 @@ class DaikinState {
   final DaikinSensors sensors;
 }
 
+/// Ce que répond un module à l'essai : son identité (`basic_info`) puis son état. Un problème est
+/// le motif donné par la liaison (« injoignable », « code 404 »), jamais une adresse.
+class ModuleProbe {
+  const ModuleProbe({this.name, this.identityProblem, this.stateProblem});
+
+  final String? name;
+  final String? identityProblem;
+  final String? stateProblem;
+
+  bool get identityOk => identityProblem == null;
+  bool get stateOk => stateProblem == null;
+}
+
 /// Identité du module, lue dans `basic_info`.
 class DaikinInfo {
   const DaikinInfo({required this.name, required this.mac});
