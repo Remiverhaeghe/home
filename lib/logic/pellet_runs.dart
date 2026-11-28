@@ -25,6 +25,7 @@ class PelletRuns {
     this.lastOn = false,
     this.kgPerHour,
     this.bagKg = defaultBagKg,
+    this.bagPrice,
   });
 
   /// Minutes de marche par jour, clé `aaaa-mm-jj`.
@@ -38,6 +39,9 @@ class PelletRuns {
   /// donné : Home n'invente aucun chiffre.
   final double? kgPerHour;
   final double bagKg;
+
+  /// Prix d'un sac en euros ; null tant que l'utilisateur ne l'a pas donné.
+  final double? bagPrice;
 
   /// Ajoute une lecture de l'état à l'instant [pAt]. La marche entre la lecture précédente et
   /// celle-ci compte si le poêle marchait à la précédente et si l'écart reste sous [maxRunGap].
@@ -57,16 +61,19 @@ class PelletRuns {
       lastOn: pOn,
       kgPerHour: kgPerHour,
       bagKg: bagKg,
+      bagPrice: bagPrice,
     );
   }
 
-  PelletRuns withFlow({required double? pKgPerHour, required double pBagKg}) => PelletRuns(
-    minutesByDay: minutesByDay,
-    lastAt: lastAt,
-    lastOn: lastOn,
-    kgPerHour: pKgPerHour,
-    bagKg: pBagKg,
-  );
+  PelletRuns withFlow({required double? pKgPerHour, required double pBagKg, double? pBagPrice}) =>
+      PelletRuns(
+        minutesByDay: minutesByDay,
+        lastAt: lastAt,
+        lastOn: lastOn,
+        kgPerHour: pKgPerHour,
+        bagKg: pBagKg,
+        bagPrice: pBagPrice,
+      );
 
   /// Heures de marche sur les [pDays] derniers jours, aujourd'hui compris.
   double hoursOver(int pDays, DateTime pNow) {
@@ -81,6 +88,12 @@ class PelletRuns {
     return vTotal / 60;
   }
 
+  /// Heures de marche de la semaine d'avant : les 7 jours qui précèdent les 7 derniers.
+  double hoursPreviousWeek(DateTime pNow) => hoursOver(14, pNow) - hoursOver(7, pNow);
+
+  /// Coût estimé de [pKg] de pellets, null sans prix du sac.
+  double? costFor(double? pKg) => pKg == null || bagPrice == null ? null : pKg / bagKg * bagPrice!;
+
   /// Pellets estimés sur [pHours] heures de marche, null sans débit.
   double? kgFor(double pHours) => kgPerHour == null ? null : pHours * kgPerHour!;
 }
@@ -91,6 +104,7 @@ String pelletRunsJson(PelletRuns pRuns) => jsonEncode({
   'marche': pRuns.lastOn,
   'debitKgH': pRuns.kgPerHour,
   'sacKg': pRuns.bagKg,
+  'prixSac': pRuns.bagPrice,
 });
 
 /// Lit le fichier ; abîmé ou absent, il redonne un journal vide.
@@ -103,6 +117,7 @@ PelletRuns parsePelletRuns(String pJson) {
     final vDays = vRoot['jours'];
     final vFlow = vRoot['debitKgH'];
     final vBag = vRoot['sacKg'];
+    final vPrice = vRoot['prixSac'];
 
     return PelletRuns(
       minutesByDay: {
@@ -114,6 +129,7 @@ PelletRuns parsePelletRuns(String pJson) {
       lastOn: vRoot['marche'] == true,
       kgPerHour: vFlow is num && vFlow > 0 ? vFlow.toDouble() : null,
       bagKg: vBag is num && vBag > 0 ? vBag.toDouble() : defaultBagKg,
+      bagPrice: vPrice is num && vPrice > 0 ? vPrice.toDouble() : null,
     );
   } on FormatException {
     return const PelletRuns();

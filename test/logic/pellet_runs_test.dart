@@ -73,4 +73,36 @@ void main() {
     expect(vOdd.kgPerHour, isNull);
     expect(vOdd.bagKg, defaultBagKg);
   });
+
+  test('la semaine d\'avant se compte sur les 7 jours qui précèdent les 7 derniers', () {
+    final vRuns = const PelletRuns(
+      minutesByDay: {
+        '2026-12-07': 120,
+        '2026-12-01': 60,
+        '2026-11-30': 180,
+        '2026-11-24': 240,
+        '2026-11-23': 600,
+      },
+    );
+
+    expect(vRuns.hoursOver(7, _t0), 3);
+    expect(vRuns.hoursPreviousWeek(_t0), 7);
+  });
+
+  test('le coût suit le prix du sac et n\'est annoncé qu\'avec lui', () {
+    const vFlow = PelletRuns(kgPerHour: 1.5, bagKg: 15);
+
+    expect(vFlow.costFor(30), isNull);
+    expect(vFlow.costFor(null), isNull);
+    final vPriced = vFlow.withFlow(pKgPerHour: 1.5, pBagKg: 15, pBagPrice: 6.5);
+    expect(vPriced.costFor(30), 13);
+  });
+
+  test('le prix du sac s\'écrit et se relit, absent ou nul il est ignoré', () {
+    const vRuns = PelletRuns(bagPrice: 6.9);
+
+    expect(parsePelletRuns(pelletRunsJson(vRuns)).bagPrice, 6.9);
+    expect(parsePelletRuns('{"prixSac": 0}').bagPrice, isNull);
+    expect(parsePelletRuns('{}').bagPrice, isNull);
+  });
 }
