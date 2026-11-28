@@ -154,7 +154,10 @@ class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
       data: MediaQuery.of(pContext).copyWith(
         textScaler: TextScaler.linear(MediaQuery.textScalerOf(pContext).scale(1) * pLook.textScale),
       ),
-      child: UnitsScope(units: Units(temperature: pLook.temperatureUnit), child: pChild!),
+      child: UnitsScope(
+        units: Units(temperature: pLook.temperatureUnit),
+        child: pChild!,
+      ),
     ),
     locale: const Locale('fr'),
     localizationsDelegates: const [

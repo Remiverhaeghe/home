@@ -37,13 +37,12 @@ class AppearanceSettings {
 }
 
 /// Fichier `apparence.json`, version 1.
-String appearanceJson(AppearanceSettings pSettings) =>
-    jsonEncode({
-      'version': 1,
-      'theme': pSettings.theme.name,
-      'textScale': pSettings.textScale,
-      'temperatureUnit': pSettings.temperatureUnit.name,
-    });
+String appearanceJson(AppearanceSettings pSettings) => jsonEncode({
+  'version': 1,
+  'theme': pSettings.theme.name,
+  'textScale': pSettings.textScale,
+  'temperatureUnit': pSettings.temperatureUnit.name,
+});
 
 /// Relit le fichier ; une valeur inconnue ou un fichier abîmé redonnent les réglages de départ.
 AppearanceSettings parseAppearance(String pText) {
@@ -59,7 +58,8 @@ AppearanceSettings parseAppearance(String pText) {
   final vThemeName = vRoot['theme'];
   final vTheme = ThemeChoice.values.where((pChoice) => pChoice.name == vThemeName);
   final vScale = vRoot['textScale'];
-  final vUnit = TemperatureUnit.values.where((pUnit) => pUnit.name == vRoot['temperatureUnit']);
+  final vUnitName = vRoot['temperatureUnit'];
+  final vUnit = TemperatureUnit.values.where((pUnit) => pUnit.name == vUnitName);
 
   return AppearanceSettings(
     theme: vTheme.isEmpty ? ThemeChoice.dark : vTheme.first,

@@ -571,9 +571,7 @@ class SensorCard extends StatelessWidget {
                             : vColors.warning,
                       ),
                     ),
-                    Text(
-                      vTexts.dewPointValue(vUnits.temp(dewPoint(vLast.temp, vLast.humidity))),
-                    ),
+                    Text(vTexts.dewPointValue(vUnits.temp(dewPoint(vLast.temp, vLast.humidity)))),
                     Text(
                       vTexts.lastReading(DateFormat.yMMMd(vLocale).add_Hm().format(vLast.at)),
                       style: vTheme.bodySmall,
