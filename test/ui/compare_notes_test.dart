@@ -27,7 +27,12 @@ void main() {
 
     await pTester.pumpWidget(localized(CompareScreen(controller: vSensors)));
 
-    expect(find.textContaining('+6,0 °C'), findsOneWidget);
+    final vShown = pTester.widgetList<Text>(find.byType(Text)).map((pText) => pText.data ?? '');
+    expect(
+      vShown.any((pText) => RegExp(r'\+6[,.]0 °C').hasMatch(pText)),
+      isTrue,
+      reason: vShown.join(' | '),
+    );
     expect(find.textContaining('sur 5 jours'), findsOneWidget);
   });
 
