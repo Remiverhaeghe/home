@@ -1,0 +1,1 @@
+- Widget d'écran d'accueil : la température et l'humidité de quatre pièces, sans réseau. Il se met à jour d'après le relevé en arrière-plan (au plus toutes les 30 minutes, limite d'Android).

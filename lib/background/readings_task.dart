@@ -17,6 +17,7 @@ import '../storage/error_log_store.dart';
 import 'alert_notifier.dart';
 import 'day_summary_runner.dart';
 import 'plan_runner.dart';
+import 'widget_writer.dart';
 
 /// Point d'entrée du service, appelé dans son propre processus Dart.
 @pragma('vm:entry-point')
@@ -149,6 +150,15 @@ class ReadingsTaskHandler extends TaskHandler {
     }
   }
 
+  /// Met à jour le fichier du widget d'écran d'accueil. Un échec ne doit pas arrêter le relevé.
+  Future<void> _widget(Directory pFolder, DetailLog pDetail) async {
+    try {
+      await writeHomeWidget(pFolder: pFolder, pNow: DateTime.now());
+    } on Object catch (pCaught) {
+      await pDetail.note('widget', 'échec : ${pCaught.runtimeType}');
+    }
+  }
+
   Future<void> _round() async {
     // Un tour long ne doit pas se superposer au suivant
     if (_busy) {
@@ -167,6 +177,7 @@ class ReadingsTaskHandler extends TaskHandler {
       }
       await _plan(vFolder, vDetail);
       await _summary(vFolder, vDetail);
+      await _widget(vFolder, vDetail);
       await vDetail.note('tour', 'fin après ${DateTime.now().difference(vStart).inSeconds} s');
     } finally {
       _busy = false;

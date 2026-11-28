@@ -7,6 +7,7 @@ Home sert de tableau de bord. Atelier, de son côté, s'en sert pour savoir quan
 ## Ce que fait Home
 
 - Lecture en direct des thermo-hygromètres ThermoPro TP357 en Bluetooth : les mesures s'ajoutent aux relevés tant que l'écran « Capteurs à portée » est ouvert.
+- Widget d'écran d'accueil : température et humidité de quatre pièces, rafraîchi au plus toutes les 30 minutes par Android, lu dans `widget.json` écrit par le relevé en arrière-plan (suivi des capteurs activé).
 - Relevé en arrière-plan : un service Android relève les capteurs suivis toutes les 5 minutes, appli fermée, avec une notification discrète.
 - Courbes par jour et extrêmes sur les quatorze derniers jours, en touchant la carte d'un capteur.
 - Écran de diagnostic de l'historique du capteur, qui affiche les trames brutes pour vérifier leur décodage (voir [docs/tp357.md](docs/tp357.md)).
