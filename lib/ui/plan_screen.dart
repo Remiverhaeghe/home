@@ -276,13 +276,11 @@ class PlanScreen extends StatelessWidget {
                 for (final vAlert in vAlerts)
                   ListTile(
                     contentPadding: EdgeInsets.zero,
-                    leading: Icon(
-                      switch (alertLevel(vAlert.kind)) {
-                        AlertLevel.critical => Icons.ac_unit,
-                        AlertLevel.important => Icons.warning_amber,
-                        AlertLevel.info => Icons.info_outline,
-                      },
-                    ),
+                    leading: Icon(switch (alertLevel(vAlert.kind)) {
+                      AlertLevel.critical => Icons.ac_unit,
+                      AlertLevel.important => Icons.warning_amber,
+                      AlertLevel.info => Icons.info_outline,
+                    }),
                     title: Text(_alertText(vTexts, vAlert, vUnits, vNumber)),
                   ),
               if (files != null) ...[

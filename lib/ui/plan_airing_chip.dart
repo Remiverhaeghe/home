@@ -39,7 +39,9 @@ class _AiringChipState extends State<AiringChip> {
 
       return;
     }
-    for (final vButton in widget.relays.buttons.where((pButton) => pButton.kind == RelayKind.velux)) {
+    for (final vButton in widget.relays.buttons.where(
+      (pButton) => pButton.kind == RelayKind.velux,
+    )) {
       await widget.relays.press(vButton);
     }
     final vUntil = widget.clock().add(const Duration(minutes: airingMinutes));

@@ -35,7 +35,11 @@ void main() {
     final vRelays = RelayController(MemoryRelayStore(pButtons), vLink, clock: () => vNow);
     await vRelays.load();
     await pTester.pumpWidget(
-      localized(Scaffold(body: AiringChip(relays: vRelays, files: vFiles, clock: () => vNow))),
+      localized(
+        Scaffold(
+          body: AiringChip(relays: vRelays, files: vFiles, clock: () => vNow),
+        ),
+      ),
     );
     await settle(pTester);
 
@@ -50,7 +54,9 @@ void main() {
     expect(find.byKey(const Key('scenario-airing')), findsNothing);
   });
 
-  testWidgets('Aération presse les Velux, jamais le garage, et note la fin du rappel', (pTester) async {
+  testWidgets('Aération presse les Velux, jamais le garage, et note la fin du rappel', (
+    pTester,
+  ) async {
     await open(pTester, [
       const RelayButton(name: 'Garage', host: '192.168.1.40', kind: RelayKind.garage),
       const RelayButton(name: 'Velux salon', host: '192.168.1.41', kind: RelayKind.velux),
