@@ -5,7 +5,9 @@ import 'package:home/logic/error_log.dart';
 
 void main() {
   test('la version affichée est celle de pubspec.yaml', () {
-    final vLine = File('pubspec.yaml').readAsLinesSync().firstWhere((l) => l.startsWith('version:'));
+    final vLine = File(
+      'pubspec.yaml',
+    ).readAsLinesSync().firstWhere((l) => l.startsWith('version:'));
 
     expect(vLine.split(RegExp(r'[:+]'))[1].trim(), appVersion);
   });

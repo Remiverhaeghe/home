@@ -52,9 +52,7 @@ void main() {
 
   testWidgets('renoncer à l\'enregistrement n\'affiche rien', (pTester) async {
     final vLog = MemoryErrorLogStore()..text = 'erreur';
-    await pTester.pumpWidget(
-      localized(AboutScreen(log: vLog, saveFile: (_, _) async => false)),
-    );
+    await pTester.pumpWidget(localized(AboutScreen(log: vLog, saveFile: (_, _) async => false)));
     await pTester.pumpAndSettle();
 
     await pTester.tap(find.text('Enregistrer le journal'));

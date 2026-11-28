@@ -117,7 +117,9 @@ void main() {
     expect(find.text('Recherche des capteurs TP357…'), findsOneWidget);
   });
 
-  testWidgets('le bouton À propos n\'apparaît qu\'avec un journal et ouvre l\'écran', (pTester) async {
+  testWidgets('le bouton À propos n\'apparaît qu\'avec un journal et ouvre l\'écran', (
+    pTester,
+  ) async {
     final vController = SensorsController(MemorySensorStore());
     await pTester.pumpWidget(localized(SensorsScreen(controller: vController)));
     expect(find.byTooltip('À propos'), findsNothing);
