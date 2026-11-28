@@ -60,6 +60,9 @@ void main() {
     }
 
     expect(vOn, isTrue);
+    // L'interrupteur relit le fichier : laisser cette lecture aboutir avant de regarder l'écran
+    await pTester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
+    await pTester.pump();
     expect(pTester.widget<Switch>(find.byType(Switch)).value, isTrue);
   });
 
