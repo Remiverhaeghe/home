@@ -22,7 +22,9 @@ class _AboutDetailSectionState extends State<AboutDetailSection> {
 
   Future<(bool, String)> _load() async => (await widget.detail.isOn(), await widget.detail.read());
 
-  void _reload() => setState(() => _state = _load());
+  void _reload() => setState(() {
+    _state = _load();
+  });
 
   Future<void> _switch(bool pOn) async {
     await widget.detail.setOn(pOn: pOn);
