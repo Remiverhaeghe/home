@@ -79,10 +79,10 @@ void main() {
     await pTester.pumpAndSettle();
     expect(find.text('Restaurer cette sauvegarde ?'), findsOneWidget);
 
-    await pTester.runAsync(() async {
-      await pTester.tap(find.widgetWithText(FilledButton, 'Restaurer'));
-      await Future<void>.delayed(const Duration(milliseconds: 200));
-    });
+    await pTester.tap(find.widgetWithText(FilledButton, 'Restaurer'));
+    await pTester.pump();
+    await pTester.pump(const Duration(seconds: 1));
+    await pTester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 300)));
     await pTester.pumpAndSettle();
 
     expect(File('${vFolder.path}/maison.json').readAsStringSync(), '{"neuf":true}');
