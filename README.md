@@ -80,6 +80,8 @@ La CI refuse une couverture de `lib/logic` sous 95 %.
 | [docs/daikin.md](docs/daikin.md) | API locale des climatisations Daikin, limites et points à vérifier |
 | [docs/poele-pellets.md](docs/poele-pellets.md) | Poêle à pellets Ecoforest : réseau, identifiants, requêtes |
 | [docs/relais.md](docs/relais.md) | Garage et Velux par relais Wi-Fi : matériel, branchement, sécurité |
+| [docs/securite.md](docs/securite.md) | Permissions Android, ce qui sort du téléphone, secrets |
+| [docs/architecture.md](docs/architecture.md) | Couches du code, données, tests, comment ajouter un appareil |
 | [docs/decisions.md](docs/decisions.md) | Choix qui ne se devinent pas à la lecture du code |
 | [CHANGELOG.md](CHANGELOG.md) | Historique des versions |
 

@@ -13,6 +13,7 @@ import 'package:home/ui/sensors_screen.dart';
 import '../support/fake_link.dart';
 import '../support/localized.dart';
 import '../support/sensors.dart';
+import '../support/menu.dart';
 
 void main() {
   testWidgets('sans capteur, l\'écran invite à importer un fichier', (pTester) async {
@@ -117,17 +118,29 @@ void main() {
     expect(find.text('Recherche des capteurs TP357…'), findsOneWidget);
   });
 
+  testWidgets('la barre ne garde que l\'actualisation et le Bluetooth, le reste est dans Plus', (
+    pTester,
+  ) async {
+    final vController = SensorsController(MemorySensorStore());
+    await pTester.pumpWidget(localized(SensorsScreen(controller: vController)));
+
+    expect(find.byTooltip('Actualiser les capteurs'), findsOneWidget);
+    expect(find.byTooltip('Capteurs à portée'), findsOneWidget);
+    expect(find.byTooltip('Importer un export ThermoPro'), findsNothing);
+    expect(await menuHas(pTester, 'Importer un export ThermoPro'), isTrue);
+  });
+
   testWidgets('le bouton À propos n\'apparaît qu\'avec un journal et ouvre l\'écran', (
     pTester,
   ) async {
     final vController = SensorsController(MemorySensorStore());
     await pTester.pumpWidget(localized(SensorsScreen(controller: vController)));
-    expect(find.byTooltip('À propos'), findsNothing);
+    expect(await menuHas(pTester, 'À propos'), isFalse);
 
     await pTester.pumpWidget(
       localized(SensorsScreen(controller: vController, errorLog: MemoryErrorLogStore())),
     );
-    await pTester.tap(find.byTooltip('À propos'));
+    await openMenuEntry(pTester, 'À propos');
     await pTester.pumpAndSettle();
 
     expect(find.text('À propos de Home'), findsOneWidget);
@@ -138,11 +151,13 @@ void main() {
       final vController = SensorsController(MemorySensorStore());
 
       await pTester.pumpWidget(localized(SensorsScreen(controller: vController)));
+      await pTester.tap(find.byTooltip('Plus d\'options'));
+      await pTester.pumpAndSettle();
 
-      expect(
-        pTester.widget<IconButton>(find.widgetWithIcon(IconButton, Icons.ios_share)).onPressed,
-        isNull,
+      final vItem = pTester.widget<PopupMenuItem<int>>(
+        find.widgetWithText(PopupMenuItem<int>, 'Exporter pour Atelier'),
       );
+      expect(vItem.enabled, isFalse);
     });
 
     testWidgets('le fichier d\'échange de tous les capteurs est proposé à l\'enregistrement', (
@@ -166,7 +181,7 @@ void main() {
           ),
         ),
       );
-      await pTester.tap(find.byTooltip('Exporter pour Atelier'));
+      await openMenuEntry(pTester, 'Exporter pour Atelier');
       await pTester.pump();
 
       expect(vName, 'home-climat.json');
@@ -181,7 +196,7 @@ void main() {
       await pTester.pumpWidget(
         localized(SensorsScreen(controller: vController, saveFile: (_, _) async => false)),
       );
-      await pTester.tap(find.byTooltip('Exporter pour Atelier'));
+      await openMenuEntry(pTester, 'Exporter pour Atelier');
       await pTester.pump();
 
       expect(find.byType(SnackBar), findsNothing);

@@ -10,4 +10,6 @@ Application Android en Flutter qui suit la température et l'humidité de la mai
 - Réseau : seulement vers les climatisations de la maison, en HTTP sur un réseau privé (`isPrivateAddress` refuse le reste). Tout passe par `lib/net/daikin_link.dart`, remplacée par une fausse dans les tests.
 - Bluetooth : tout passe par `lib/ble/tp357_link.dart` (interface remplacée par une fausse dans les tests) ; les trames se décodent dans `lib/logic/tp357.dart`.
 - Avant de valider : `flutter gen-l10n`, `dart format lib test`, `flutter analyze`, `flutter test`.
-- `README.md`, `CHANGELOG.md` et `ROADMAP.md` à jour après chaque lot ; fichiers de moins de 1000 lignes.
+- `README.md` et `ROADMAP.md` à jour après chaque lot ; `CHANGELOG.md` par fragments : un fichier `changelog.d/sujet.added.md` (ou `.changed.md`, `.fixed.md`) par lot, assemblé par `python3 tool/changelog.py` (voir `changelog.d/README.md`) ; fichiers de moins de 1000 lignes.
+- Textes : les nouvelles clés de `app_fr.arb` se rangent à côté de leurs voisines, pas en fin de fichier. Une section ou un dialogue d'écran vit dans son propre fichier.
+

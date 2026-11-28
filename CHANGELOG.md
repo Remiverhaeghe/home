@@ -9,6 +9,11 @@
 
 ### Ajouté
 
+- Notes de version : l'écran « À propos » montre les nouveautés de la dernière version (le CHANGELOG, livré avec l'appli), repliées par défaut.
+- Menu « Plus d'options » dans l'écran des capteurs : les appareils, la maison, les données (export, import CSV, sauvegarde) et l'appli y sont rangés par famille ; la barre ne garde que l'actualisation et le Bluetooth.
+- La recherche des climatisations ne dépend plus de la diffusion UDP : elle diffuse aussi sur le réseau du téléphone, puis interroge chaque adresse du même réseau pour trouver les modules que la box ne laisse pas répondre.
+- `docs/architecture.md` : couches du code, données, tests et marche à suivre pour ajouter un appareil.
+- Audit des permissions et du réseau : `docs/securite.md` liste chaque permission Android, ce qui sort du téléphone et où vivent les identifiants.
 - Bilan du chauffage (bouton de l'écran Pilotage) : heures de marche de chaque clim, avec la semaine d'avant, énergie et coût estimés avec la puissance et le prix du kWh que tu donnes, total sur 30 jours avec le poêle, budget mensuel (dans les clous, proche, dépassé) et repère courant d'un degré de consigne en moins (environ 7 %). Heures des clims dans `marche-clims.json`, ajouté à la sauvegarde.
 - Poêle : stock de pellets (sacs comptés, diminués de la consommation estimée, autonomie et alerte de stock bas), arrêt programmé du soir appliqué dans la demi-heure qui suit son heure (appli ou service d'arrière-plan), et message quand le poêle s'éteint sans ordre de Home.
 - Le service d'arrière-plan tient aussi le journal des heures de marche du poêle et des clims appli fermée.
