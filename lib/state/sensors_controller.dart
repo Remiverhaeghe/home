@@ -119,6 +119,29 @@ class SensorsController extends ChangeNotifier {
     return true;
   }
 
+  DateTime? _lastRefresh;
+
+  /// Dernière actualisation par Bluetooth, null avant la première.
+  DateTime? get lastRefresh => _lastRefresh;
+
+  /// Actualise par Bluetooth si la dernière actualisation date de [pStale] ou plus, ou n'a pas eu
+  /// lieu. Renvoie le nombre de capteurs lus, ou null quand rien n'était à faire. La date est
+  /// prise avant la recherche : deux retours rapprochés ne lancent pas deux recherches.
+  Future<int?> refreshIfStale(
+    Tp357Link pLink,
+    DateTime pNow, {
+    Duration pStale = const Duration(minutes: 10),
+    Duration pScan = const Duration(seconds: 6),
+  }) async {
+    final vLast = _lastRefresh;
+    if (vLast != null && pNow.difference(vLast) < pStale) {
+      return null;
+    }
+    _lastRefresh = pNow;
+
+    return refreshFromBluetooth(pLink, pScan: pScan);
+  }
+
   /// Cherche les capteurs à portée pendant [pScan], puis lit une mesure sur chacun (au plus [pWait]
   /// d'attente) et la range. Renvoie le nombre de capteurs lus.
   Future<int> refreshFromBluetooth(
