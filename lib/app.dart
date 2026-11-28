@@ -159,7 +159,7 @@ class _HomeAppState extends State<HomeApp> with WidgetsBindingObserver {
         child: pChild!,
       ),
     ),
-    locale: const Locale('fr'),
+    locale: Locale(pLook.language.code),
     localizationsDelegates: const [
       AppLocalizations.delegate,
       GlobalMaterialLocalizations.delegate,
