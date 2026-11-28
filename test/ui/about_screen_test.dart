@@ -103,11 +103,7 @@ void main() {
     final vDetail = MemoryDetailLog(pNow: () => DateTime(2026, 11, 28, 9));
     await pTester.pumpWidget(
       localized(
-        AboutScreen(
-          log: MemoryErrorLogStore(),
-          saveFile: (_, _) async => true,
-          detail: vDetail,
-        ),
+        AboutScreen(log: MemoryErrorLogStore(), saveFile: (_, _) async => true, detail: vDetail),
       ),
     );
     await pTester.pumpAndSettle();

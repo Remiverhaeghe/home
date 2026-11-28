@@ -339,7 +339,10 @@ class SensorsScreen extends StatelessWidget {
           _MenuEntry(
             Icons.info_outline,
             pTexts.aboutOpen,
-            () => _open(pContext, (_) => AboutScreen(log: errorLog!, saveFile: saveFile, detail: detailLog)),
+            () => _open(
+              pContext,
+              (_) => AboutScreen(log: errorLog!, saveFile: saveFile, detail: detailLog),
+            ),
           ),
       ],
     ].where((pGroup) => pGroup.isNotEmpty).toList();

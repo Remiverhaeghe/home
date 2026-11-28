@@ -100,14 +100,17 @@ class ReadingsTaskHandler extends TaskHandler {
         await pDetail.note(
           'capteur $pRank',
           'mesure reçue en ${DateTime.now().difference(vStart).inSeconds} s '
-          '(essai ${vTry + 1}${vAfter == null ? '' : ', après $vAfter tours manqués'})',
+              '(essai ${vTry + 1}${vAfter == null ? '' : ', après $vAfter tours manqués'})',
         );
 
         return;
       } on Object catch (pCaught) {
         // Capteur hors de portée ou Bluetooth coupé : seconde tentative, puis tour suivant
         vError = pCaught;
-        await pDetail.note('capteur $pRank', 'essai ${vTry + 1} sans mesure : ${pCaught.runtimeType}');
+        await pDetail.note(
+          'capteur $pRank',
+          'essai ${vTry + 1} sans mesure : ${pCaught.runtimeType}',
+        );
       }
     }
     final vMisses = (_misses[pDevice.id] ?? 0) + 1;
