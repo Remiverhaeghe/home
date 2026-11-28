@@ -10,6 +10,7 @@
 ### Ajouté
 
 - Bilan des pièces en PDF (bouton de l'écran des pièces) : mesures du moment, extrêmes sur 14 jours et courbe de température par pièce, quatre pièces par page. PDF écrit sans dépendance ; l'enregistrement passe par le sélecteur de fichier.
+- Bilan du poêle : prix du sac à saisir, coût estimé sur 7 et 30 jours, et comparaison des heures de marche avec la semaine d'avant (« Marche et pellets »).
 - Seuil d'alerte d'humidité réglable dans l'écran Pilotage (de 55 à 85 %, 70 % au départ), gardé dans `reglages-plan.json` et pris en compte par le service d'arrière-plan.
 - Captures d'écran d'une maison fictive générées par la CI (workflow Captures, `test/captures`) : liste des capteurs, courbes d'un capteur, écran des pièces. Aucune donnée réelle.
 - Poêle éteint en vacances même appli fermée : le service d'arrière-plan relit le poêle à chaque tour et l'éteint s'il marche pendant l'absence (hors remontée avant le retour).

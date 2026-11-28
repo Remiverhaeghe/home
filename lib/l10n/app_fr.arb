@@ -414,6 +414,11 @@
   "planHumidityTitle": "Alerte d'humidité",
   "planHumidityHint": "Une alerte est donnée quand l'humidité d'un capteur dépasse {level} %.",
   "@planHumidityHint": {"placeholders": {"level": {"type": "String"}}},
+  "pelletUsageBefore": "Semaine d'avant : {hours} h de marche ({delta} cette semaine).",
+  "@pelletUsageBefore": {"placeholders": {"hours": {"type": "String"}, "delta": {"type": "String"}}},
+  "pelletUsageCost": "Coût estimé : {week} € sur 7 jours, {month} € sur 30 jours.",
+  "@pelletUsageCost": {"placeholders": {"week": {"type": "String"}, "month": {"type": "String"}}},
+  "pelletUsagePrice": "Prix d'un sac (€), pour estimer le coût",
   "roomsPdfOpen": "Exporter le bilan en PDF",
   "roomsPdfSaved": "Bilan enregistré."
 }
