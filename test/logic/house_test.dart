@@ -100,4 +100,38 @@ void main() {
     expect(vBad.placeOf('A').room, 'Salon');
     expect(vBad.placeOf('A').ceiling, isNull);
   });
+
+  group('surface et volume', () {
+    test('la surface se lit avec une virgule ou un point, dans les bornes', () {
+      expect(parseArea('24,5'), 24.5);
+      expect(parseArea('30'), 30);
+      expect(parseArea('0,5'), isNull);
+      expect(parseArea('501'), isNull);
+      expect(parseArea('grand'), isNull);
+    });
+
+    test('le volume est la surface fois la hauteur, et manque si l\'une manque', () {
+      expect(const SensorPlace(area: 20, ceiling: 5.5).volume, 110);
+      expect(const SensorPlace(area: 20).volume, isNull);
+      expect(const SensorPlace(ceiling: 5.5).volume, isNull);
+    });
+
+    test('monter l\'air de 1 °C demande 0,335 Wh par m³', () {
+      expect(airEnergyKwh(100, 1), closeTo(0.0335, 1e-9));
+      expect(airEnergyKwh(100, 3), closeTo(0.1005, 1e-9));
+    });
+
+    test('la surface est rangée et relue, hors bornes elle est ignorée', () {
+      final vHouse = const House().withPlace('A', const SensorPlace(room: 'Salon', area: 32.5));
+
+      expect(parseHouse(houseJson(vHouse)).placeOf('A').area, 32.5);
+      expect(const House().withPlace('B', const SensorPlace(area: 40)).places.keys, ['B']);
+      expect(
+        parseHouse(
+          '{"version":1,"places":{"A":{"room":"Salon","floor":0,"outdoor":false,"area":9999}}}',
+        ).placeOf('A').area,
+        isNull,
+      );
+    });
+  });
 }

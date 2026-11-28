@@ -1,0 +1,1 @@
+- Pièce : surface au sol à côté de la hauteur sous plafond (hauteur moyenne sous un plafond en pente). Home en tire le volume d'air et l'énergie pour monter l'air de 1 °C (air seul, sans les murs). Ces valeurs sont rangées avec la maison.

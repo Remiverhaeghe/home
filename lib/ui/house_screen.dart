@@ -226,6 +226,9 @@ class _PlaceDialogState extends State<_PlaceDialog> {
   late final _ceiling = TextEditingController(
     text: widget.current.ceiling == null ? '' : '${widget.current.ceiling}'.replaceAll('.', ','),
   );
+  late final _area = TextEditingController(
+    text: widget.current.area == null ? '' : '${widget.current.area}'.replaceAll('.', ','),
+  );
   late int? _floor = widget.current.floor;
   late bool _outdoor = widget.current.outdoor;
 
@@ -233,6 +236,7 @@ class _PlaceDialogState extends State<_PlaceDialog> {
   void dispose() {
     _room.dispose();
     _ceiling.dispose();
+    _area.dispose();
     super.dispose();
   }
 
@@ -258,7 +262,40 @@ class _PlaceDialogState extends State<_PlaceDialog> {
                 decoration: InputDecoration(
                   labelText: vTexts.placeCeiling,
                   helperText: vTexts.placeCeilingHelp,
+                  helperMaxLines: 3,
                 ),
+              ),
+            if (!_outdoor)
+              TextField(
+                key: const Key('place-area'),
+                controller: _area,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                decoration: InputDecoration(labelText: vTexts.placeArea),
+              ),
+            if (!_outdoor)
+              ListenableBuilder(
+                listenable: Listenable.merge([_ceiling, _area]),
+                builder: (pContext, _) {
+                  final vVolume = SensorPlace(
+                    ceiling: parseCeiling(_ceiling.text),
+                    area: parseArea(_area.text),
+                  ).volume;
+                  if (vVolume == null) {
+                    return const SizedBox.shrink();
+                  }
+                  final vNumber = NumberFormat('0.0', Localizations.localeOf(pContext).toString());
+
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text(
+                      vTexts.placeVolume(
+                        vVolume.round(),
+                        vNumber.format(airEnergyKwh(vVolume, 1)),
+                      ),
+                      key: const Key('place-volume'),
+                    ),
+                  );
+                },
               ),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
@@ -291,6 +328,7 @@ class _PlaceDialogState extends State<_PlaceDialog> {
               floor: _floor,
               outdoor: _outdoor,
               ceiling: _outdoor ? null : parseCeiling(_ceiling.text),
+              area: _outdoor ? null : parseArea(_area.text),
             ),
           ),
           child: Text(vTexts.save),
