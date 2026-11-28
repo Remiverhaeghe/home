@@ -25,6 +25,20 @@ lib/l10n/gen/
 !/android/app/src/main/
 /android/app/src/main/*
 !/android/app/src/main/AndroidManifest.xml
+# Widget d'écran d'accueil : sa classe, sa disposition et sa description
+!/android/app/src/main/kotlin/
+/android/app/src/main/kotlin/*
+!/android/app/src/main/kotlin/fr/
+/android/app/src/main/kotlin/fr/*
+!/android/app/src/main/kotlin/fr/remiverhaeghe/
+/android/app/src/main/kotlin/fr/remiverhaeghe/*
+!/android/app/src/main/kotlin/fr/remiverhaeghe/home/
+/android/app/src/main/kotlin/fr/remiverhaeghe/home/*
+!/android/app/src/main/kotlin/fr/remiverhaeghe/home/HomeWidget.kt
+!/android/app/src/main/res/
+/android/app/src/main/res/*
+!/android/app/src/main/res/layout/
+!/android/app/src/main/res/xml/
 /ios/
 /web/
 /linux/
