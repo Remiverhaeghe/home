@@ -151,4 +151,5 @@ const defaultReadInterval = 5;
 
 /// Le tour de relevé doit-il avoir lieu ? Une marge de 30 secondes absorbe le retard du réveil.
 bool readRoundDue(DateTime pNow, DateTime? pLastRound, int pMinutes) =>
-    pLastRound == null || pNow.difference(pLastRound) >= Duration(minutes: pMinutes) - const Duration(seconds: 30);
+    pLastRound == null ||
+    pNow.difference(pLastRound) >= Duration(minutes: pMinutes) - const Duration(seconds: 30);
