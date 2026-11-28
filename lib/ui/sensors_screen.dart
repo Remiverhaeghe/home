@@ -366,8 +366,12 @@ class SensorsScreen extends StatelessWidget {
               onPressed: () => Navigator.push<void>(
                 pContext,
                 MaterialPageRoute(
-                  builder: (_) =>
-                      PlanScreen(plan: planController!, ac: acController!, sensors: controller),
+                  builder: (_) => PlanScreen(
+                    plan: planController!,
+                    ac: acController!,
+                    sensors: controller,
+                    files: files,
+                  ),
                 ),
               ),
             ),
